@@ -5,10 +5,10 @@ test.group('user registration (join)', () => {
   test('can join platform with a new wallet address', async ({ client, expect }) => {
     const { signature, publicKey } = getUserKeypair()
 
-    const response = await client
-      .post('/auth/join')
-      .field('signature', signature)
-      .field('publicKey', publicKey)
+    const response = await client.post('/auth/join').json({
+      signature,
+      publicKey,
+    })
 
     const body = response.body()
 
@@ -18,10 +18,10 @@ test.group('user registration (join)', () => {
   test('registration fails if wallet has already been registered', async ({ client, expect }) => {
     const { signature, publicKey } = await joinAndLogin(client)
 
-    const response = await client
-      .post('/auth/join')
-      .field('signature', signature)
-      .field('publicKey', publicKey)
+    const response = await client.post('/auth/join').json({
+      signature,
+      publicKey,
+    })
 
     expect(response.status()).toEqual(401)
     expect(response.body()).toMatchObject({
@@ -37,10 +37,10 @@ test.group('user registration (join)', () => {
 
     await client.post('/auth/join').field('signature', signature).field('publicKey', publicKey)
 
-    const response = await client
-      .post('/auth/join')
-      .field('signature', signature)
-      .field('publicKey', publicKey)
+    const response = await client.post('/auth/join').json({
+      signature,
+      publicKey,
+    })
 
     expect(response.status()).toEqual(401)
     expect(response.body()).toMatchObject({ message: 'E_INVALID_SIGNATURE: Invalid signature.' })

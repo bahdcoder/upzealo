@@ -20,6 +20,9 @@ export default class SocialAccount extends BaseModel {
   public userId: number
 
   @column()
+  public communityId: number
+
+  @column()
   public username: string
 
   @column()

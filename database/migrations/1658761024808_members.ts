@@ -1,7 +1,7 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'social_accounts'
+  protected tableName = 'memberships'
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
@@ -9,7 +9,7 @@ export default class extends BaseSchema {
 
       table
         .integer('user_id')
-        .nullable()
+        .notNullable()
         .unsigned()
         .references('id')
         .inTable('users')
@@ -17,18 +17,13 @@ export default class extends BaseSchema {
 
       table
         .integer('community_id')
+        .notNullable()
         .unsigned()
-        .nullable()
         .references('id')
         .inTable('communities')
         .onDelete('CASCADE')
 
-      table.string('network').notNullable()
-      table.string('username').notNullable()
-      table.string('access_token').notNullable()
-      table.string('avatar_url').nullable()
-      table.string('network_id').notNullable()
-      table.json('meta').nullable()
+      table.string('status') // can be approved or pending.
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

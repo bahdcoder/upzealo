@@ -58,6 +58,7 @@
     "@adonisjs/core": "^5.8.5",
     "@adonisjs/lucid": "^18.1.0",
     "@adonisjs/lucid-slugify": "2.1.4",
+    "@adonisjs/redis": "^7.3.0",
     "@adonisjs/repl": "^3.1.11",
     "@bahdcoder/ally-twitter-v2": "^1.0.3",
     "@solana/web3.js": "^1.50.0",

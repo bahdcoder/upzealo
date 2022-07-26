@@ -25,7 +25,8 @@
     "@adonisjs/lucid",
     "adonis5-jwt",
     "@adonisjs/ally",
-    "@adonisjs/lucid-slugify"
+    "@adonisjs/lucid-slugify",
+    "@adonisjs/redis"
   ],
   "aceProviders": [
     "@adonisjs/repl"

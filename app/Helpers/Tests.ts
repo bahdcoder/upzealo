@@ -20,7 +20,12 @@ export async function joinAndLogin(client: ApiClient) {
 
   const address = await Address.query().where('publicKey', publicKey).preload('user').firstOrFail()
 
+  const AUTH = 'Authorization'
+  const BEARER = `Bearer ${accessToken}`
+
   return {
+    AUTH,
+    BEARER,
     address,
     response,
     signature,

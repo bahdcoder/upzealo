@@ -9,10 +9,10 @@ test.group('user login (get access token)', () => {
 
     await client.post('/auth/join').field('signature', signature).field('publicKey', publicKey)
 
-    const response = await client
-      .post('/auth/login')
-      .field('signature', signature)
-      .field('publicKey', publicKey)
+    const response = await client.post('/auth/login').json({
+      signature,
+      publicKey,
+    })
 
     const body = response.body()
 
@@ -26,10 +26,10 @@ test.group('user login (get access token)', () => {
 
     const { signature: wrongSignature } = getUserKeypair()
 
-    const response = await client
-      .post('/auth/login')
-      .field('signature', wrongSignature)
-      .field('publicKey', publicKey)
+    const response = await client.post('/auth/login').json({
+      signature: wrongSignature,
+      publicKey,
+    })
 
     expect(response.status()).toEqual(401)
     expect(response.body()).toMatchObject({ message: 'E_INVALID_SIGNATURE: Invalid signature.' })
