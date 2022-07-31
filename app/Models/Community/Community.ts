@@ -45,7 +45,7 @@ export default class Community extends BaseModel {
   @column({ serializeAs: 'userId' })
   public userId: number
 
-  @belongsTo(() => User)
+  @belongsTo(() => User, { serializeAs: 'owner' })
   public user: BelongsTo<typeof User>
 
   public TOKENS_HASHLIST_KEY() {

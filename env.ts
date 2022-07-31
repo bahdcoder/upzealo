@@ -22,6 +22,8 @@ export default Env.rules({
   DRIVE_DISK: Env.schema.enum(['local'] as const),
   NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
 
+  BASE_URL: Env.schema.string({ format: 'url' }),
+
   /**
    * Database connection configuration
    */
@@ -59,4 +61,9 @@ export default Env.rules({
   REDIS_HOST: Env.schema.string({ format: 'host' }),
   REDIS_PORT: Env.schema.number(),
   REDIS_PASSWORD: Env.schema.string.optional(),
+
+  /**
+   * Blockchain related
+   */
+  RPC_URL: Env.schema.string({ format: 'url' }),
 })

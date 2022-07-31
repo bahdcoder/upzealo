@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import { getUserKeypair, joinAndLogin } from 'App/Helpers/Tests'
+import { getUserKeypair, joinAndLogin } from 'App/Helpers/Tests/Utils'
 
 test.group('user registration (join)', () => {
   test('can join platform with a new wallet address', async ({ client, expect }) => {

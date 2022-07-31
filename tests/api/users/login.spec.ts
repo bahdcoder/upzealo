@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import { getUserKeypair, joinAndLogin } from 'App/Helpers/Tests'
+import { getUserKeypair, joinAndLogin } from 'App/Helpers/Tests/Utils'
 
 import Address from 'App/Models/Profile/Address'
 

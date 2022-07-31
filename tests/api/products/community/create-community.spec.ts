@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 import { Keypair } from '@solana/web3.js'
-import { joinAndLogin } from 'App/Helpers/Tests'
+import { joinAndLogin } from 'App/Helpers/Tests/Utils'
 import CommunityFactory from 'Database/factories/Community/CommunityFactory'
 
 import Redis from '@ioc:Adonis/Addons/Redis'

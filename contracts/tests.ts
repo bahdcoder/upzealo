@@ -16,3 +16,14 @@ declare module '@japa/runner' {
     // Extend test
   }
 }
+
+declare module '@ioc:Adonis/Core/TestUtils' {
+  // type HookCleanupHandler = () => Promise<void>
+  // type HookCallback = () => Promise<HookCleanupHandler> | Promise<void>
+
+  export interface TestUtilsContract {
+    blockchain(connectionName?: string): {
+      solanaValidator: HookCallback
+    }
+  }
+}

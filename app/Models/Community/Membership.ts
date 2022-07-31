@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon'
 import { BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 
 import BaseModel from 'App/Models/Base'
@@ -20,7 +19,7 @@ export default class Membership extends BaseModel {
   @belongsTo(() => Community)
   public community: BelongsTo<typeof Community>
 
-  @column({ serializeAs: 'usZXerId' })
+  @column({ serializeAs: 'userId' })
   public userId: number
 
   @belongsTo(() => User)

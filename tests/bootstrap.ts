@@ -52,6 +52,7 @@ export const runnerHooks: Required<Pick<Config, 'setup' | 'teardown'>> = {
     () => TestUtils.ace().loadCommands(),
     () => TestUtils.db().migrate(),
     () => TestUtils.db().seed(),
+    () => TestUtils.blockchain().solanaValidator(),
   ],
   teardown: [],
 }

@@ -58,9 +58,7 @@ export default class CreateCommunityController {
     })
 
     if (membershipType === CommunityMembershipTypes.WALLET_TOKENS) {
-      const key = community.TOKENS_HASHLIST_KEY()
-
-      await Redis.sadd(key, tokensList)
+      await Redis.sadd(community.TOKENS_HASHLIST_KEY(), tokensList)
     }
 
     return community.toJSON()

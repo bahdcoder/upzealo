@@ -14,10 +14,7 @@
     "Contracts": "contracts",
     "Helpers": "helpers"
   },
-  "preloads": [
-    "./start/routes",
-    "./start/kernel"
-  ],
+  "preloads": ["./start/routes", "./start/kernel"],
   "providers": [
     "./providers/AppProvider",
     "@adonisjs/core",
@@ -28,24 +25,16 @@
     "@adonisjs/lucid-slugify",
     "@adonisjs/redis"
   ],
-  "aceProviders": [
-    "@adonisjs/repl"
-  ],
+  "aceProviders": ["@adonisjs/repl"],
   "tests": {
     "suites": [
       {
         "name": "api",
-        "files": [
-          "tests/api/**/*.spec(.ts|.js)"
-        ],
+        "files": ["tests/api/**/*.spec(.ts|.js)"],
         "timeout": 60000
       }
     ]
   },
-  "testProviders": [
-    "@japa/preset-adonis/TestsProvider"
-  ],
-  "metaFiles": [
-    "resources/lang/**/*.(json|yaml)"
-  ]
+  "testProviders": ["@japa/preset-adonis/TestsProvider"],
+  "metaFiles": ["resources/lang/**/*.(json|yaml)"]
 }

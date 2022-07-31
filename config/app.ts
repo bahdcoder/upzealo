@@ -12,6 +12,8 @@ import { LoggerConfig } from '@ioc:Adonis/Core/Logger'
 import { ProfilerConfig } from '@ioc:Adonis/Core/Profiler'
 import { ValidatorConfig } from '@ioc:Adonis/Core/Validator'
 
+import { Commitment } from '@solana/web3.js'
+
 /*
 |--------------------------------------------------------------------------
 | Application secret key
@@ -26,6 +28,8 @@ import { ValidatorConfig } from '@ioc:Adonis/Core/Validator'
 |
 */
 export const appKey: string = Env.get('APP_KEY')
+
+export const baseUrl: string = Env.get('BASE_URL')
 
 /*
 |--------------------------------------------------------------------------
@@ -244,8 +248,12 @@ export const validator: ValidatorConfig = {}
 export const blockchain: BlockchainConfig = {
   authenticationSignatureTemplate: () =>
     `I want to login on ${logger.name}. I accept the Terms of Service https://terms.of.service.com.`,
+  rpcUrl: Env.get('RPC_URL'),
+  defaultCommitment: 'confirmed',
 }
 
 export interface BlockchainConfig {
   authenticationSignatureTemplate: () => string
+  rpcUrl: string
+  defaultCommitment?: Commitment
 }

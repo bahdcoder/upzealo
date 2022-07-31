@@ -1,5 +1,17 @@
 {
   "commands": {
+    "solana:validator": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/TestUtils/SolanaValidator",
+      "commandName": "solana:validator",
+      "description": "Run the solana test validator.",
+      "args": [],
+      "aliases": [],
+      "flags": []
+    },
     "dump:rcfile": {
       "settings": {},
       "commandPath": "@adonisjs/core/build/commands/DumpRc",
