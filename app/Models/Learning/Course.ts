@@ -10,13 +10,13 @@ import { DateTime } from 'luxon'
 
 export default class Course extends BaseModel {
   @column({ serializeAs: 'pathId' })
-  public pathId: number
+  public pathId: string
 
   @belongsTo(() => Path)
   public path: BelongsTo<typeof Path>
 
   @column({ serializeAs: 'authorId' })
-  public authorId: number
+  public authorId: string
 
   @belongsTo(() => Author)
   public author: BelongsTo<typeof Author>

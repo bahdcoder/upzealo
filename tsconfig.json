@@ -23,7 +23,8 @@
       "adonis5-jwt",
       "@adonisjs/ally",
       "@adonisjs/lucid-slugify",
-      "@adonisjs/redis"
+      "@adonisjs/redis",
+      "adonisjs-cloudinary"
     ]
   }
 }

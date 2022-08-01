@@ -5,12 +5,12 @@ export default class extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.string('id').primary()
 
       table.string('public_key').unique().notNullable()
       table.boolean('is_default').defaultTo(false)
       table.string('blockchain').notNullable()
-      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.string('user_id').references('id').inTable('users').onDelete('CASCADE')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

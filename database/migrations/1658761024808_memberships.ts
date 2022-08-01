@@ -5,25 +5,20 @@ export default class extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.string('id').primary()
+
+      table.string('user_id').notNullable().references('id').inTable('users').onDelete('CASCADE')
 
       table
-        .integer('user_id')
+        .string('community_id')
         .notNullable()
-        .unsigned()
-        .references('id')
-        .inTable('users')
-        .onDelete('CASCADE')
-
-      table
-        .integer('community_id')
-        .notNullable()
-        .unsigned()
         .references('id')
         .inTable('communities')
         .onDelete('CASCADE')
 
       table.string('status') // can be approved or pending.
+
+      table.unique(['user_id', 'community_id'])
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

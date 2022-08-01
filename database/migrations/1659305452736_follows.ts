@@ -1,18 +1,16 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'sections'
+  protected tableName = 'follows'
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.string('id').primary()
 
-      table.string('course_id').references('id').inTable('courses').onDelete('CASCADE')
+      table.string('user_id').references('id').inTable('users').onDelete('CASCADE')
+      table.string('target_id').references('id').inTable('users').onDelete('CASCADE')
 
-      table.string('title').notNullable()
-      table.string('slug').notNullable().unique()
-
-      table.text('details').nullable()
+      table.unique(['user_id', 'target_id'])
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

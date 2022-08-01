@@ -6,6 +6,10 @@ import { PublicKey } from '@solana/web3.js'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
+import Getstream from 'App/Services/Getstream'
+
+import Application from '@ioc:Adonis/Core/Application'
+
 import Address from 'App/Models/Profile/Address'
 import UnauthenticatedException from 'App/Exceptions/Auth/UnauthenticatedException'
 
@@ -41,8 +45,10 @@ export default class LoginController {
       throw new UnauthenticatedException('Address does not exist.', 401, 'E_ADRESS_DOES_NOT_EXIST')
     }
 
+    const getstream: Getstream = Application.container.use('Adonis/Addons/Getstream')
+
     const { accessToken } = await auth.use('jwt').generate(address.user)
 
-    return { accessToken }
+    return { accessToken, streamAccessToken: getstream.accessToken(address.user.id) }
   }
 }

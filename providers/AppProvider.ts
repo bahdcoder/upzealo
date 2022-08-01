@@ -1,3 +1,5 @@
+import Getstream from 'App/Services/Getstream'
+import Cloudinary from 'App/Services/Cloudinary'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 import { SolanaTestValidator } from 'App/Helpers/Tests/SolanaValidator'
 
@@ -6,6 +8,17 @@ export default class AppProvider {
 
   public register() {
     // Register your own bindings
+    this.app.container.singleton('Adonis/Addons/Cloudinary', () => {
+      const config = this.app.container.resolveBinding('Adonis/Core/Config').get('cloudinary', {})
+
+      return new Cloudinary(config)
+    })
+
+    this.app.container.singleton('Adonis/Addons/Getstream', () => {
+      const config = this.app.container.resolveBinding('Adonis/Core/Config').get('getstream', {})
+
+      return new Getstream(config)
+    })
   }
 
   public async boot() {

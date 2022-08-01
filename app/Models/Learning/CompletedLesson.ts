@@ -6,13 +6,13 @@ import Lesson from 'App/Models/Learning/Lesson'
 
 export default class CompletedLesson extends BaseModel {
   @column({ serializeAs: 'lessonId' })
-  public lessonId: number
+  public lessonId: string
 
   @belongsTo(() => Lesson)
   public lesson: BelongsTo<typeof Lesson>
 
   @column({ serializeAs: 'userId' })
-  public userId: number
+  public userId: string
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>

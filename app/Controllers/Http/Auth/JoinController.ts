@@ -6,6 +6,10 @@ import { PublicKey } from '@solana/web3.js'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
+import Getstream from 'App/Services/Getstream'
+
+import Application from '@ioc:Adonis/Core/Application'
+
 import User from 'App/Models/Profile/User'
 import Address from 'App/Models/Profile/Address'
 import CannotJoinException from 'App/Exceptions/Auth/CannotJoinException'
@@ -47,8 +51,10 @@ export default class JoinController {
       userId: user.id,
     })
 
+    const getstream: Getstream = Application.container.use('Adonis/Addons/Getstream')
+
     const { accessToken } = await auth.use('jwt').generate(user)
 
-    return { accessToken }
+    return { accessToken, streamAccessToken: getstream.accessToken(user.id) }
   }
 }

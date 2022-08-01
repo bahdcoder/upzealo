@@ -104,18 +104,17 @@ const authConfig: AuthConfig = {
         model: () => import('App/Models/Profile/User'),
       },
     },
-
     jwt: {
       driver: 'jwt',
       publicKey: Env.get('JWT_PUBLIC_KEY', '').replace(/\\n/g, '\n'),
       privateKey: Env.get('JWT_PRIVATE_KEY', '').replace(/\\n/g, '\n'),
-      persistJwt: false,
+      persistJwt: true,
       jwtDefaultExpire: '7d',
-      refreshTokenDefaultExpire: '40d',
+      refreshTokenDefaultExpire: '49d',
       tokenProvider: {
-        type: 'api',
-        driver: 'database',
-        table: 'jwt_tokens',
+        type: 'jwt',
+        driver: 'redis',
+        redisConnection: 'local',
         foreignKey: 'user_id',
       },
       provider: {

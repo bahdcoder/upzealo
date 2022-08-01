@@ -13,7 +13,7 @@ export enum LessonType {
 
 export default class Lesson extends BaseModel {
   @column({ serializeAs: 'sectionId' })
-  public sectionId: number
+  public sectionId: string
 
   @belongsTo(() => Section)
   public section: BelongsTo<typeof Section>

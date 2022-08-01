@@ -5,7 +5,7 @@ export default class extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.string('id').primary()
 
       table.string('title')
       table.string('slug').notNullable().unique()
@@ -15,15 +15,9 @@ export default class extends BaseSchema {
 
       table.string('cover_image').nullable()
 
-      table.integer('author_id').unsigned().references('id').inTable('authors').onDelete('CASCADE')
+      table.string('author_id').references('id').inTable('authors').onDelete('CASCADE')
 
-      table
-        .integer('path_id')
-        .unsigned()
-        .nullable()
-        .references('id')
-        .inTable('paths')
-        .onDelete('CASCADE')
+      table.string('path_id').nullable().references('id').inTable('paths').onDelete('CASCADE')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

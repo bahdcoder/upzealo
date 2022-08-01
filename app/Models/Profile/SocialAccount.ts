@@ -17,10 +17,10 @@ export default class SocialAccount extends BaseModel {
   public networkId: string
 
   @column()
-  public userId: number
+  public userId: string
 
   @column()
-  public communityId: number
+  public communityId: string
 
   @column()
   public username: string

@@ -5,19 +5,12 @@ export default class extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.string('id').primary()
+
+      table.string('user_id').nullable().references('id').inTable('users').onDelete('CASCADE')
 
       table
-        .integer('user_id')
-        .nullable()
-        .unsigned()
-        .references('id')
-        .inTable('users')
-        .onDelete('CASCADE')
-
-      table
-        .integer('community_id')
-        .unsigned()
+        .string('community_id')
         .nullable()
         .references('id')
         .inTable('communities')

@@ -20,7 +20,7 @@ export default class Address extends BaseModel {
   public isDefault: boolean = false
 
   @column({ serializeAs: 'userId' })
-  public userId: number
+  public userId: string
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>

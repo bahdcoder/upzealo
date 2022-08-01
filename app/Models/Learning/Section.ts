@@ -7,7 +7,7 @@ import Lesson from 'App/Models/Learning/Lesson'
 
 export default class Section extends BaseModel {
   @column({ serializeAs: 'courseId' })
-  public courseId: number
+  public courseId: string
 
   @belongsTo(() => Course)
   public course: BelongsTo<typeof Course>

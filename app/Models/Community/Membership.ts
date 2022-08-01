@@ -14,13 +14,13 @@ export default class Membership extends BaseModel {
   public status: MembershipStatus = MembershipStatus.PENDING
 
   @column({ serializeAs: 'communityId' })
-  public communityId: number
+  public communityId: string
 
   @belongsTo(() => Community)
   public community: BelongsTo<typeof Community>
 
   @column({ serializeAs: 'userId' })
-  public userId: number
+  public userId: string
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>

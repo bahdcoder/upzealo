@@ -66,4 +66,18 @@ export default Env.rules({
    * Blockchain related
    */
   RPC_URL: Env.schema.string({ format: 'url' }),
+
+  /**
+   * Media uploads
+   */
+  CLOUDINARY_CLOUD_NAME: Env.schema.string(),
+  CLOUDINARY_API_KEY: Env.schema.string(),
+  CLOUDINARY_API_SECRET: Env.schema.string(),
+
+  /**
+   * Getstream feeds & chat
+   */
+  GETSTREAM_APP_ID: Env.schema.string(),
+  GETSTREAM_API_KEY: Env.schema.string(),
+  GETSTREAM_API_SECRET: Env.schema.string(),
 })

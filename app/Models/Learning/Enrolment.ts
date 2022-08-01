@@ -7,13 +7,13 @@ import Course from 'App/Models/Learning/Course'
 
 export default class Enrolment extends BaseModel {
   @column({ serializeAs: 'courseId' })
-  public courseId: number
+  public courseId: string
 
   @belongsTo(() => Course)
   public course: BelongsTo<typeof Course>
 
   @column({ serializeAs: 'userId' })
-  public userId: number
+  public userId: string
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>

@@ -43,7 +43,7 @@ export default class Community extends BaseModel {
   public membershipType: CommunityMembershipTypes = CommunityMembershipTypes.WALLET_TOKENS
 
   @column({ serializeAs: 'userId' })
-  public userId: number
+  public userId: string
 
   @belongsTo(() => User, { serializeAs: 'owner' })
   public user: BelongsTo<typeof User>
