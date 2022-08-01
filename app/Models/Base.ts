@@ -29,6 +29,7 @@ export default class BaseModel extends LucidBaseModel {
     Post: 'post',
     Comment: 'comment',
     Attachment: 'attach',
+    Follow: 'follow',
   }
 
   @beforeCreate()
