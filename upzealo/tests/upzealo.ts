@@ -4,13 +4,15 @@ import { Program } from '@project-serum/anchor'
 import { BN } from 'bn.js'
 import { Upzealo } from '../target/types/upzealo'
 import { helpers } from './helpers/program'
-import { getAssociatedTokenAddress } from '@solana/spl-token'
+import { getAccount, getAssociatedTokenAddress } from '@solana/spl-token'
 
 describe('upzealo', () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env())
 
   const program = anchor.workspace.Upzealo as Program<Upzealo>
+
+  const { connection } = anchor.AnchorProvider.env()
 
   const helper = helpers(program)
 
@@ -97,5 +99,12 @@ describe('upzealo', () => {
       })
       .signers([helper.secondWallet])
       .rpc()
+
+    const mintDestinationAccount = await getAccount(connection, mintDestination)
+
+    const paidBountyAccount = await program.account.bounty.fetch(bounty)
+
+    assert.equal(paidBountyAccount.paid, true)
+    assert.equal(Number(mintDestinationAccount.amount), amount.toNumber())
   })
 })

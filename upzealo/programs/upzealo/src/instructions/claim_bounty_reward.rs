@@ -61,8 +61,6 @@ impl<'info> ClaimBountyReward<'info> {
 pub fn handler(ctx: Context<ClaimBountyReward>) -> Result<()> {
   let bounty = &mut ctx.accounts.bounty;
 
-//   // constraint = bounty.winner == user.unwrap().key())
-
   bounty.paid = true;
 
   token::transfer(
