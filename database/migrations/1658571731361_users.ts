@@ -8,6 +8,7 @@ export default class UsersSchema extends BaseSchema {
       table.string('id').primary()
 
       table.string('username').unique().nullable()
+      table.string('solana_address').nullable().unique()
 
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL

@@ -10,6 +10,9 @@ export default class User extends BaseModel {
   @column()
   public username: string
 
+  @column({ serializeAs: 'solanaAddress' })
+  public solanaAddress: string
+
   @hasMany(() => Address)
   public addresses: HasMany<typeof Address>
 

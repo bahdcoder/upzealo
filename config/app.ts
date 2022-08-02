@@ -250,10 +250,12 @@ export const blockchain: BlockchainConfig = {
     `I want to login on ${logger.name}. I accept the Terms of Service https://terms.of.service.com.`,
   rpcUrl: Env.get('RPC_URL'),
   defaultCommitment: 'confirmed',
+  solanaProgramId: Env.get('SOLANA_PROGRAM_ID'),
 }
 
 export interface BlockchainConfig {
   authenticationSignatureTemplate: () => string
   rpcUrl: string
+  solanaProgramId: string
   defaultCommitment?: Commitment
 }
