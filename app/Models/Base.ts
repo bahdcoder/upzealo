@@ -30,6 +30,7 @@ export default class BaseModel extends LucidBaseModel {
     Comment: 'comment',
     Attachment: 'attach',
     Follow: 'follow',
+    CompletedLesson: 'comlsn',
   }
 
   @beforeCreate()

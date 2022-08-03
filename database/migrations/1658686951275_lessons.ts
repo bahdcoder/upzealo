@@ -12,6 +12,7 @@ export default class extends BaseSchema {
       table.string('title').notNullable()
       table.string('slug').notNullable().unique()
 
+      table.integer('index')
       table.string('type').notNullable()
       table.text('details').nullable()
       table.string('video_url').nullable()

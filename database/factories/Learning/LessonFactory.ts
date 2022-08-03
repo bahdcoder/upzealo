@@ -13,6 +13,7 @@ export default Factory.define(Lesson, ({ faker }) => {
     videoUrl: faker.internet.url(),
     type: lessonTypes[Math.floor(Math.random() * lessonTypes.length)],
     publishedAt: null,
+    index: faker.datatype.number({ min: 0, max: 50 }),
   }
 })
   .state(

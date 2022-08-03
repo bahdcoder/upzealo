@@ -4,7 +4,8 @@
     "./commands",
     "@adonisjs/core/build/commands/index.js",
     "@adonisjs/repl/build/commands",
-    "@adonisjs/lucid/build/commands"
+    "@adonisjs/lucid/build/commands",
+    "@rocketseat/adonis-bull/build/commands"
   ],
   "exceptionHandlerNamespace": "App/Exceptions/Handler",
   "aliases": {
@@ -14,7 +15,11 @@
     "Contracts": "contracts",
     "Helpers": "helpers"
   },
-  "preloads": ["./start/routes", "./start/kernel"],
+  "preloads": [
+    "./start/routes",
+    "./start/kernel",
+    "./start/bull"
+  ],
   "providers": [
     "./providers/AppProvider",
     "@adonisjs/core",
@@ -23,18 +28,27 @@
     "adonis5-jwt",
     "@adonisjs/ally",
     "@adonisjs/lucid-slugify",
-    "@adonisjs/redis"
+    "@adonisjs/redis",
+    "@rocketseat/adonis-bull"
   ],
-  "aceProviders": ["@adonisjs/repl"],
+  "aceProviders": [
+    "@adonisjs/repl"
+  ],
   "tests": {
     "suites": [
       {
         "name": "api",
-        "files": ["tests/api/**/*.spec(.ts|.js)"],
+        "files": [
+          "tests/api/**/*.spec(.ts|.js)"
+        ],
         "timeout": 60000
       }
     ]
   },
-  "testProviders": ["@japa/preset-adonis/TestsProvider"],
-  "metaFiles": ["resources/lang/**/*.(json|yaml)"]
+  "testProviders": [
+    "@japa/preset-adonis/TestsProvider"
+  ],
+  "metaFiles": [
+    "resources/lang/**/*.(json|yaml)"
+  ]
 }

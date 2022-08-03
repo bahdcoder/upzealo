@@ -9,6 +9,9 @@ export default class extends BaseSchema {
 
       table.string('lesson_id').references('id').inTable('lessons').onDelete('CASCADE')
       table.string('user_id').references('id').inTable('users').onDelete('CASCADE')
+      table.string('course_id').references('id').inTable('courses').onDelete('CASCADE')
+
+      table.unique(['lesson_id', 'user_id'])
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

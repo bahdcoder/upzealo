@@ -22,6 +22,9 @@ export default class Lesson extends BaseModel {
   public title: string
 
   @column()
+  public index: number
+
+  @column()
   @slugify({
     strategy: 'dbIncrement',
     fields: ['title'],

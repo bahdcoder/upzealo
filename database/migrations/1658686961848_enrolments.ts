@@ -12,6 +12,8 @@ export default class extends BaseSchema {
 
       table.timestamp('completed_at', { useTz: true }).nullable()
 
+      table.unique(['user_id', 'course_id'])
+
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */

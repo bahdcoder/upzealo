@@ -81,4 +81,11 @@ export default Env.rules({
   GETSTREAM_APP_ID: Env.schema.string(),
   GETSTREAM_API_KEY: Env.schema.string(),
   GETSTREAM_API_SECRET: Env.schema.string(),
+
+  /**
+   * Queue redis connection
+   */
+  BULL_REDIS_HOST: Env.schema.string({ format: 'host' }),
+  BULL_REDIS_PORT: Env.schema.number(),
+  BULL_REDIS_PASSWORD: Env.schema.string.optional(),
 })

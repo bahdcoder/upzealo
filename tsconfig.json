@@ -1,19 +1,36 @@
 {
   "extends": "adonis-preset-ts/tsconfig.json",
-  "include": ["**/*"],
-  "exclude": ["node_modules", "build"],
+  "include": [
+    "**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ],
   "compilerOptions": {
     "outDir": "build",
     "rootDir": "./",
     "sourceMap": true,
-    "lib": ["ES2017"],
+    "lib": [
+      "ES2017"
+    ],
     "resolveJsonModule": true,
     "paths": {
-      "App/*": ["./app/*"],
-      "Config/*": ["./config/*"],
-      "Contracts/*": ["./contracts/*"],
-      "Database/*": ["./database/*"],
-      "Helpers/*": ["./helpers/*"]
+      "App/*": [
+        "./app/*"
+      ],
+      "Config/*": [
+        "./config/*"
+      ],
+      "Contracts/*": [
+        "./contracts/*"
+      ],
+      "Database/*": [
+        "./database/*"
+      ],
+      "Helpers/*": [
+        "./helpers/*"
+      ]
     },
     "types": [
       "@adonisjs/core",
@@ -25,7 +42,7 @@
       "@adonisjs/ally",
       "@adonisjs/lucid-slugify",
       "@adonisjs/redis",
-      "adonisjs-cloudinary"
+      "@rocketseat/adonis-bull"
     ]
   }
 }
