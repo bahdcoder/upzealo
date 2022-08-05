@@ -1,8 +1,7 @@
-import Post from 'App/Models/Feed/Post'
 import Follow from 'App/Models/Feed/Follow'
 import User from 'App/Models/Profile/User'
 import * as BaseStream from 'getstream'
-import { FeedAPIResponse, StreamClient } from 'getstream'
+import { StreamClient } from 'getstream'
 
 export interface StreamConfig {
   apiKey: string
@@ -42,6 +41,14 @@ export default class Stream {
       foreign_id: post.id,
       object: 'post',
     })
+  }
+
+  async addReaction(activityId: string, text: string) {
+    const comment = await this.stream.reactions.add('comment', activityId, {
+      text,
+    })
+
+    return comment
   }
 
   async timeline(user: User, page = 1, perPage = 10) {

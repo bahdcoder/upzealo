@@ -16,6 +16,11 @@ Route.group(() => [
   Route.post('/follows/:user', 'Feed/FollowController.store'),
   Route.delete('/follows/:user', 'Feed/FollowController.destroy'),
 
+  // comments
+  Route.get('/posts/:post/comments', 'Feed/CommentController.index'),
+  Route.post('/posts/:post/comments', 'Feed/CommentController.store'),
+  Route.post('/posts/:post/comments/:comment', 'Feed/CommentController.store'),
+
   Route.get('/', 'Feed/FeedController.timeline'),
   Route.get('/:user', 'Feed/FeedController.profile'),
 ])

@@ -2,6 +2,7 @@ import { afterCreate, BelongsTo, belongsTo, column, hasMany, HasMany } from '@io
 
 import BaseModel from 'App/Models/Base'
 import User from 'App/Models/Profile/User'
+import Comment from 'App/Models/Feed/Comment'
 import Attachment from 'App/Models/Feed/Attachment'
 import Community from 'App/Models/Community/Community'
 
@@ -32,6 +33,9 @@ export default class Post extends BaseModel {
 
   @hasMany(() => Attachment)
   public attachments: HasMany<typeof Attachment>
+
+  @hasMany(() => Comment)
+  public comments: HasMany<typeof Comment>
 
   @afterCreate()
   public static async syncFeed(post: Post) {

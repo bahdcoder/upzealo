@@ -23,12 +23,10 @@ export default class PostController {
       }),
     })
 
-    let attachments: Attachment[] = []
-
     const post = await Post.create({ content, userId: user.id })
 
     if (attachmentIds !== null) {
-      attachments = await Attachment.query().whereIn('id', attachmentIds).update({
+      await Attachment.query().whereIn('id', attachmentIds).update({
         postId: post.id,
       })
     }

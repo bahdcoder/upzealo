@@ -15,6 +15,9 @@ export default class Attachment extends BaseModel {
   @column({ serializeAs: 'postId' })
   public postId: string
 
+  @column({ serializeAs: 'commentId' })
+  public commentId: string
+
   @column()
   public url: string
 

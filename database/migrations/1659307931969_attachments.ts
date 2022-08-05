@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.string('id').primary()
 
       table.string('post_id').nullable().references('id').inTable('posts').onDelete('CASCADE')
+      table.string('comment_id').nullable().references('id').inTable('posts').onDelete('CASCADE')
       table.string('user_id').nullable().references('id').inTable('users').onDelete('CASCADE')
 
       table.string('url').notNullable()

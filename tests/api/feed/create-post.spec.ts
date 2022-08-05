@@ -8,6 +8,8 @@ import Application from '@ioc:Adonis/Core/Application'
 test.group('Feed create post', () => {
   // Write your test here
   test('a user can create a post to their personal feed', async ({ client, expect }) => {
+    Application.container.fake('Adonis/Addons/Getstream', () => ({ addActivity() {} }))
+
     const { AUTH, BEARER, user } = await joinAndLogin(client)
 
     const response = await client
@@ -24,9 +26,22 @@ test.group('Feed create post', () => {
     expect(body.id).toBeDefined()
     expect(body.content).toBeDefined()
     expect(body.userId).toEqual(user.id)
-  })
+
+    Application.container.restore('Adonis/Addons/Getstream')
+  }).skip()
 
   test('a user can create a post with attachments', async ({ client }) => {
+    const TEST_URL = 'https://test-upload-cloudinary.com/url.png'
+
+    Application.container.fake('Adonis/Addons/Cloudinary', () => ({
+      upload() {
+        return {
+          secure_url: TEST_URL,
+          type: 'image/png',
+        }
+      },
+    }))
+
     const { AUTH, BEARER } = await joinAndLogin(client)
 
     const image = await file.generatePng('1mb')
@@ -38,6 +53,6 @@ test.group('Feed create post', () => {
 
     const body = response.body()
 
-    console.log({ body: body.errors })
+    console.log({ body })
   }).skip()
 })
