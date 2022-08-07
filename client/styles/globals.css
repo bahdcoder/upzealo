@@ -1,26 +1,55 @@
-html,
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-light.ttf');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-regular.ttf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-medium.ttf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-bold.ttf');
+  font-weight: 700;
+}
+
 body {
-  padding: 0;
+  @apply font-sans text-white;
+}
+
+::selection {
+  background: #d0fa3d; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+  background: #d0fa3d; /* Gecko Browsers */
+}
+
+body {
+  background: linear-gradient(90deg, black 44px, transparent 1%) center,
+    linear-gradient(black 44px, transparent 1%) center, #1e1e1e;
+  background-size: 48px 48px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
 }
