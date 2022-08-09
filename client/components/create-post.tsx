@@ -15,6 +15,7 @@ import Button, { ActionButton, PrimaryButton } from './button'
 import Input from './input'
 import AvatarProfile from './avatar-profile'
 import { Select } from './select'
+import { Modal } from './modal'
 
 export function BountyButton({
   children,
@@ -272,184 +273,122 @@ export function CreatePostModal({
     type === PostType.BOUNTY ? 'What do you need help with?' : "What's on your mind?"
 
   return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={closeModal}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-[#131212] bg-opacity-90" />
-        </Transition.Child>
-
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center lg:p-4 text-center">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <Dialog.Panel className="w-full max-w-xl h-screen lg:h-auto transform overflow-hidden lg:rounded-3xl bg-black p-6 text-left align-middle shadow-xl transition-all relative">
-                <div className="flex items-center justify-between pb-6 border-b border-dark-700">
-                  <Dialog.Title as="h3" className="text-xl font-bold leading-6">
-                    {resolveTitle()}
-                  </Dialog.Title>
-
+    <Modal isOpen={isOpen} setIsOpen={() => closeModal()} title={resolveTitle()}>
+      {type === PostType.SELL ? (
+        <>
+          {step === 0 ? (
+            <>
+              <Input placeholder="Search for an nft..." />
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 py-6 h-[32rem] lg:h-[24rem] max-h-[32rem] lg:max-h-[24rem] overflow-y-auto">
+                {[
+                  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                ].map((x) => (
                   <button
-                    className="focus:outline-none hover:opacity-70 transition ease-linear"
-                    onClick={() => setIsOpen(false)}
+                    className="flex flex-col border-2 border-transparent hover:border-primary-500 p-2 rounded-lg transition ease-linear"
+                    key={x}
                   >
-                    <svg
-                      width={32}
-                      height={32}
-                      viewBox="0 0 32 32"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle cx={16} cy={16} r={16} fill="#202125" />
-                      <g clipPath="url(#clip0_45_16633)">
-                        <path
-                          d="M16.7667 16.0597C16.7589 16.0519 16.7528 16.0427 16.7486 16.0326C16.7444 16.0225 16.7422 16.0116 16.7422 16.0007C16.7422 15.9897 16.7444 15.9789 16.7486 15.9687C16.7528 15.9586 16.7589 15.9494 16.7667 15.9417L19.8544 12.8543C19.9481 12.7604 20.0007 12.6332 20.0007 12.5005C20.0006 12.3678 19.9478 12.2406 19.8539 12.1468C19.76 12.0531 19.6327 12.0005 19.5 12.0006C19.3673 12.0007 19.2401 12.0534 19.1464 12.1473L16.059 15.2333C16.0513 15.2411 16.0421 15.2473 16.032 15.2515C16.0219 15.2557 16.011 15.2578 16 15.2578C15.9891 15.2578 15.9782 15.2557 15.9681 15.2515C15.958 15.2473 15.9488 15.2411 15.941 15.2333L12.8537 12.1473C12.8073 12.1009 12.7522 12.064 12.6915 12.0389C12.6308 12.0138 12.5658 12.0008 12.5002 12.0008C12.3675 12.0008 12.2403 12.0534 12.1465 12.1472C12.0527 12.2409 12 12.3681 12 12.5007C12 12.6333 12.0526 12.7605 12.1464 12.8543L15.2334 15.9417C15.2411 15.9494 15.2473 15.9586 15.2515 15.9687C15.2557 15.9789 15.2579 15.9897 15.2579 16.0007C15.2579 16.0116 15.2557 16.0225 15.2515 16.0326C15.2473 16.0427 15.2411 16.0519 15.2334 16.0597L12.1464 19.1473C12.1 19.1938 12.0631 19.2489 12.038 19.3096C12.0129 19.3703 12 19.4353 12 19.501C12 19.6336 12.0527 19.7607 12.1465 19.8545C12.193 19.9009 12.2481 19.9377 12.3088 19.9629C12.3695 19.988 12.4345 20.0009 12.5002 20.0009C12.6328 20.0008 12.76 19.9481 12.8537 19.8543L15.941 16.7667C15.9488 16.7589 15.958 16.7528 15.9681 16.7485C15.9782 16.7443 15.9891 16.7422 16 16.7422C16.011 16.7422 16.0219 16.7443 16.032 16.7485C16.0421 16.7528 16.0513 16.7589 16.059 16.7667L19.1464 19.8543C19.2401 19.9481 19.3673 20.0008 19.4999 20.0009C19.6325 20.0009 19.7597 19.9483 19.8535 19.8545C19.9473 19.7607 20.0001 19.6336 20.0001 19.501C20.0001 19.3683 19.9475 19.2411 19.8537 19.1473L16.7667 16.0597Z"
-                          fill="white"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_45_16633">
-                          <rect width={8} height={8} fill="white" transform="translate(12 12)" />
-                        </clipPath>
-                      </defs>
-                    </svg>
+                    <img
+                      className="object-cover object-center rounded-lg"
+                      src="https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://metadata.degods.com/g/9377-dead.png"
+                      alt=""
+                    />
+                    <p className="mt-2 text-xs text-left">Banana Baby #1223</p>
                   </button>
+                ))}
+              </div>
+            </>
+          ) : null}
+
+          {step === 1 ? (
+            <>
+              <div className="flex justify-start my-4 space-x-6">
+                <div className="w-1/3">
+                  <img
+                    className="rounded-xl"
+                    src="https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://metadata.degods.com/g/9377-dead.png"
+                    alt=""
+                  />
                 </div>
 
-                {type === PostType.SELL ? (
-                  <>
-                    {step === 0 ? (
-                      <>
-                        <Input placeholder="Search for an nft..." />
-                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 py-6 h-[32rem] lg:h-[24rem] max-h-[32rem] lg:max-h-[24rem] overflow-y-auto">
-                          {[
-                            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                          ].map((x) => (
-                            <button
-                              className="flex flex-col border-2 border-transparent hover:border-primary-500 p-2 rounded-lg transition ease-linear"
-                              key={x}
-                            >
-                              <img
-                                className="object-cover object-center rounded-lg"
-                                src="https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://metadata.degods.com/g/9377-dead.png"
-                                alt=""
-                              />
-                              <p className="mt-2 text-xs text-left">Banana Baby #1223</p>
-                            </button>
-                          ))}
-                        </div>
-                      </>
-                    ) : null}
+                <div className="w-2/3">
+                  <Input
+                    placeholder="5 SOL"
+                    label="Amount (in SOL)"
+                    type="number"
+                    min={0}
+                  />
 
-                    {step === 1 ? (
-                      <>
-                        <div className="flex justify-start my-4 space-x-6">
-                          <div className="w-1/3">
-                            <img
-                              className="rounded-xl"
-                              src="https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://metadata.degods.com/g/9377-dead.png"
-                              alt=""
-                            />
-                          </div>
+                  <span className="text-xs mt-1 text-dark-300">$32,23</span>
+                </div>
+              </div>
+            </>
+          ) : null}
 
-                          <div className="w-2/3">
-                            <Input
-                              placeholder="5 SOL"
-                              label="Amount (in SOL)"
-                              type="number"
-                              min={0}
-                            />
+          <div className="flex flex-col absolute lg:static bottom-0 pb-8 pt-8 lg:pb-0">
+            {types}
 
-                            <span className="text-xs mt-1 text-dark-300">$32,23</span>
-                          </div>
-                        </div>
-                      </>
-                    ) : null}
-
-                    <div className="flex flex-col absolute lg:static bottom-0 pb-8 pt-8 lg:pb-0">
-                      {types}
-
-                      <div className="mt-6 flex items-center space-x-4">
-                        {step === 0 ? null : (
-                          <ActionButton
-                            onClick={() => setStep(0)}
-                            className="bg-dark-300 px-12 py-4"
-                          >
-                            Back
-                          </ActionButton>
-                        )}
-                        <PrimaryButton onClick={() => setStep(1)} className="px-16">
-                          {step === 0 ? 'Next' : 'Publish'}
-                        </PrimaryButton>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="mt-6">
-                      <AvatarProfile hideUsername />
-                    </div>
-
-                    <div className="my-6">
-                      <TextareaAutosize
-                        autoFocus
-                        placeholder={placeholder}
-                        className="bg-transparent min-h-[5rem] text-white focus:outline-none w-full text-md resize-none placeholder:text-dark-300"
-                      />
-                    </div>
-
-                    <div className="flex flex-col absolute bottom-0 lg:static pb-8 lg:pb-0 w-[88%] lg:w-full">
-                      {type === PostType.BOUNTY ? (
-                        <div className="w-full">
-                          <label htmlFor="" className="text-sm text-white font-bold">
-                            Bounty amount
-                          </label>
-                          <div className="flex items-center relative my-4 w-full ">
-                            <Input className="w-full" placeholder="Amount" type="number" />
-                            <div className="absolute inset-y-0 right-0 flex items-center">
-                              <Select
-                                options={[
-                                  {
-                                    id: '1',
-                                    name: 'USDC',
-                                    image:
-                                      'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                                  },
-                                ]}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      ) : null}
-
-                      <div className="my-2">{types}</div>
-
-                      <div className="mt-6">
-                        <PrimaryButton className="px-12">Publish</PrimaryButton>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </Dialog.Panel>
-            </Transition.Child>
+            <div className="mt-6 flex items-center space-x-4">
+              {step === 0 ? null : (
+                <ActionButton
+                  onClick={() => setStep(0)}
+                  className="bg-dark-300 px-12 py-4"
+                >
+                  Back
+                </ActionButton>
+              )}
+              <PrimaryButton onClick={() => setStep(1)} className="px-16">
+                {step === 0 ? 'Next' : 'Publish'}
+              </PrimaryButton>
+            </div>
           </div>
-        </div>
-      </Dialog>
-    </Transition>
+        </>
+      ) : (
+        <>
+          <div className="mt-6">
+            <AvatarProfile hideUsername />
+          </div>
+
+          <div className="my-6">
+            <TextareaAutosize
+              autoFocus
+              placeholder={placeholder}
+              className="bg-transparent min-h-[5rem] text-white focus:outline-none w-full text-md resize-none placeholder:text-dark-300"
+            />
+          </div>
+
+          <div className="flex flex-col absolute bottom-0 lg:static pb-8 lg:pb-0 w-[88%] lg:w-full">
+            {type === PostType.BOUNTY ? (
+              <div className="w-full">
+                <label htmlFor="" className="text-sm text-white font-bold">
+                  Bounty amount
+                </label>
+                <div className="flex items-center relative my-4 w-full ">
+                  <Input className="w-full" placeholder="Amount" type="number" />
+                  <div className="absolute inset-y-0 right-0 flex items-center">
+                    <Select
+                      options={[
+                        {
+                          id: '1',
+                          name: 'USDC',
+                          image:
+                            'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                        },
+                      ]}
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            <div className="my-2">{types}</div>
+
+            <div className="mt-6">
+              <PrimaryButton className="px-12">Publish</PrimaryButton>
+            </div>
+          </div>
+        </>
+      )}
+    </Modal>
   )
 }
 
