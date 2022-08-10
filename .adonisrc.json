@@ -15,11 +15,7 @@
     "Contracts": "contracts",
     "Helpers": "helpers"
   },
-  "preloads": [
-    "./start/routes",
-    "./start/kernel",
-    "./start/bull"
-  ],
+  "preloads": ["./start/routes", "./start/kernel", "./start/bull"],
   "providers": [
     "./providers/AppProvider",
     "@adonisjs/core",
@@ -31,24 +27,16 @@
     "@adonisjs/redis",
     "@rocketseat/adonis-bull"
   ],
-  "aceProviders": [
-    "@adonisjs/repl"
-  ],
+  "aceProviders": ["@adonisjs/repl"],
   "tests": {
     "suites": [
       {
         "name": "api",
-        "files": [
-          "tests/api/**/*.spec(.ts|.js)"
-        ],
+        "files": ["tests/api/**/*.spec(.ts|.js)"],
         "timeout": 60000
       }
     ]
   },
-  "testProviders": [
-    "@japa/preset-adonis/TestsProvider"
-  ],
-  "metaFiles": [
-    "resources/lang/**/*.(json|yaml)"
-  ]
+  "testProviders": ["@japa/preset-adonis/TestsProvider"],
+  "metaFiles": ["resources/lang/**/*.(json|yaml)"]
 }

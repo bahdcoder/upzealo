@@ -49,6 +49,10 @@ export default class LoginController {
 
     const { accessToken } = await auth.use('jwt').generate(address.user)
 
-    return { accessToken, streamAccessToken: getstream.accessToken(address.user.id) }
+    return {
+      accessToken,
+      streamAccessToken: getstream.accessToken(address.user.id),
+      userId: address.user.id,
+    }
   }
 }

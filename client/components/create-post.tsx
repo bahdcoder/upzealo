@@ -280,21 +280,21 @@ export function CreatePostModal({
             <>
               <Input placeholder="Search for an nft..." />
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 py-6 h-[32rem] lg:h-[24rem] max-h-[32rem] lg:max-h-[24rem] overflow-y-auto">
-                {[
-                  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                ].map((x) => (
-                  <button
-                    className="flex flex-col border-2 border-transparent hover:border-primary-500 p-2 rounded-lg transition ease-linear"
-                    key={x}
-                  >
-                    <img
-                      className="object-cover object-center rounded-lg"
-                      src="https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://metadata.degods.com/g/9377-dead.png"
-                      alt=""
-                    />
-                    <p className="mt-2 text-xs text-left">Banana Baby #1223</p>
-                  </button>
-                ))}
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(
+                  (x) => (
+                    <button
+                      className="flex flex-col border-2 border-transparent hover:border-primary-500 p-2 rounded-lg transition ease-linear"
+                      key={x}
+                    >
+                      <img
+                        className="object-cover object-center rounded-lg"
+                        src="https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://metadata.degods.com/g/9377-dead.png"
+                        alt=""
+                      />
+                      <p className="mt-2 text-xs text-left">Banana Baby #1223</p>
+                    </button>
+                  )
+                )}
               </div>
             </>
           ) : null}
@@ -311,12 +311,7 @@ export function CreatePostModal({
                 </div>
 
                 <div className="w-2/3">
-                  <Input
-                    placeholder="5 SOL"
-                    label="Amount (in SOL)"
-                    type="number"
-                    min={0}
-                  />
+                  <Input placeholder="5 SOL" label="Amount (in SOL)" type="number" min={0} />
 
                   <span className="text-xs mt-1 text-dark-300">$32,23</span>
                 </div>
@@ -329,10 +324,7 @@ export function CreatePostModal({
 
             <div className="mt-6 flex items-center space-x-4">
               {step === 0 ? null : (
-                <ActionButton
-                  onClick={() => setStep(0)}
-                  className="bg-dark-300 px-12 py-4"
-                >
+                <ActionButton onClick={() => setStep(0)} className="bg-dark-300 px-12 py-4">
                   Back
                 </ActionButton>
               )}

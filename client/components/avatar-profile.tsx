@@ -10,7 +10,8 @@ export default function AvatarProfile({
   size = 'default',
   hideUsername,
   subTitle,
-}: PropsWithChildren<{ size?: Size; hideUsername?: boolean; subTitle?: string }>) {
+  hideSubtitle = size !== 'default'
+}: PropsWithChildren<{ size?: Size; hideUsername?: boolean; subTitle?: string, hideSubtitle?: boolean }>) {
   return (
     <Link href="/">
       <a className="flex items-center">
@@ -32,7 +33,7 @@ export default function AvatarProfile({
             {hideUsername ? null : <span className="ml-1 text-dark-300">@s00lSorcerer</span>}
           </p>
 
-          {size === 'default' ? <span className="text-dark-300 text-xs">{subTitle}</span> : null}
+          {hideSubtitle ? null : <span className="text-dark-300 text-xs">{subTitle}</span>}
         </div>
       </a>
     </Link>

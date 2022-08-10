@@ -31,6 +31,8 @@ export default class BaseModel extends LucidBaseModel {
     Attachment: 'attach',
     Follow: 'follow',
     CompletedLesson: 'comlsn',
+    Badge: 'badge',
+    Tag: 'tag',
   }
 
   @beforeCreate()
