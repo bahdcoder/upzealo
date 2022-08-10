@@ -1,4 +1,5 @@
 import './routes/auth'
 import './routes/feed'
+import './routes/profile'
 import './routes/learning'
 import './routes/community'

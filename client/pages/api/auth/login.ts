@@ -9,6 +9,7 @@ export default withIronSessionApiRoute(
 
     const userExists = userExistsResponse.data.userId !== undefined
 
+    let user: any = {}
     let userId: string = ''
     let accessToken: string = ''
     let streamAccessToken: string = ''
@@ -16,6 +17,7 @@ export default withIronSessionApiRoute(
     async function persistUser(payload: any) {
       request.session.user = payload
 
+      user = payload.user
       userId = payload.userId
       accessToken = payload.accessToken
       streamAccessToken = payload.streamAccessToken
@@ -29,14 +31,14 @@ export default withIronSessionApiRoute(
 
       await persistUser(userLoginResponse.data)
 
-      return response.json({ userExists, accessToken, streamAccessToken, userId })
+      return response.json({ userExists, accessToken, streamAccessToken, userId, user })
     }
 
     const userRegistrationResponse = await instance.post(`/auth/join`, request.body)
 
     await persistUser(userRegistrationResponse.data)
 
-    response.send({ userExists, accessToken, streamAccessToken, userId })
+    response.send({ userExists, accessToken, streamAccessToken, userId, user })
   },
   {
     cookieName: 'myapp_cookiename',

@@ -9,7 +9,7 @@ import { queryClient } from '../helpers/query-client'
 
 import Layout from '../components/layout'
 
-import { AuthContextProvider, AuthContextWrapper } from '../store/auth'
+import { AuthContextProvider, AuthContextWrapper } from '../store/auth-ctx'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

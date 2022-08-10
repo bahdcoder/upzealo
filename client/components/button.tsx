@@ -79,7 +79,11 @@ export interface ButtonProps {
 }
 
 export function FollowButton(props: PropsWithChildren<ButtonProps>) {
-  return <ActionButton className="py-2 px-3 bg-dark-400 text-xs" {...props}>Follow</ActionButton>
+  return (
+    <ActionButton className="py-2 px-3 bg-dark-400 text-xs" {...props}>
+      Follow
+    </ActionButton>
+  )
 }
 
 export function ActionButton({

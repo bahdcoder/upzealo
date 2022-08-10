@@ -10,8 +10,13 @@ export default function AvatarProfile({
   size = 'default',
   hideUsername,
   subTitle,
-  hideSubtitle = size !== 'default'
-}: PropsWithChildren<{ size?: Size; hideUsername?: boolean; subTitle?: string, hideSubtitle?: boolean }>) {
+  hideSubtitle = size !== 'default',
+}: PropsWithChildren<{
+  size?: Size
+  hideUsername?: boolean
+  subTitle?: string
+  hideSubtitle?: boolean
+}>) {
   return (
     <Link href="/">
       <a className="flex items-center">

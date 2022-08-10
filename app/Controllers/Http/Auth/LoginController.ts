@@ -12,6 +12,7 @@ import Application from '@ioc:Adonis/Core/Application'
 
 import Address from 'App/Models/Profile/Address'
 import UnauthenticatedException from 'App/Exceptions/Auth/UnauthenticatedException'
+import User from 'App/Models/Profile/User'
 
 export default class LoginController {
   public async handler({ request, auth }: HttpContextContract) {
@@ -49,10 +50,17 @@ export default class LoginController {
 
     const { accessToken } = await auth.use('jwt').generate(address.user)
 
+    const user = await User.query()
+      .where('id', address.user.id)
+      .preload('addresses')
+      .preload('socialAccounts')
+      .first()
+
     return {
       accessToken,
       streamAccessToken: getstream.accessToken(address.user.id),
       userId: address.user.id,
+      user: user?.toJSON(),
     }
   }
 }

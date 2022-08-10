@@ -55,6 +55,10 @@ export default class JoinController {
 
     const { accessToken } = await auth.use('jwt').generate(user)
 
-    return { accessToken, streamAccessToken: getstream.accessToken(user.id) }
+    await user.load((loader) => {
+      loader.load('addresses').load('socialAccounts')
+    })
+
+    return { accessToken, streamAccessToken: getstream.accessToken(user.id), user: user.toJSON() }
   }
 }

@@ -5,7 +5,12 @@ export default class extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.string('id').primary()
+
+      table.string('badge_id').nullable().references('id').inTable('badges').onDelete('CASCADE')
+
+      table.string('title')
+      table.text('description').nullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

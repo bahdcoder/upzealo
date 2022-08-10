@@ -11,6 +11,7 @@ export default class UsersSchema extends BaseSchema {
       table.string('username').unique().nullable()
       table.string('solana_address').nullable().unique()
       table.timestamp('completed_onboarding_at').nullable()
+      table.text('bio').nullable()
 
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL
