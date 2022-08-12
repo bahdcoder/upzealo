@@ -23,6 +23,7 @@ export function RootOnboarding({
   setOnboardingSteps: Dispatch<SetStateAction<OnboardingStepInterface[]>>
 }>) {
   const [badges, setBadges] = useState<Badge[]>([])
+  const [selectedBadges, setSelectedBadges] = useState<Badge[]>([])
   const [step, setStep] = useState(OnboardingStep.PICK_USERNAME)
 
   useEffect(() => {
@@ -38,6 +39,8 @@ export function RootOnboarding({
         setStep,
         badges,
         setBadges,
+        selectedBadges,
+        setSelectedBadges,
         isUserOnboarding,
         setIsUserOnboarding,
         onboardingSteps,
@@ -46,7 +49,7 @@ export function RootOnboarding({
     >
       <Modal
         hideHeading
-        size="medium"
+        size="large"
         isOpen={isUserOnboarding}
         setIsOpen={() => {}}
         positionClasses="fixed inset-x-0 overflow-y-auto top-0 lg:mt-24"

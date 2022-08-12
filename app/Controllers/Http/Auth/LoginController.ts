@@ -54,13 +54,15 @@ export default class LoginController {
       .where('id', address.user.id)
       .preload('addresses')
       .preload('socialAccounts')
+      .preload('badges', (badgesQuery) => badgesQuery.preload('tags'))
+      .preload('tags')
       .first()
 
     return {
       accessToken,
       streamAccessToken: getstream.accessToken(address.user.id),
       userId: address.user.id,
-      user: user?.toJSON(),
+      user: user?.serialize(),
     }
   }
 }

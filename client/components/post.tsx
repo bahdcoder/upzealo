@@ -49,7 +49,7 @@ export default function Post({ image, ...rest }: PropsWithChildren<{ image?: boo
   return (
     <div className="w-full bg-black rounded-3xl p-6">
       <div className="w-full flex items-center justify-between">
-        <AvatarProfile subTitle="12 February" />
+        {/* <AvatarProfile subTitle="12 February" /> */}
 
         <button>
           <svg
@@ -172,7 +172,7 @@ export default function Post({ image, ...rest }: PropsWithChildren<{ image?: boo
             <div className="w-full border border-dark-700 my-6"></div>
 
             <div className="w-full">
-              <AvatarProfile size="small" subTitle="A few minutes ago" />
+              {/* <AvatarProfile size="small" subTitle="A few minutes ago" /> */}
 
               <div className="pl-12 mt-2">
                 <p className="py-3 min-h-[3rem] inline-flex items-center px-4 rounded-lg bg-dark-700 text-white text-sm">

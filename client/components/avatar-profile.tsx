@@ -3,27 +3,28 @@ import { PropsWithChildren } from 'react'
 import Link from 'next/link'
 
 import Avatar from './avatar'
+import { UserProfile } from '../store/auth'
 
 type Size = 'default' | 'small'
 
 export default function AvatarProfile({
   size = 'default',
-  hideUsername,
-  subTitle,
-  hideSubtitle = size !== 'default',
+  profile
 }: PropsWithChildren<{
   size?: Size
-  hideUsername?: boolean
-  subTitle?: string
-  hideSubtitle?: boolean
+  profile: UserProfile
 }>) {
+  // subtitle is either current working position or user's username
+  const subtitle = profile?.experiences?.length > 0 ? 'Works at Aurory' : profile.username
+  const username = profile?.experiences?.length > 0 ? profile.username : null
+
   return (
     <Link href="/">
       <a className="flex items-center">
         <div className="mr-4">
           <Avatar
             size={size}
-            url="https://pbs.twimg.com/profile_images/1537681214546616320/xC9xGPn3_400x400.jpg"
+            url={profile?.avatarUrl}
           />
         </div>
 
@@ -34,11 +35,11 @@ export default function AvatarProfile({
               'text-xs': size === 'small',
             })}
           >
-            sOOl Sorcerer{' '}
-            {hideUsername ? null : <span className="ml-1 text-dark-300">@s00lSorcerer</span>}
+            {profile.username}
+            {username ? <span className="ml-1 text-dark-300">@{username}</span> : null}
           </p>
 
-          {hideSubtitle ? null : <span className="text-dark-300 text-xs">{subTitle}</span>}
+          {subtitle ? <span className="text-dark-300 text-xs">{subtitle}</span> : null}
         </div>
       </a>
     </Link>

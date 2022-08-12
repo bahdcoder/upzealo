@@ -1,0 +1,227 @@
+/* Software Engineer */
+.badge-software-engineer {
+  @apply border-[#ec4899];
+}
+
+.badge-software-engineer-heading,
+.badge-software-engineer-svg {
+  @apply text-[#ec4899];
+}
+
+.badge-software-engineer-tag {
+  @apply text-[#ec4899] bg-[#ec4899]/10 border border-[#ec4899]/50;
+}
+
+.badge-software-engineer-tag:hover,
+.badge-software-engineer-tag-selected {
+  @apply bg-[#ec4899]/30;
+}
+
+/* Quality Content Creator */
+.badge-quality-content-creator {
+  @apply border-[#7c3aed];
+}
+
+.badge-quality-content-creator-heading,
+.badge-quality-content-creator-svg {
+  @apply text-[#7c3aed];
+}
+
+.badge-quality-content-creator-tag {
+  @apply text-[#7c3aed] bg-[#7c3aed]/10 border border-[#7c3aed]/50;
+}
+
+.badge-quality-content-creator-tag:hover,
+.badge-quality-content-creator-tag-selected {
+  @apply bg-[#7c3aed]/30;
+}
+
+/* Meme Creator & Shitposter */
+.badge-meme-creator-and-shitposter {
+  @apply border-[#ef4444];
+}
+
+.badge-meme-creator-and-shitposter-heading,
+.badge-meme-creator-and-shitposter-svg {
+  @apply text-[#ef4444];
+}
+
+.badge-meme-creator-and-shitposter-tag {
+  @apply text-[#ef4444] bg-[#ef4444]/10 border border-[#ef4444]/50;
+}
+
+.badge-meme-creator-and-shitposter-tag:hover,
+.badge-meme-creator-and-shitposter-tag-selected {
+  @apply bg-[#ef4444]/30;
+}
+
+/* Builder / Founder */
+.badge-builder-founder {
+  @apply border-[#16a34a];
+}
+
+.badge-builder-founder-heading,
+.badge-builder-founder-svg {
+  @apply text-[#16a34a];
+}
+
+.badge-builder-founder-tag {
+  @apply text-[#16a34a] bg-[#16a34a]/10 border border-[#16a34a]/50;
+}
+
+.badge-builder-founder-tag:hover,
+.badge-builder-founder-tag-selected {
+  @apply bg-[#16a34a]/30;
+}
+
+/* Graphic / UI Designer */
+.badge-graphic-ui-designer {
+  @apply border-[#ea580c];
+}
+
+.badge-graphic-ui-designer-heading,
+.badge-graphic-ui-designer-svg {
+  @apply text-[#ea580c];
+}
+
+.badge-graphic-ui-designer-tag {
+  @apply text-[#ea580c] bg-[#ea580c]/10 border border-[#ea580c]/50;
+}
+
+.badge-graphic-ui-designer-tag:hover,
+.badge-graphic-ui-designer-tag-selected {
+  @apply bg-[#ea580c]/30;
+}
+
+/* Marketer */
+.badge-marketer {
+  @apply border-[#3b82f6];
+}
+
+.badge-marketer-heading,
+.badge-marketer-svg {
+  @apply text-[#3b82f6];
+}
+
+.badge-marketer-tag {
+  @apply text-[#3b82f6] bg-[#3b82f6]/10 border border-[#3b82f6]/50;
+}
+
+.badge-marketer-tag:hover,
+.badge-marketer-tag-selected {
+  @apply bg-[#3b82f6]/30;
+}
+
+/* Artist */
+.badge-artist {
+  @apply border-[#D0FA3D];
+}
+
+.badge-artist-heading,
+.badge-artist-svg {
+  @apply text-[#D0FA3D];
+}
+
+.badge-artist-tag {
+  @apply text-[#D0FA3D] bg-[#D0FA3D]/10 border border-[#D0FA3D]/50;
+}
+
+.badge-artist-tag:hover,
+.badge-artist-tag-selected {
+  @apply bg-[#D0FA3D]/30;
+}
+
+/* Web3 Investor */
+.badge-web3-investor {
+  @apply border-[#66C3FF];
+}
+
+.badge-web3-investor-heading,
+.badge-web3-investor-svg {
+  @apply text-[#66C3FF];
+}
+
+.badge-web3-investor-tag {
+  @apply text-[#66C3FF] bg-[#66C3FF]/10 border border-[#66C3FF]/50;
+}
+
+.badge-web3-investor-tag:hover,
+.badge-web3-investor-tag-selected {
+  @apply bg-[#66C3FF]/30;
+}
+
+/* Community Manager */
+.badge-community-manager {
+  @apply border-[#7692FF];
+}
+
+.badge-community-manager-heading,
+.badge-community-manager-svg {
+  @apply text-[#7692FF];
+}
+
+.badge-community-manager-tag {
+  @apply text-[#7692FF] bg-[#7692FF]/10 border border-[#7692FF]/50;
+}
+
+.badge-community-manager-tag:hover,
+.badge-community-manager-tag-selected {
+  @apply bg-[#7692FF]/30;
+}
+
+/* Influencer */
+.badge-influencer {
+  @apply border-[#eab308];
+}
+
+.badge-influencer-heading,
+.badge-influencer-svg {
+  @apply text-[#eab308];
+}
+
+.badge-influencer-tag {
+  @apply text-[#eab308] bg-[#eab308]/10 border border-[#eab308]/50;
+}
+
+.badge-influencer-tag:hover,
+.badge-influencer-tag-selected {
+  @apply bg-[#eab308]/30;
+}
+
+/* Trader */
+.badge-trader {
+  @apply border-[#2AF5FF];
+}
+
+.badge-trader-heading,
+.badge-trader-svg {
+  @apply text-[#2AF5FF];
+}
+
+.badge-trader-tag {
+  @apply text-[#2AF5FF] bg-[#2AF5FF]/10 border border-[#2AF5FF]/50;
+}
+
+.badge-trader-tag:hover,
+.badge-trader-tag-selected {
+  @apply bg-[#2AF5FF]/30;
+}
+
+/* Advisor & Strategist */
+.badge-advisor-and-strategist {
+  @apply border-[#FFF];
+}
+
+.badge-advisor-and-strategist-heading,
+.badge-advisor-and-strategist-svg {
+  @apply text-[#FFF];
+}
+
+.badge-advisor-and-strategist-tag {
+  @apply text-[#FFF] bg-[#FFF]/10 border border-[#FFF]/50;
+}
+
+.badge-advisor-and-strategist-tag:hover,
+.badge-advisor-and-strategist-tag-selected {
+  @apply bg-[#FFF]/30;
+}

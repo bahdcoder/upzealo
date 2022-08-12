@@ -10,7 +10,7 @@ export default class extends BaseSchema {
       table.string('title')
       table.text('description').nullable()
       table.string('icon').nullable()
-      table.string('color').nullable()
+      table.string('class_name').nullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

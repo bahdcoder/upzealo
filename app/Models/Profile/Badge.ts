@@ -13,8 +13,8 @@ export default class Badge extends BaseModel {
   @column()
   public icon: string
 
-  @column()
-  public color: string
+  @column({ serializeAs: 'className' })
+  public className: string
 
   @hasMany(() => Tag)
   public tags: HasMany<typeof Tag>

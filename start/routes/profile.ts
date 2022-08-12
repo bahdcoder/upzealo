@@ -14,8 +14,14 @@ Route.group(() => []).prefix('profiles')
 Route.group(() => [
   Route.get('/badges', 'Profile/BadgeController.index'),
   Route.put('/username/update', 'Profile/UpdateUsernameController.update'),
+  Route.put('/bio/update', 'Profile/UpdateBioController.update'),
 
-  Route.get('/onboarding', 'Profile/OnboardingController.index'),
+  // Attach badges to a user profile.
+  Route.post('/badges', 'Profile/BadgeController.store'),
+  Route.post('/tags', 'Profile/TagController.store'),
+
+  // Suggestions
+  Route.get('/follows/suggestions', 'Profile/FollowSuggestionController.index'),
 ])
   .middleware('auth')
   .prefix('profiles')

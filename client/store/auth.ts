@@ -8,6 +8,8 @@ export interface Address {
 export interface Tag {
   id: string
   title: string
+  className: string
+  icon: string
   description: string | null
 }
 
@@ -15,7 +17,7 @@ export interface Badge {
   id: string
   title: string
   description: string
-  color: string
+  className: string
   icon: string
   tags: Tag[]
 }
@@ -26,9 +28,24 @@ export interface OnboardingStep {
   completed: boolean
 }
 
+export interface Experience {
+  isCurrent: boolean
+}
+
 export interface UserProfile {
+  id: string
+  avatarUrl: string
   addresses: Address[]
+  badges: Badge[]
+  experiences: Experience[]
+  onboardingSteps: {
+    completedOnboarding: boolean
+    steps: OnboardingStep[]
+  }
   username: string
+  follows: boolean
+  followedBy: boolean
+  solanaAddress: string | null
 }
 
 export interface AuthState {
@@ -52,8 +69,18 @@ export const AuthCtx = createContext<AuthContextData>({
     authenticated: false,
   },
   profile: {
+    id: '',
     addresses: [],
     username: '',
+    avatarUrl: '',
+    badges: [],
+    solanaAddress: null,
+    onboardingSteps: {
+      steps: [],
+      completedOnboarding: true,
+    },
+    followedBy: false,
+    follows: false,
   },
   setProfile() {},
 })

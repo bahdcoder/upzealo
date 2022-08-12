@@ -9,6 +9,7 @@ export default class UsersSchema extends BaseSchema {
 
       table.string('resume_url').nullable()
       table.string('username').unique().nullable()
+      table.string('avatar_url').nullable()
       table.string('solana_address').nullable().unique()
       table.timestamp('completed_onboarding_at').nullable()
       table.text('bio').nullable()

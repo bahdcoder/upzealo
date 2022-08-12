@@ -34,8 +34,19 @@ export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
     authenticated: false,
   })
   const [profile, setProfile] = useState<UserProfile>({
+    id: '',
     addresses: [],
     username: '',
+    avatarUrl: '',
+    badges: [],
+    experiences: [],
+    solanaAddress: null,
+    onboardingSteps: {
+      steps: [],
+      completedOnboarding: true,
+    },
+    followedBy: false,
+    follows: false
   })
 
   return (

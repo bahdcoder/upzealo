@@ -337,7 +337,7 @@ export function CreatePostModal({
       ) : (
         <>
           <div className="mt-6">
-            <AvatarProfile hideUsername />
+            {/* <AvatarProfile  /> */}
           </div>
 
           <div className="my-6">

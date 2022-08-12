@@ -5,14 +5,20 @@ import { OnboardingCtx, OnboardingStep } from './onboarding-ctx'
 import { useMutation } from '@tanstack/react-query'
 import { useApiAxiosInstance } from '../../helpers/axios-client'
 import { AuthCtx } from '../../store/auth'
+import { AxiosError } from 'axios'
 
-export function PickUsername({}: {}) {
+export function PickUsername({ }: {}) {
   const instance = useApiAxiosInstance()
   const { setProfile } = useContext(AuthCtx)
   const [username, setUsername] = useState('')
   const { step, setStep, setOnboardingSteps } = useContext(OnboardingCtx)
 
-  const { isLoading: isUpdatingUsername, mutate } = useMutation(
+  const {
+    isLoading: isUpdatingUsername,
+    mutate,
+    isError,
+    error,
+  } = useMutation(
     async () => {
       await instance.put(`/profiles/username/update`, {
         username,
@@ -33,8 +39,13 @@ export function PickUsername({}: {}) {
           })
         )
       },
+      onError(error: AxiosError<{ errors: { message: string }[] }>) { },
     }
   )
+
+  const errorMessage = isError
+    ? error?.response?.data?.errors?.[0]?.message || `Please provide a valid username.`
+    : undefined
 
   function onNext() {
     mutate()
@@ -74,7 +85,7 @@ export function PickUsername({}: {}) {
 
         <div className="my-6">
           <Input
-            error="Please provide a valid username"
+            error={errorMessage}
             placeholder="s00lSorcerer"
             onChange={(event: any) => setUsername(event.target.value)}
           />

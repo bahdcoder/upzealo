@@ -15,7 +15,11 @@ export default withIronSessionApiRoute(
     let streamAccessToken: string = ''
 
     async function persistUser(payload: any) {
-      request.session.user = payload
+      request.session.user = {
+        userId: payload.userId,
+        accessToken: payload.accessToken,
+        streamAccessToken: payload.streamAccessToken,
+      }
 
       user = payload.user
       userId = payload.userId

@@ -92,23 +92,13 @@ export function ConnectWallet({
       ...response.data,
     })
 
-    const onboardingResponse = await apiInstance.get(`/profiles/onboarding`, {
-      headers: {
-        Authorization: `Bearer ${response.data.accessToken}`,
-      },
-    })
+    setOnboardingSteps(response.data.user.onboardingSteps.steps)
 
-    setOnboardingSteps(onboardingResponse.data.steps)
-
-    if (onboardingResponse.data.completedOnboarding === false) {
+    if (response.data.user.onboardingSteps.completedOnboarding === false) {
       setUserOnboarding(true)
     }
 
     onAuthenticated(response.data.user)
-
-    if (response.data.userExists === false) {
-      setUserOnboarding(true)
-    }
   })
 
   useEffect(() => {

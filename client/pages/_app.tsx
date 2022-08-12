@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import '../styles/badges.css'
 import '../styles/satoshi.css'
 
 import { QueryClientProvider } from '@tanstack/react-query'

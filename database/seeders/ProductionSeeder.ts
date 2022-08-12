@@ -15,7 +15,7 @@ export default class extends BaseSeeder {
         title: 'Builder/Founder',
         description:
           "You like to build things from scratch. You've launched or are currently building an NFT or Web3 Project.",
-        color: '#16a34a',
+        className: 'builder-founder',
         tags: [
           'Launched an NFT Collection',
           'Founded a Web3 Startup',
@@ -35,7 +35,7 @@ export default class extends BaseSeeder {
         title: 'Quality Content Creator',
         description:
           "You like to build things from scratch. You've launched or are currently building an NFT or Web3 Project.",
-        color: '#7c3aed',
+        className: 'quality-content-creator',
         tags: [
           'Managed a Web3 Twitter Account',
           'Wrote a Web3 Article',
@@ -50,7 +50,7 @@ export default class extends BaseSeeder {
         icon: 'MarkunreadMailbox',
         title: 'Meme Creator & Sh*tposter',
         description: 'You make funny, original memes, while keeping the community alive and fun.',
-        color: '#ef4444',
+        className: 'meme-creator-and-shitposter',
         tags: ['Created memes', 'Sh*tposted on Twitter', 'Large Twitter Audience'],
       },
       {
@@ -58,7 +58,7 @@ export default class extends BaseSeeder {
         title: 'Artist',
         description:
           "You create 1/1, NFT Collection and fan art in Web3. You're passionate about bringing communities together with your talent.",
-        color: '#9333ea',
+        className: 'artist',
         tags: [
           'Created NFT Collection',
           'Created 1/1 Piece',
@@ -74,7 +74,7 @@ export default class extends BaseSeeder {
         title: 'Web3 Investor',
         description:
           "You find and invest in the best projects. You've always in search of the next big thing, and you're here for the long term.",
-        color: '#f43f5e',
+        className: 'web3-investor',
         tags: [
           'Seed funded a Web3 Startup',
           'Invested in an NFT Project',
@@ -88,7 +88,7 @@ export default class extends BaseSeeder {
         title: 'Trader',
         description:
           "You flip and trade coins and NFTs for profit. You're a short and long term holder.",
-        color: '#ec4899',
+        className: 'trader',
         tags: ['Technical Analysis', 'Traded NFTs', 'Traded 10 - 100 SOL', 'Traded 100 - 1000 SOL'],
       },
       {
@@ -96,7 +96,7 @@ export default class extends BaseSeeder {
         title: 'Software Engineer',
         description:
           'You write the code that powers Web3. You develop frontend interfaces, smart contracts, APIs or backend systems in Web3.',
-        color: '#ec4899',
+        className: 'software-engineer',
         tags: [
           'Published an Open Source Package',
           'Created a DAPP',
@@ -120,7 +120,7 @@ export default class extends BaseSeeder {
         title: 'Graphic / UI Designer',
         description:
           'You create illustrations, logos, interfaces to solve problems for Web3 Projects and startups.',
-        color: '#ec4899',
+        className: 'graphic-ui-designer',
         tags: [
           'Created an NFT Illustration',
           'Created A Logo',
@@ -131,10 +131,10 @@ export default class extends BaseSeeder {
       },
       {
         icon: 'Groups',
-        title: 'Community Manager / Builder',
+        title: 'Community Manager',
         description:
           'You bring communities together with activities & games. You can come up with unique ideas to bring people together.',
-        color: '#10b981',
+        className: 'community-manager',
         tags: [
           'Managed Discord Servers',
           'Marketed Discord Communities',
@@ -150,7 +150,7 @@ export default class extends BaseSeeder {
         title: 'Influencer',
         description:
           'You collaborate with NFT and Web3 Brands to give them exposure in the space. ',
-        color: '#10b981',
+        className: 'influencer',
         tags: ['Large Twitter Audience', 'Brand partnerships', 'Sold out Collections'],
       },
       {
@@ -158,7 +158,7 @@ export default class extends BaseSeeder {
         title: 'Marketer',
         description:
           'You find and implement the best marketing strategies for Web3 brands and projects.',
-        color: '#10b981',
+        className: 'marketer',
         tags: [
           'Created Web3 Marketing Strategies',
           'Grown Twitter Audiences',
@@ -171,7 +171,7 @@ export default class extends BaseSeeder {
         title: 'Advisor & Strategist',
         description:
           'You know the best strategies for success in Web3. You guide NFT & Web3 startups on how to best achieve success.',
-        color: '#10b981',
+        className: 'advisor-and-strategist',
         tags: ['Adviced NFT Projects', 'Adviced Web3 Startups', 'Seed invested in Web3 Startups'],
       },
     ]

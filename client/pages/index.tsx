@@ -129,7 +129,7 @@ const Home: NextPage = () => {
         <div className="mt-6 space-y-6">
           {[1, 2, 3, 4, 5].map((x) => (
             <div key={x} className="flex justify-between items-center">
-              <AvatarProfile hideUsername subTitle="7.6k Followers" />
+              {/* <AvatarProfile hideUsername subTitle="7.6k Followers" /> */}
               <ActionButton className="py-2 px-3 bg-dark-400 text-sm">Follow</ActionButton>
             </div>
           ))}

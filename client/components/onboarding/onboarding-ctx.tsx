@@ -14,6 +14,9 @@ export interface OnboardingCtx {
   step: OnboardingStep
   setStep: Dispatch<SetStateAction<OnboardingStep>>
 
+  selectedBadges: Badge[]
+  setSelectedBadges: Dispatch<SetStateAction<Badge[]>>
+
   onboardingSteps: OnboardingStepInterface[]
   setOnboardingSteps: Dispatch<SetStateAction<OnboardingStepInterface[]>>
 
@@ -27,8 +30,10 @@ export interface OnboardingCtx {
 export const OnboardingCtx = createContext<OnboardingCtx>({
   step: OnboardingStep.PICK_USERNAME,
   badges: [],
+  selectedBadges: [],
   onboardingSteps: [],
   setBadges() {},
+  setSelectedBadges() {},
   setOnboardingSteps() {},
   setStep: () => {},
   isUserOnboarding: true,

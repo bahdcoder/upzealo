@@ -121,6 +121,7 @@ export function PrimaryButton({
   return (
     <button
       onClick={onClick}
+      disabled={isDisabled}
       className={classNames(
         'group rounded-full flex items-center justify-center py-4 border-none text-black transition ease-linear focus:outline-none font-bold',
         className,

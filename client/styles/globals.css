@@ -2,30 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/satoshi-light.ttf');
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/satoshi-regular.ttf');
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/satoshi-medium.ttf');
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/satoshi-bold.ttf');
-  font-weight: 700;
-}
-
 body {
   @apply font-sans text-white;
 }
