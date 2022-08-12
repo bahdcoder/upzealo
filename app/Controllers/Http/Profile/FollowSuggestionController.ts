@@ -9,11 +9,14 @@ export default class FollowSuggestionController {
       .orderBy('created_at', 'desc')
       .preload('badges')
       .preload('tags')
+      .whereNot('id', user.id)
+      .preload('experiences', (experienceQuery) => experienceQuery.preload('organisation'))
       .preload('addresses')
       .limit(50)
 
-    const users = await user.attachFollowStatus(firstFiftyUsers)
+    let users = await user.attachFollowStatus(firstFiftyUsers)
+    users = await User.loadFollowersAndFollowingCount(users)
 
-    return { users: users.map((user) => user.serialize()) }
+    return { users }
   }
 }

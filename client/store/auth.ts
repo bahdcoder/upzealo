@@ -28,8 +28,18 @@ export interface OnboardingStep {
   completed: boolean
 }
 
+export interface Organisation {
+  id: string
+  name: string
+  imageUrl: string
+}
+
 export interface Experience {
-  isCurrent: boolean
+  startedAt: string
+  endedAt: string | null
+  title: string
+  id: string
+  organisation: Organisation
 }
 
 export interface UserProfile {
@@ -42,9 +52,13 @@ export interface UserProfile {
     completedOnboarding: boolean
     steps: OnboardingStep[]
   }
+  meta: {
+    followersCount: number
+    followingCount: number
+    isFollowedBy: boolean
+    isFollowing: boolean
+  }
   username: string
-  follows: boolean
-  followedBy: boolean
   solanaAddress: string | null
 }
 
@@ -74,13 +88,18 @@ export const AuthCtx = createContext<AuthContextData>({
     username: '',
     avatarUrl: '',
     badges: [],
+    experiences: [],
     solanaAddress: null,
     onboardingSteps: {
       steps: [],
       completedOnboarding: true,
     },
-    followedBy: false,
-    follows: false,
+    meta: {
+      followersCount: 0,
+      followingCount: 0,
+      isFollowedBy: false,
+      isFollowing: false,
+    },
   },
   setProfile() {},
 })

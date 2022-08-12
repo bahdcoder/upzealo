@@ -45,8 +45,12 @@ export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
       steps: [],
       completedOnboarding: true,
     },
-    followedBy: false,
-    follows: false
+    meta: {
+      followersCount: 0,
+      followingCount: 0,
+      isFollowedBy: false,
+      isFollowing: false,
+    },
   })
 
   return (

@@ -1,7 +1,10 @@
+import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
-import { PropsWithChildren, MouseEventHandler } from 'react'
+import { PropsWithChildren, MouseEventHandler, useContext, useState, SVGProps } from 'react'
+import { useApiAxiosInstance } from '../helpers/axios-client'
+import { AuthCtx, UserProfile } from '../store/auth'
 
-export function Spinner() {
+export function Spinner(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       className="animate-spin"
@@ -10,6 +13,7 @@ export function Spinner() {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       <path
         d="M12 4.75V6.25"
@@ -76,12 +80,59 @@ export interface ButtonProps {
   isLoading?: boolean
   isDisabled?: boolean
   onClick?: MouseEventHandler<HTMLButtonElement>
+  onMouseEnter?: MouseEventHandler<HTMLButtonElement>
+  onMouseLeave?: MouseEventHandler<HTMLButtonElement>
 }
 
-export function FollowButton(props: PropsWithChildren<ButtonProps>) {
+export function FollowButton({
+  profile: targetProfile,
+  onChange,
+  ...buttonProps
+}: PropsWithChildren<
+  ButtonProps & {
+    profile: UserProfile
+    onChange?: (action: 'followed' | 'unfollowed') => void
+  }
+>) {
+  const instance = useApiAxiosInstance()
+  const [hovered, setHovered] = useState(false)
+  const { profile: userProfile } = useContext(AuthCtx)
+
+  let content = targetProfile.isFollowedByAuthUser ? 'Following' : 'Follow'
+
+  if (hovered && targetProfile.isFollowedByAuthUser) {
+    content = 'Unfollow'
+  }
+
+  const { isLoading, mutate: followUnfollow } = useMutation(async () => {
+    if (targetProfile.isFollowedByAuthUser) {
+      await instance.delete(`/feed/follows/${targetProfile.id}`)
+
+      onChange?.('unfollowed')
+    } else {
+      await instance.post(`/feed/follows/${targetProfile.id}`)
+
+      onChange?.('followed')
+    }
+  })
+
   return (
-    <ActionButton className="py-2 px-3 bg-dark-400 text-xs" {...props}>
-      Follow
+    <ActionButton
+      className={classNames('py-2 px-3 text-xs w-[92px] h-[50px]', {
+        'hover:bg-red-500/10 hover:text-red-500 bg-dark-700 border-transparent':
+          targetProfile.isFollowedByAuthUser,
+      })}
+      onMouseEnter={() => {
+        setHovered(true)
+      }}
+      onMouseLeave={() => {
+        setHovered(false)
+      }}
+      {...buttonProps}
+      isLoading={isLoading}
+      onClick={() => followUnfollow()}
+    >
+      {content}
     </ActionButton>
   )
 }
@@ -92,21 +143,25 @@ export function ActionButton({
   onClick,
   isLoading,
   isDisabled,
+  onMouseEnter,
+  onMouseLeave,
 }: PropsWithChildren<ButtonProps>) {
   return (
     <button
       onClick={onClick}
       disabled={isLoading || isDisabled}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       className={classNames(
         'group rounded-full flex items-center justify-center py-4 px-5 transition ease-linear hover:border-transparent focus:outline-none',
         className,
         {
           'bg-dark-700 cursor-not-allowed': isLoading || isDisabled,
-          'bg-transparent border border-dark-400 hover:bg-dark-700': !isLoading && !isDisabled,
+          'border border-dark-400 hover:bg-dark-700': !isLoading && !isDisabled,
         }
       )}
     >
-      {isLoading ? <Spinner /> : children}
+      {isLoading ? <Spinner width={16} height={16} /> : children}
     </button>
   )
 }

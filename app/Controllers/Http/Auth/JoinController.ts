@@ -59,14 +59,17 @@ export default class JoinController {
       loader
         .load('addresses')
         .load('socialAccounts')
+        .preload('experiences', (experienceQuery) => experienceQuery.preload('organisation'))
         .load('badges', (badgesQuery) => badgesQuery.preload('tags'))
         .load('tags')
     })
 
+    const [serialisedUser] = await User.loadFollowersAndFollowingCount([user])
+
     return {
       accessToken,
       streamAccessToken: getstream.accessToken(user.id),
-      user: user.serialize(),
+      user: serialisedUser,
     }
   }
 }

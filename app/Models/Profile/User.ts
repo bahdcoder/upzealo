@@ -1,12 +1,17 @@
+import { DateTime } from 'luxon'
+
 import BaseModel from 'App/Models/Base'
 import {
   beforeCreate,
+  beforeFetch,
+  beforeFind,
   column,
   computed,
   HasMany,
   hasMany,
   manyToMany,
   ManyToMany,
+  ModelQueryBuilderContract,
 } from '@ioc:Adonis/Lucid/Orm'
 
 import Tag from 'App/Models/Profile/Tag'
@@ -16,6 +21,8 @@ import SocialAccount from 'App/Models/Profile/SocialAccount'
 
 import Follow from 'App/Models/Feed/Follow'
 import Enrolment from 'App/Models/Learning/Enrolment'
+import Experience from 'App/Models/Network/Experience'
+import Community from 'App/Models/Community/Community'
 import CompletedLesson from 'App/Models/Learning/CompletedLesson'
 
 export interface OnboardingStep {
@@ -87,6 +94,9 @@ export default class User extends BaseModel {
   @column()
   public bio: string
 
+  @column.dateTime({ serializeAs: 'verifiedAt' })
+  public verifiedAt: DateTime | null
+
   @column({ serializeAs: 'solanaAddress' })
   public solanaAddress: string
 
@@ -108,6 +118,12 @@ export default class User extends BaseModel {
 
   @hasMany(() => Enrolment)
   public enrolments: HasMany<typeof Enrolment>
+
+  @hasMany(() => Experience)
+  public experiences: HasMany<typeof Experience>
+
+  @hasMany(() => Community)
+  public communities: HasMany<typeof Community>
 
   @hasMany(() => Follow)
   public follows: HasMany<typeof Follow>
@@ -143,7 +159,7 @@ export default class User extends BaseModel {
       {
         idx: 5,
         title: 'Follow Recommendations',
-        completed: false,
+        completed: this.$extras['followingCount'] ? this.$extras['followingCount'] > 0 : false,
       },
     ]
 
@@ -155,6 +171,49 @@ export default class User extends BaseModel {
     // loop through users
     // attach the follow status.
     // return updated users array.
+    const userIds = users.map((user) => user.id)
+
+    const allFollowingThisUser = await Follow.query()
+      .where('target_id', this.id)
+      .andWhereIn('user_id', userIds)
+
+    const allFollowedByThisUser = await Follow.query()
+      .whereIn('target_id', userIds)
+      .andWhere('user_id', this.id)
+
+    const allFollowsBetweenThisUserAndAllUsers = [...allFollowedByThisUser, ...allFollowingThisUser]
+
+    users.forEach((user) => {
+      const isFollowing = allFollowsBetweenThisUserAndAllUsers.some(
+        (follow) => follow.userId === this.id && follow.targetId === user.id
+      )
+
+      const isFollowedBy = allFollowsBetweenThisUserAndAllUsers.some(
+        (follow) => follow.userId === user.id && follow.targetId === this.id
+      )
+
+      user.$extras['isFollowing'] = isFollowing
+      user.$extras['isFollowedBy'] = isFollowedBy
+    })
+
+    return users
+  }
+
+  public static async loadFollowersAndFollowingCount(users: User[]) {
+    const userIds = users.map((user) => user.id)
+    const allFollows = await Follow.query()
+      .whereIn('target_id', userIds)
+      .orWhereIn('user_id', userIds)
+
+    users.forEach((user) => {
+      user.$extras['followersCount'] = allFollows.filter(
+        (follow) => follow.targetId === user.id
+      ).length
+      user.$extras['followingCount'] = allFollows.filter(
+        (follow) => follow.userId === user.id
+      ).length
+    })
+
     return users
   }
 }

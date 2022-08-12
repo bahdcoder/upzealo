@@ -336,9 +336,7 @@ export function CreatePostModal({
         </>
       ) : (
         <>
-          <div className="mt-6">
-            {/* <AvatarProfile  /> */}
-          </div>
+          <div className="mt-6">{/* <AvatarProfile  /> */}</div>
 
           <div className="my-6">
             <TextareaAutosize

@@ -8,6 +8,8 @@ import {
 } from '@ioc:Adonis/Lucid/Orm'
 
 export default class BaseModel extends LucidBaseModel {
+  public serializeExtras = true
+
   @column({ isPrimary: true })
   public id: string
 
@@ -33,6 +35,9 @@ export default class BaseModel extends LucidBaseModel {
     CompletedLesson: 'comlsn',
     Badge: 'badge',
     Tag: 'tag',
+    Organisation: 'org',
+    Experience: 'exp',
+    Opportunity: 'opp',
   }
 
   @beforeCreate()

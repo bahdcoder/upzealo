@@ -13,9 +13,12 @@ import Env from '@ioc:Adonis/Core/Env'
 
 const PORT = 9999
 const isDevelopment = Env.get('NODE_ENV') === 'development'
+const isServerStart = process.argv.some((arg) => arg.match('serve'))
 
-Bull.process()
+if (isServerStart) {
+  Bull.process()
 
-if (isDevelopment) {
-  Bull.ui(PORT)
+  if (isDevelopment) {
+    Bull.ui(PORT)
+  }
 }

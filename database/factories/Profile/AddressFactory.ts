@@ -11,9 +11,12 @@ const supportedBlockchains = [
 ]
 
 export default Factory.define(Address, () => {
-  const { publicKey, signature } = getUserKeypair()
+  const { publicKey, wallet } = getUserKeypair()
 
-  console.log(`Public Key: ${publicKey}, Signature: ${signature}`)
+  console.log({
+    publicKey,
+    secretKey: wallet.secretKey,
+  })
 
   return {
     isDefault: false,
@@ -22,4 +25,5 @@ export default Factory.define(Address, () => {
   }
 })
   .relation('user', () => UserFactory)
+  .state('default', (address) => (address.isDefault = true))
   .build()

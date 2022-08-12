@@ -7,7 +7,7 @@ import { useApiAxiosInstance } from '../../helpers/axios-client'
 import { AuthCtx } from '../../store/auth'
 import { AxiosError } from 'axios'
 
-export function PickUsername({ }: {}) {
+export function PickUsername({}: {}) {
   const instance = useApiAxiosInstance()
   const { setProfile } = useContext(AuthCtx)
   const [username, setUsername] = useState('')
@@ -39,7 +39,7 @@ export function PickUsername({ }: {}) {
           })
         )
       },
-      onError(error: AxiosError<{ errors: { message: string }[] }>) { },
+      onError(error: AxiosError<{ errors: { message: string }[] }>) {},
     }
   )
 

@@ -50,19 +50,22 @@ export default class LoginController {
 
     const { accessToken } = await auth.use('jwt').generate(address.user)
 
-    const user = await User.query()
+    let user = await User.query()
       .where('id', address.user.id)
       .preload('addresses')
       .preload('socialAccounts')
+      .preload('experiences', (experienceQuery) => experienceQuery.preload('organisation'))
       .preload('badges', (badgesQuery) => badgesQuery.preload('tags'))
       .preload('tags')
-      .first()
+      .firstOrFail()
+
+    const [serialisedUser] = await User.loadFollowersAndFollowingCount([user])
 
     return {
       accessToken,
       streamAccessToken: getstream.accessToken(address.user.id),
       userId: address.user.id,
-      user: user?.serialize(),
+      user: serialisedUser,
     }
   }
 }

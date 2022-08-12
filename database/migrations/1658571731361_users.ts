@@ -14,6 +14,8 @@ export default class UsersSchema extends BaseSchema {
       table.timestamp('completed_onboarding_at').nullable()
       table.text('bio').nullable()
 
+      table.timestamp('verified_at').nullable()
+
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL
        */
