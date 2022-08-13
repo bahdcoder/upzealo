@@ -159,7 +159,8 @@ export default class User extends BaseModel {
       {
         idx: 5,
         title: 'Follow Recommendations',
-        completed: this.$extras['followingCount'] ? this.$extras['followingCount'] > 0 : false,
+        completed: false,
+        // this.$extras['followingCount'] ? this.$extras['followingCount'] > 0 : false
       },
     ]
 

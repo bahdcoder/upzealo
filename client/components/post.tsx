@@ -7,7 +7,6 @@ import Input from './input'
 import { ToggleFade } from './toggle-transition'
 
 export function LikeButton({
-  children,
   liked,
   onClick,
 }: PropsWithChildren<{ liked?: boolean; onClick?: MouseEventHandler<HTMLButtonElement> }>) {

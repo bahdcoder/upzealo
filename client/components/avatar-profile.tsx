@@ -17,6 +17,10 @@ export default function AvatarProfile({
   // subtitle is either current working position or user's username
 
   const subtitle = useMemo(() => {
+    if (profile.username.length > 10) {
+      return `@${profile.username}`
+    }
+
     if (profile?.experiences?.length > 0) {
       const latestExperience = profile.experiences.sort((exA, exB) => {
         const startedA = new Date(exA.startedAt)
@@ -30,15 +34,16 @@ export default function AvatarProfile({
         : undefined
     }
 
-    return profile.username
+    return `@${profile.username}`
   }, [profile])
-  const username = profile?.experiences?.length > 0 ? profile.username : null
+
+  const username = profile?.experiences?.length > 0 ? profile.username.length > 10 ? null : profile.username : null
 
   return (
     <Link href="/">
       <a className="flex items-center">
         <div className="mr-4">
-          <Avatar size={size} url={profile?.avatarUrl} />
+          <Avatar size={size} url={profile?.avatarUrl} name={profile.username} />
         </div>
 
         <div className="flex flex-col justify-center">

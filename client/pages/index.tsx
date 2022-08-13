@@ -1,15 +1,16 @@
 import type { NextPage } from 'next'
 import Link from 'next/link'
-import AvatarProfile from '../components/avatar-profile'
-import { ActionButton, PrimaryButton } from '../components/button'
-import CreatePost from '../components/create-post'
+
 import Post from '../components/post'
+import CreatePost from '../components/create-post'
+import { WhoToFollow } from '../components/who-to-follow'
+import { ActionButton, PrimaryButton } from '../components/button'
 
 const Home: NextPage = () => {
   const noCommunities = true
   return (
     <div className="flex items-center h-[calc(100%-5rem)]">
-      <div className="hidden lg:flex w-[22%] h-full flex-col px-8 pt-12">
+      <div className="hidden lg:flex w-[24%] h-full flex-col px-8 pt-12">
         <div className="flex items-center">
           <div className="rounded-full w-[2.25rem] h-[2.25rem] flex items-center justify-center bg-dark-700">
             <svg
@@ -21,7 +22,7 @@ const Home: NextPage = () => {
             >
               <g clipPath="url(#clip0_5_49635)">
                 <path
-                  d="M9.00003 7.25C8.54605 7.25009 8.09812 7.35408 7.69053 7.554C7.65923 7.56933 7.63148 7.59103 7.60906 7.61772C7.58664 7.6444 7.57005 7.67548 7.56035 7.70895C7.55065 7.74243 7.54806 7.77756 7.55274 7.8121C7.55742 7.84664 7.56927 7.87981 7.58753 7.9095C8.02062 8.61336 8.24995 9.42357 8.25003 10.25C8.25003 10.3163 8.27637 10.3799 8.32325 10.4268C8.37014 10.4737 8.43373 10.5 8.50003 10.5H11.75C11.8163 10.5 11.8799 10.4737 11.9268 10.4268C11.9737 10.3799 12 10.3163 12 10.25C12 9.45435 11.684 8.69129 11.1214 8.12868C10.5587 7.56607 9.79568 7.25 9.00003 7.25Z"
+                  d="M9.00003 7.25C8.54605 7.25009 8.09812 7.35408 7.69053 7.554C7.65923 7.56933 7.63148 7.59103 7.60906 7.61772C7.58664 7.6444 7.57005 7.67548 7.56035 7.70895C7.55065 7.74243 7.54806 7.77756 7.55274 7.8121C7.55742 7.84664 7.56927 7.87981 7.58753 7.9095C8.02062 8.61336 8.24995 9.42357 8.25003 10.25C8.25003 10.3163 8.27637 10.3799 8.32325 10.4248C8.37014 10.4737 8.43373 10.5 8.50003 10.5H11.75C11.8163 10.5 11.8799 10.4737 11.9248 10.4248C11.9737 10.3799 12 10.3163 12 10.25C12 9.45435 11.684 8.69129 11.1214 8.12868C10.5587 7.56607 9.79568 7.25 9.00003 7.25Z"
                   fill="white"
                 />
                 <path
@@ -33,7 +34,7 @@ const Home: NextPage = () => {
                   fill="white"
                 />
                 <path
-                  d="M7.5 10.25C7.5 9.25544 7.10491 8.30161 6.40165 7.59835C5.69839 6.89509 4.74456 6.5 3.75 6.5C2.75544 6.5 1.80161 6.89509 1.09835 7.59835C0.395088 8.30161 0 9.25544 0 10.25C0 10.3163 0.0263392 10.3799 0.0732233 10.4268C0.120107 10.4737 0.183696 10.5 0.25 10.5H7.25C7.3163 10.5 7.37989 10.4737 7.42678 10.4268C7.47366 10.3799 7.5 10.3163 7.5 10.25Z"
+                  d="M7.5 10.25C7.5 9.25544 7.10491 8.30161 6.40165 7.59835C5.69839 6.89509 4.74456 6.5 3.75 6.5C2.75544 6.5 1.80161 6.89509 1.09835 7.59835C0.395088 8.30161 0 9.25544 0 10.25C0 10.3163 0.0243392 10.3799 0.0732233 10.4248C0.120107 10.4737 0.183696 10.5 0.25 10.5H7.25C7.3163 10.5 7.37989 10.4737 7.42478 10.4248C7.47366 10.3799 7.5 10.3163 7.5 10.25Z"
                   fill="white"
                 />
               </g>
@@ -110,7 +111,7 @@ const Home: NextPage = () => {
           </div>
         ) : null}
       </div>
-      <div className="bg-dark-700 w-full lg:w-[56%] rounded-t-3xl h-full px-6 pt-6 border-b-8 border-black overflow-y-auto">
+      <div className="bg-dark-700 w-full lg:w-[52%] rounded-t-3xl h-full px-6 pt-6 border-b-8 border-black overflow-y-auto">
         <div className="mb-6">
           <CreatePost />
         </div>
@@ -123,17 +124,10 @@ const Home: NextPage = () => {
           <Post />
         </div>
       </div>
-      <div className="hidden lg:flex flex-col w-[22%] h-full px-8 pt-12">
+      <div className="hidden lg:flex flex-col w-[24%] h-full px-8 pt-12">
         <h2 className="text-white text-xl font-bold">Who to follow</h2>
 
-        <div className="mt-6 space-y-6">
-          {[1, 2, 3, 4, 5].map((x) => (
-            <div key={x} className="flex justify-between items-center">
-              {/* <AvatarProfile hideUsername subTitle="7.6k Followers" /> */}
-              <ActionButton className="py-2 px-3 bg-dark-400 text-sm">Follow</ActionButton>
-            </div>
-          ))}
-        </div>
+        <WhoToFollow />
       </div>
     </div>
   )

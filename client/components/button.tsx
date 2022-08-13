@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
+import { twMerge } from 'tailwind-merge'
 import { PropsWithChildren, MouseEventHandler, useContext, useState, SVGProps } from 'react'
 import { useApiAxiosInstance } from '../helpers/axios-client'
 import { AuthCtx, UserProfile } from '../store/auth'
@@ -87,25 +88,26 @@ export interface ButtonProps {
 export function FollowButton({
   profile: targetProfile,
   onChange,
+  size = 'default',
   ...buttonProps
 }: PropsWithChildren<
   ButtonProps & {
     profile: UserProfile
+    size?: 'small' | 'default'
     onChange?: (action: 'followed' | 'unfollowed') => void
   }
 >) {
   const instance = useApiAxiosInstance()
   const [hovered, setHovered] = useState(false)
-  const { profile: userProfile } = useContext(AuthCtx)
 
-  let content = targetProfile.isFollowedByAuthUser ? 'Following' : 'Follow'
+  let content = targetProfile.meta.isFollowing ? 'Following' : 'Follow'
 
-  if (hovered && targetProfile.isFollowedByAuthUser) {
+  if (hovered && targetProfile.meta.isFollowing) {
     content = 'Unfollow'
   }
 
   const { isLoading, mutate: followUnfollow } = useMutation(async () => {
-    if (targetProfile.isFollowedByAuthUser) {
+    if (targetProfile.meta.isFollowing) {
       await instance.delete(`/feed/follows/${targetProfile.id}`)
 
       onChange?.('unfollowed')
@@ -118,9 +120,11 @@ export function FollowButton({
 
   return (
     <ActionButton
-      className={classNames('py-2 px-3 text-xs w-[92px] h-[50px]', {
+      className={classNames('py-2 px-3 text-xs', {
         'hover:bg-red-500/10 hover:text-red-500 bg-dark-700 border-transparent':
-          targetProfile.isFollowedByAuthUser,
+          targetProfile.meta.isFollowing,
+        'w-[92px] h-[50px]': size === 'default',
+        'w-[76px] h-[34px]': size === 'small',
       })}
       onMouseEnter={() => {
         setHovered(true)
@@ -152,14 +156,13 @@ export function ActionButton({
       disabled={isLoading || isDisabled}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className={classNames(
+      className={twMerge(classNames(
         'group rounded-full flex items-center justify-center py-4 px-5 transition ease-linear hover:border-transparent focus:outline-none',
-        className,
         {
           'bg-dark-700 cursor-not-allowed': isLoading || isDisabled,
           'border border-dark-400 hover:bg-dark-700': !isLoading && !isDisabled,
-        }
-      )}
+        },
+      ), className)}
     >
       {isLoading ? <Spinner width={16} height={16} /> : children}
     </button>
@@ -177,14 +180,13 @@ export function PrimaryButton({
     <button
       onClick={onClick}
       disabled={isDisabled}
-      className={classNames(
+      className={twMerge(classNames(
         'group rounded-full flex items-center justify-center py-4 border-none text-black transition ease-linear focus:outline-none font-bold',
-        className,
         {
           'bg-primary-700 cursor-not-allowed': isDisabled || isLoading,
           'bg-primary-500 hover:bg-primary-700': !isLoading && !isDisabled,
         }
-      )}
+      ), className)}
     >
       {isLoading ? <Spinner /> : children}
     </button>
@@ -200,14 +202,7 @@ export default function Button({
 }: PropsWithChildren<ButtonProps>) {
   return (
     <button
-      className={classNames(
-        'rounded-full px-4 py-3 cursor-pointer bg-dark-700 font-medium transition ease-linear flex items-center justify-center',
-        className
-        // {
-        //   "": isDisabled || isLoading,
-        //   "": !isLoading && !isDisabled
-        // }
-      )}
+      className={twMerge(classNames('rounded-full px-4 py-3 cursor-pointer bg-dark-700 font-medium transition ease-linear flex items-center justify-center'), className)}
       {...rest}
     >
       {children}

@@ -11,7 +11,7 @@ import { ConnectWallet } from '../components/connect-wallet'
 import { RootOnboarding } from '../components/onboarding/root'
 import { UserProfile, AuthState, AuthCtx, OnboardingStep } from './auth'
 
-export function AuthContextWrapper({ children }: PropsWithChildren<{}>) {
+export function AuthContextWrapper({ children, isAuthenticated }: PropsWithChildren<{ isAuthenticated: boolean }>) {
   const wallets = useMemo(
     () => [new PhantomWalletAdapter(), new SolflareWalletAdapter(), new SlopeWalletAdapter()],
     []
@@ -19,20 +19,20 @@ export function AuthContextWrapper({ children }: PropsWithChildren<{}>) {
 
   return (
     <ConnectionProvider endpoint={config.solanaRpcUrl}>
-      <WalletProvider wallets={wallets}>{children}</WalletProvider>
+      <WalletProvider wallets={wallets} autoConnect={isAuthenticated}>{children}</WalletProvider>
     </ConnectionProvider>
   )
 }
 
-export function AuthContextProvider({ children }: PropsWithChildren<{}>) {
+export function AuthContextProvider({ children, defaultAuthState = {
+  accessToken: '',
+  streamAccessToken: '',
+  userId: '',
+  authenticated: false,
+} }: PropsWithChildren<{ defaultAuthState?: AuthState }>) {
   const [userOnboarding, setUserOnboarding] = useState(false)
   const [onboardingSteps, setOnboardingSteps] = useState<OnboardingStep[]>([])
-  const [authState, setAuthState] = useState<AuthState>({
-    accessToken: '',
-    streamAccessToken: '',
-    userId: '',
-    authenticated: false,
-  })
+  const [authState, setAuthState] = useState<AuthState>(defaultAuthState)
   const [profile, setProfile] = useState<UserProfile>({
     id: '',
     addresses: [],
