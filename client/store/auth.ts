@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, createContext } from 'react'
+import { Dispatch, SetStateAction, createContext, useContext } from 'react'
 
 export interface Address {
   isDefault: boolean
@@ -59,7 +59,7 @@ export interface UserProfile {
     isFollowing: boolean
   }
   username: string
-  solanaAddress: string | null
+  solanaAddress: string
 }
 
 export interface AuthState {
@@ -75,6 +75,26 @@ export interface AuthContextData {
   setProfile: Dispatch<SetStateAction<UserProfile>>
 }
 
+export const defaultProfile: UserProfile = {
+  id: '',
+  addresses: [],
+  username: '',
+  avatarUrl: '',
+  badges: [],
+  experiences: [],
+  solanaAddress: '',
+  onboardingSteps: {
+    steps: [],
+    completedOnboarding: true,
+  },
+  meta: {
+    followersCount: 0,
+    followingCount: 0,
+    isFollowedBy: false,
+    isFollowing: false,
+  },
+}
+
 export const AuthCtx = createContext<AuthContextData>({
   authState: {
     accessToken: '',
@@ -82,24 +102,8 @@ export const AuthCtx = createContext<AuthContextData>({
     userId: '',
     authenticated: false,
   },
-  profile: {
-    id: '',
-    addresses: [],
-    username: '',
-    avatarUrl: '',
-    badges: [],
-    experiences: [],
-    solanaAddress: null,
-    onboardingSteps: {
-      steps: [],
-      completedOnboarding: true,
-    },
-    meta: {
-      followersCount: 0,
-      followingCount: 0,
-      isFollowedBy: false,
-      isFollowing: false,
-    },
-  },
+  profile: defaultProfile,
   setProfile() {},
 })
+
+export const useAuth = () => useContext(AuthCtx)

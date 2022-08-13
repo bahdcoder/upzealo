@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Fragment, useState, PropsWithChildren } from 'react'
+import { Fragment, useState, PropsWithChildren, useEffect } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, ArrowDownIcon } from '@heroicons/react/solid'
 
@@ -12,11 +12,19 @@ export interface SelectOption {
 export function Select({
   label,
   options = [],
+  defaultOption,
+  onChange,
 }: PropsWithChildren<{
   label?: string
+  defaultOption?: SelectOption
   options: SelectOption[]
+  onChange?: (option: SelectOption) => void
 }>) {
-  const [selected, setSelected] = useState(options[0])
+  const [selected, setSelected] = useState(defaultOption || options[0])
+
+  useEffect(() => {
+    onChange?.(selected)
+  }, [selected])
 
   return (
     <Listbox value={selected} onChange={setSelected}>

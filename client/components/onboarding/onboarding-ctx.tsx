@@ -1,4 +1,4 @@
-import { createContext, Dispatch, SetStateAction } from 'react'
+import { createContext, Dispatch, SetStateAction, useContext } from 'react'
 
 import { OnboardingStep as OnboardingStepInterface, Badge } from '../../store/auth'
 
@@ -39,3 +39,7 @@ export const OnboardingCtx = createContext<OnboardingCtx>({
   isUserOnboarding: true,
   setIsUserOnboarding: () => {},
 })
+
+export function useOnboardingCtx() {
+  return useContext(OnboardingCtx)
+}

@@ -156,13 +156,16 @@ export function ActionButton({
       disabled={isLoading || isDisabled}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className={twMerge(classNames(
-        'group rounded-full flex items-center justify-center py-4 px-5 transition ease-linear hover:border-transparent focus:outline-none',
-        {
-          'bg-dark-700 cursor-not-allowed': isLoading || isDisabled,
-          'border border-dark-400 hover:bg-dark-700': !isLoading && !isDisabled,
-        },
-      ), className)}
+      className={twMerge(
+        classNames(
+          'group rounded-full flex items-center justify-center py-4 px-5 transition ease-linear hover:border-transparent focus:outline-none',
+          {
+            'bg-dark-700 cursor-not-allowed': isLoading || isDisabled,
+            'border border-dark-400 hover:bg-dark-700': !isLoading && !isDisabled,
+          }
+        ),
+        className
+      )}
     >
       {isLoading ? <Spinner width={16} height={16} /> : children}
     </button>
@@ -180,13 +183,16 @@ export function PrimaryButton({
     <button
       onClick={onClick}
       disabled={isDisabled}
-      className={twMerge(classNames(
-        'group rounded-full flex items-center justify-center py-4 border-none text-black transition ease-linear focus:outline-none font-bold',
-        {
-          'bg-primary-700 cursor-not-allowed': isDisabled || isLoading,
-          'bg-primary-500 hover:bg-primary-700': !isLoading && !isDisabled,
-        }
-      ), className)}
+      className={twMerge(
+        classNames(
+          'group rounded-full flex items-center justify-center py-4 border-none text-black transition ease-linear focus:outline-none font-bold',
+          {
+            'bg-primary-700 cursor-not-allowed': isDisabled || isLoading,
+            'bg-primary-500 hover:bg-primary-700': !isLoading && !isDisabled,
+          }
+        ),
+        className
+      )}
     >
       {isLoading ? <Spinner /> : children}
     </button>
@@ -202,7 +208,12 @@ export default function Button({
 }: PropsWithChildren<ButtonProps>) {
   return (
     <button
-      className={twMerge(classNames('rounded-full px-4 py-3 cursor-pointer bg-dark-700 font-medium transition ease-linear flex items-center justify-center'), className)}
+      className={twMerge(
+        classNames(
+          'rounded-full px-4 py-3 cursor-pointer bg-dark-700 font-medium transition ease-linear flex items-center justify-center'
+        ),
+        className
+      )}
       {...rest}
     >
       {children}

@@ -106,9 +106,9 @@ export function ConnectWallet({
       connected &&
       wallet &&
       publicKey &&
+      // walletManuallySelected &&
       !isSigningMessage &&
       !failedSigningMessage &&
-      !walletManuallySelected &&
       !authState.authenticated
     ) {
       signWalletMessage()

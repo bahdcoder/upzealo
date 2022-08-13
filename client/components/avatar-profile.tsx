@@ -17,7 +17,7 @@ export default function AvatarProfile({
   // subtitle is either current working position or user's username
 
   const subtitle = useMemo(() => {
-    if (profile.username.length > 10) {
+    if (profile.username && profile.username.length > 10) {
       return `@${profile.username}`
     }
 
@@ -37,7 +37,12 @@ export default function AvatarProfile({
     return `@${profile.username}`
   }, [profile])
 
-  const username = profile?.experiences?.length > 0 ? profile.username.length > 10 ? null : profile.username : null
+  const username =
+    profile?.experiences?.length > 0
+      ? profile.username.length > 10
+        ? null
+        : profile.username
+      : null
 
   return (
     <Link href="/">
@@ -47,12 +52,7 @@ export default function AvatarProfile({
         </div>
 
         <div className="flex flex-col justify-center">
-          <p
-            className={cx('text-white font-bold', {
-              'text-sm': size === 'default',
-              'text-xs': size === 'small',
-            })}
-          >
+          <p className={cx('text-white font-bold text-sm', {})}>
             {profile.username}
             {username ? <span className="ml-1 text-dark-300">@{username}</span> : null}
           </p>

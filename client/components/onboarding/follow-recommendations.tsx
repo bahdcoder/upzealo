@@ -58,12 +58,12 @@ export function FollowRecommendations() {
                     profiles.map((oldProfile) =>
                       oldProfile.id === profile.id
                         ? {
-                          ...oldProfile,
-                          meta: {
-                            ...oldProfile.meta,
-                            isFollowing: action === 'followed'
+                            ...oldProfile,
+                            meta: {
+                              ...oldProfile.meta,
+                              isFollowing: action === 'followed',
+                            },
                           }
-                        }
                         : oldProfile
                     )
                   )

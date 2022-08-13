@@ -1,5 +1,5 @@
 import cx from 'classnames'
-import { Transition, Dialog } from '@headlessui/react'
+import Decimal from 'decimal.js'
 import TextareaAutosize from 'react-textarea-autosize'
 import {
   PropsWithChildren,
@@ -8,6 +8,7 @@ import {
   MouseEventHandler,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from 'react'
 
 import Avatar from './avatar'
@@ -16,6 +17,14 @@ import Input from './input'
 import AvatarProfile from './avatar-profile'
 import { Select } from './select'
 import { Modal } from './modal'
+import { BountyInputLoader } from './bounty-input-loader'
+import { CurrencyAmountSelector } from './currency-amount-selector'
+import { useMutation } from '@tanstack/react-query'
+import { useApiAxiosInstance } from '../helpers/axios-client'
+import { useAuth } from '../store/auth'
+import { Transaction } from '@solana/web3.js'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { SolanaProgram } from '../helpers/solana'
 
 export function BountyButton({
   children,
@@ -211,6 +220,52 @@ export function CreatePostModal({
   setIsOpen: Dispatch<SetStateAction<boolean>>
 }>) {
   const [step, setStep] = useState(0)
+  const [form, setForm] = useState<{
+    content: string
+    amount: number
+    currency: string
+    balance: string
+    decimals: number
+  }>({ content: '', amount: 0, currency: '', balance: '0', decimals: 0 })
+  const [error, setError] = useState<{
+    content?: string
+    amount?: string
+  }>({})
+  const { signTransaction } = useWallet()
+  const instance = useApiAxiosInstance()
+  const { profile } = useAuth()
+
+  const { isLoading: isPublishingBounty, mutate: publishBounty } = useMutation(
+    async () => {
+      const amount = form.amount * 10 ** form.decimals
+
+      let { transaction, bounty } = await SolanaProgram.createBountyTransaction({
+        userAddress: profile.solanaAddress,
+        walletAddress: profile.addresses[0].publicKey,
+        amountAsNumber: amount,
+        mintAddress: form.currency,
+      })
+
+      transaction = await signTransaction!(transaction)
+
+      const signature = await SolanaProgram.sendAndConfirmTransaction(transaction, [])
+
+      const createBountyResponse = await instance.post('/feed/bounties', {
+        currencyMint: form.currency,
+        amount,
+        content: form.content,
+        bountyAddress: bounty.publicKey.toBase58(),
+        signature,
+      })
+
+      console.log(createBountyResponse.data)
+    },
+    {
+      onError(error) {
+        console.error(error)
+      },
+    }
+  )
 
   function closeModal() {
     setIsOpen(false)
@@ -271,6 +326,45 @@ export function CreatePostModal({
 
   const placeholder =
     type === PostType.BOUNTY ? 'What do you need help with?' : "What's on your mind?"
+
+  function publish() {
+    if (type === PostType.BOUNTY) {
+      const errors: typeof error = {}
+
+      const amount = new Decimal(form.amount)
+      const balance = new Decimal(form.balance)
+
+      if (form.amount === 0 || !form.amount) {
+        errors.amount = 'Please provide a valid amount.'
+      }
+
+      if (balance.lessThan(amount)) {
+        errors.amount = `You only have ${form.balance} available.`
+      }
+
+      if (!form.content) {
+        errors.content = 'Please provide your post content.'
+      }
+
+      if (Object.keys(errors).length > 0) {
+        setError(errors)
+
+        return
+      }
+
+      publishBounty()
+    }
+  }
+
+  useEffect(() => {
+    if (form.content) {
+      setError({ ...error, content: undefined })
+    }
+
+    if (form.amount) {
+      setError({ ...error, amount: undefined })
+    }
+  }, [form])
 
   return (
     <Modal isOpen={isOpen} setIsOpen={() => closeModal()} title={resolveTitle()}>
@@ -342,38 +436,33 @@ export function CreatePostModal({
             <TextareaAutosize
               autoFocus
               placeholder={placeholder}
+              onChange={(event) => setForm({ ...form, content: event.target.value })}
               className="bg-transparent min-h-[5rem] text-white focus:outline-none w-full text-md resize-none placeholder:text-dark-300"
             />
+
+            {error?.content ? <span className="text-xs text-red-500">{error?.content}</span> : null}
           </div>
 
           <div className="flex flex-col absolute bottom-0 lg:static pb-8 lg:pb-0 w-[88%] lg:w-full">
             {type === PostType.BOUNTY ? (
-              <div className="w-full">
-                <label htmlFor="" className="text-sm text-white font-bold">
-                  Bounty amount
-                </label>
-                <div className="flex items-center relative my-4 w-full ">
-                  <Input className="w-full" placeholder="Amount" type="number" />
-                  <div className="absolute inset-y-0 right-0 flex items-center">
-                    <Select
-                      options={[
-                        {
-                          id: '1',
-                          name: 'USDC',
-                          image:
-                            'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                        },
-                      ]}
-                    />
-                  </div>
-                </div>
-              </div>
+              <CurrencyAmountSelector
+                error={error?.amount}
+                onChange={({ currency, amount, balance, decimals }) => {
+                  setForm({ ...form, currency, amount, balance, decimals })
+                }}
+              />
             ) : null}
 
             <div className="my-2">{types}</div>
 
             <div className="mt-6">
-              <PrimaryButton className="px-12">Publish</PrimaryButton>
+              <PrimaryButton
+                isLoading={isPublishingBounty}
+                className="px-12"
+                onClick={() => publish()}
+              >
+                Publish
+              </PrimaryButton>
             </div>
           </div>
         </>
