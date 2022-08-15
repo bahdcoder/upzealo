@@ -6,9 +6,14 @@ export type Upzealo = {
       name: 'createAccount'
       accounts: [
         {
-          name: 'wallet'
+          name: 'payer'
           isMut: true
           isSigner: true
+        },
+        {
+          name: 'wallet'
+          isMut: false
+          isSigner: false
         },
         {
           name: 'user'
@@ -513,9 +518,14 @@ export const IDL: Upzealo = {
       name: 'createAccount',
       accounts: [
         {
-          name: 'wallet',
+          name: 'payer',
           isMut: true,
           isSigner: true,
+        },
+        {
+          name: 'wallet',
+          isMut: false,
+          isSigner: false,
         },
         {
           name: 'user',

@@ -12,12 +12,14 @@ export default class CourseProgressController {
   public async index({ auth, params }: HttpContextContract) {
     const user = auth.user!
 
+    const course = await Course.query().where('slug', params.course).firstOrFail()
+
     const completedLessons = await CompletedLesson.query()
-      .where('courseId', params.course)
+      .where('courseId', course.id)
       .where('userId', user.id)
       .select(['lessonId'])
 
-    return completedLessons
+    return { completedLessons }
   }
 
   public async store({ params, auth }: HttpContextContract) {
@@ -68,10 +70,11 @@ export default class CourseProgressController {
       })
     })
 
-    console.log({ totalLessonsInCourse, totalCompletedLessons })
+    let completedCourse = false
 
     if (totalCompletedLessons === totalLessonsInCourse) {
       enrolment.completedAt = DateTime.now()
+      completedCourse = true
 
       await enrolment.save()
 
@@ -81,6 +84,6 @@ export default class CourseProgressController {
       })
     }
 
-    return completedLesson
+    return { completedLesson, completedCourse }
   }
 }

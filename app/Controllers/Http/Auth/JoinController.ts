@@ -6,6 +6,8 @@ import { PublicKey } from '@solana/web3.js'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
+import Bull from '@ioc:Rocketseat/Bull'
+
 import Getstream from 'App/Services/Getstream'
 
 import Application from '@ioc:Adonis/Core/Application'
@@ -13,6 +15,9 @@ import Application from '@ioc:Adonis/Core/Application'
 import User from 'App/Models/Profile/User'
 import Address from 'App/Models/Profile/Address'
 import CannotJoinException from 'App/Exceptions/Auth/CannotJoinException'
+
+import CreateSolanaAccount from 'App/Jobs/Profile/CreateSolanaAccount'
+import FollowBotAccount from 'App/Jobs/Profile/FollowBotAccount'
 
 export default class JoinController {
   public async handler({ request, auth }: HttpContextContract) {
@@ -66,10 +71,18 @@ export default class JoinController {
 
     const [serialisedUser] = await User.loadFollowersAndFollowingCount([user])
 
+    Bull.add(new CreateSolanaAccount().key, {
+      user: user.id,
+    })
+
+    Bull.add(new FollowBotAccount().key, {
+      user: user.id,
+    })
+
     return {
       accessToken,
-      streamAccessToken: getstream.accessToken(user.id),
       user: serialisedUser,
+      streamAccessToken: getstream.accessToken(user.id),
     }
   }
 }

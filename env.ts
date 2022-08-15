@@ -65,8 +65,9 @@ export default Env.rules({
   /**
    * Blockchain related
    */
-  RPC_URL: Env.schema.string({ format: 'url' }),
+  SOLANA_RPC_URL: Env.schema.string({ format: 'url' }),
   SOLANA_PROGRAM_ID: Env.schema.string(),
+  SOLANA_ENVIRONMENT: Env.schema.enum(['devnet', 'mainnet']),
 
   /**
    * Media uploads

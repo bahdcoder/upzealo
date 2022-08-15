@@ -16,6 +16,8 @@ export default class UsersSchema extends BaseSchema {
 
       table.timestamp('verified_at').nullable()
 
+      table.boolean('is_bot').defaultTo(false)
+
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL
        */

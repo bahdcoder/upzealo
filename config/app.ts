@@ -248,14 +248,16 @@ export const validator: ValidatorConfig = {}
 export const blockchain: BlockchainConfig = {
   authenticationSignatureTemplate: () =>
     `I want to login on Upzealo. I accept the Terms of Service https://upzealo.com/terms-and-conditions.`,
-  rpcUrl: Env.get('RPC_URL'),
   defaultCommitment: 'confirmed',
+  rpcUrl: Env.get('SOLANA_RPC_URL'),
+  environment: Env.get('SOLANA_ENVIRONMENT'),
   solanaProgramId: Env.get('SOLANA_PROGRAM_ID'),
 }
 
 export interface BlockchainConfig {
   authenticationSignatureTemplate: () => string
   rpcUrl: string
+  environment: string
   solanaProgramId: string
   defaultCommitment?: Commitment
 }

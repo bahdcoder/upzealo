@@ -1,7 +1,17 @@
-import { afterCreate, BelongsTo, belongsTo, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
+import {
+  afterCreate,
+  BelongsTo,
+  belongsTo,
+  column,
+  hasMany,
+  HasMany,
+  hasOne,
+  HasOne,
+} from '@ioc:Adonis/Lucid/Orm'
 
 import BaseModel from 'App/Models/Base'
 import User from 'App/Models/Profile/User'
+import Bounty from 'App/Models/Feed/Bounty'
 import Comment from 'App/Models/Feed/Comment'
 import Attachment from 'App/Models/Feed/Attachment'
 import Community from 'App/Models/Community/Community'
@@ -25,11 +35,17 @@ export default class Post extends BaseModel {
   @column()
   public content: string
 
+  @column()
+  public type: string = PostType.DEFAULT
+
   @belongsTo(() => Community)
   public community: BelongsTo<typeof Community>
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
+
+  @hasOne(() => Bounty)
+  public bounty: HasOne<typeof Bounty>
 
   @hasMany(() => Attachment)
   public attachments: HasMany<typeof Attachment>

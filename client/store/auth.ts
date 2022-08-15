@@ -13,6 +13,43 @@ export interface Tag {
   description: string | null
 }
 
+export interface Author {
+  id: string
+  bio: string
+
+  user: UserProfile
+}
+
+export interface Section {
+  id: string
+  title: string
+  slug: string
+  index: number
+  lessons: Lesson[]
+}
+
+export interface Lesson {
+  id: string
+  title: string
+  slug: string
+  index: number
+}
+
+export interface Course {
+  id: string
+  title: string
+  slug: string
+  coverImage: string
+  author: Author
+  sections: Section[]
+}
+
+export interface CompletedLesson {
+  id: string
+  lessonId: string
+  userId: string
+}
+
 export interface Badge {
   id: string
   title: string
@@ -20,6 +57,7 @@ export interface Badge {
   className: string
   icon: string
   tags: Tag[]
+  courses: Course[]
 }
 
 export interface OnboardingStep {

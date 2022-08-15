@@ -14,14 +14,14 @@ export default class FeedController {
 
     const activities = await getstream.timeline(user, page, perPage)
 
-    return enrichWithPosts(activities)
+    return enrichWithPosts(activities, user)
   }
 
-  public async profile({ params }: HttpContextContract) {
+  public async profile({ params, auth }: HttpContextContract) {
     const getstream: Getstream = Application.container.use('Adonis/Addons/Getstream')
 
     const activities = await getstream.profile(params.user)
 
-    return enrichWithPosts(activities)
+    return enrichWithPosts(activities, auth.user!)
   }
 }

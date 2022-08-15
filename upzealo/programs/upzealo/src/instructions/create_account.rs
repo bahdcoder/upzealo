@@ -13,9 +13,13 @@ use crate::state::*;
 #[instruction()]
 pub struct CreateAccount<'info> {
   #[account(mut)]
-  pub wallet: Signer<'info>,
+  pub payer: Signer<'info>,
 
-  #[account(init, payer = wallet, space = 8 + std::mem::size_of::<User>())]
+  /// CHECK
+  #[account()]
+  pub wallet: AccountInfo<'info>,
+
+  #[account(init, payer = payer, space = 8 + std::mem::size_of::<User>())]
   pub user: Box<Account<'info, User>>,
 
   pub token_program: Program<'info, Token>,

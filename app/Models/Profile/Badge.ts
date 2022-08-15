@@ -2,6 +2,7 @@ import { column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 
 import BaseModel from 'App/Models/Base'
 import Tag from 'App/Models/Profile/Tag'
+import Course from 'App/Models/Learning/Course'
 
 export default class Badge extends BaseModel {
   @column()
@@ -18,4 +19,7 @@ export default class Badge extends BaseModel {
 
   @hasMany(() => Tag)
   public tags: HasMany<typeof Tag>
+
+  @hasMany(() => Course)
+  public courses: HasMany<typeof Course>
 }

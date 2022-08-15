@@ -23,6 +23,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Satoshi', ...defaultTheme.fontFamily.sans],
+        grotesk: ['CraftworkGrotesk', ...defaultTheme.fontFamily.serif],
       },
     },
   },

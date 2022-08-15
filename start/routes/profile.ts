@@ -22,6 +22,7 @@ Route.group(() => [
 
   // Suggestions
   Route.get('/follows/suggestions', 'Profile/FollowSuggestionController.index'),
+  Route.get('/wallets/balances', 'Profile/WalletController.index'),
 ])
   .middleware('auth')
   .prefix('profiles')

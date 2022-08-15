@@ -38,6 +38,9 @@ export default class BaseModel extends LucidBaseModel {
     Organisation: 'org',
     Experience: 'exp',
     Opportunity: 'opp',
+    Bounty: 'bounty',
+    Bot: 'bot',
+    Author: 'author',
   }
 
   @beforeCreate()

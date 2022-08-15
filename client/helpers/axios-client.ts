@@ -10,6 +10,17 @@ export function getInstance(baseURL = config.apiUrl, headers?: AxiosRequestHeade
   })
 }
 
+export function getApiInstance(accessToken?: string, baseURL = config.apiUrl) {
+  return Axios.create({
+    baseURL,
+    headers: accessToken
+      ? {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      : undefined,
+  })
+}
+
 export function useAxiosInstance() {
   const { authState } = useContext(AuthCtx)
   const instance = useMemo(

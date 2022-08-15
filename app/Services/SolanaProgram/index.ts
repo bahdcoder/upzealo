@@ -4,6 +4,7 @@ import {
   PublicKey,
   Transaction,
   sendAndConfirmTransaction,
+  Signer,
 } from '@solana/web3.js'
 import { Program, AnchorProvider, BN } from '@project-serum/anchor'
 
@@ -41,8 +42,9 @@ export const SolanaProgram = new (class {
     this.helpers = helpers(this.program)
   }
 
-  async createAccountTransaction(walletAddress: string) {
+  async createAccountTransaction(walletAddress: string, payerAddress: string) {
     const user = Keypair.generate()
+    const payer = new PublicKey(payerAddress)
     const wallet = new PublicKey(walletAddress)
 
     const transaction = await this.program.methods
@@ -50,17 +52,21 @@ export const SolanaProgram = new (class {
       .accounts({
         user: user.publicKey,
         wallet,
+        payer,
       })
       .signers([user])
       .transaction()
 
+    const recentBlockhash = (await this.connection.getLatestBlockhash()).blockhash
+    transaction.recentBlockhash = recentBlockhash
+
     return { transaction, user }
   }
 
-  async createAccount(walletAddress: string) {
-    const { transaction, user } = await this.createAccountTransaction(walletAddress)
+  async createAccount(walletAddress: string, payerAddress: string, signers: Signer[]) {
+    const { transaction, user } = await this.createAccountTransaction(walletAddress, payerAddress)
 
-    const signature = await this.sendAndConfirmTransaction(transaction)
+    const signature = await this.sendAndConfirmTransaction(transaction, signers)
 
     return { user, signature }
   }
@@ -91,7 +97,7 @@ export const SolanaProgram = new (class {
       .accounts({
         user,
         wallet,
-        bounty,
+        bounty: bounty.publicKey,
         mint,
         mintSource,
         bountyWallet,
@@ -100,18 +106,27 @@ export const SolanaProgram = new (class {
       .signers([bounty])
       .transaction()
 
+    await this.setTransactionOptions(transaction, walletAddress)
+
     return { transaction, bounty, user, bountyWallet, bountyAuthority, mintSource, mint, amount }
   }
 
-  async createBounty(payload: CreateBountyTransactionPayload) {
+  async setTransactionOptions(transaction: Transaction, feePayer: string | PublicKey) {
+    const recentBlockhash = (await this.connection.getLatestBlockhash()).blockhash
+    transaction.recentBlockhash = recentBlockhash
+
+    transaction.feePayer = new PublicKey(feePayer)
+  }
+
+  async createBounty(payload: CreateBountyTransactionPayload, signers: Signer[]) {
     const { transaction, ...rest } = await this.createBountyTransaction(payload)
-    const signature = await this.sendAndConfirmTransaction(transaction)
+    const signature = await this.sendAndConfirmTransaction(transaction, signers)
 
     return { ...rest, signature, transaction }
   }
 
-  async sendAndConfirmTransaction(transaction: Transaction) {
-    const signature = await sendAndConfirmTransaction(this.connection, transaction, [])
+  async sendAndConfirmTransaction(transaction: Transaction, signers: Signer[]) {
+    const signature = await sendAndConfirmTransaction(this.connection, transaction, signers)
 
     return signature
   }

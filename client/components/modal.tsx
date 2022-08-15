@@ -49,7 +49,7 @@ export function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-[#131212] bg-opacity-90" />
+          <div className="fixed inset-0 bg-[#131212]/90" />
         </Transition.Child>
 
         <div

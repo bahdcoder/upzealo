@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --plyr-color-main: #d0fa3d;
+  --plyr-font-family: 'CraftworkGrotesk';
+  --plyr-tooltip-background: '#000';
+  --plyr-tooltip-color: '#FFF';
+  --plyr-audio-range-track-background: '#000';
+}
+
 body {
   @apply font-sans text-white;
 }

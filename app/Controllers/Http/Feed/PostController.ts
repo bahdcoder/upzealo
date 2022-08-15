@@ -1,4 +1,4 @@
-import Post from 'App/Models/Feed/Post'
+import Post, { PostType } from 'App/Models/Feed/Post'
 import Attachment from 'App/Models/Feed/Attachment'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
@@ -6,9 +6,17 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 export default class PostController {
   public async show({ params }: HttpContextContract) {
     return Post.query()
-      .preload('user', (userQuery) => userQuery.preload('addresses').preload('socialAccounts'))
+      .preload('user', (userQuery) =>
+        userQuery
+          .preload('addresses')
+          .preload('socialAccounts')
+          .preload('experiences', (experienceQuery) => experienceQuery.preload('organisation'))
+          .preload('badges', (badgesQuery) => badgesQuery.preload('tags'))
+          .preload('tags')
+      )
       .preload('community')
       .preload('attachments')
+      .preload('bounty')
       .where('id', params.post)
       .firstOrFail()
   }

@@ -13,6 +13,7 @@ export default class FollowSuggestionController {
       .whereNot('id', user.id)
       .preload('experiences', (experienceQuery) => experienceQuery.preload('organisation'))
       .preload('addresses')
+      .whereNotNull('username')
       .limit(100)
 
     let users = await user.attachFollowStatus(firstFiftyUsers)

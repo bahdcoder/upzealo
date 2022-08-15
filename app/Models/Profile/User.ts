@@ -3,15 +3,12 @@ import { DateTime } from 'luxon'
 import BaseModel from 'App/Models/Base'
 import {
   beforeCreate,
-  beforeFetch,
-  beforeFind,
   column,
   computed,
   HasMany,
   hasMany,
   manyToMany,
   ManyToMany,
-  ModelQueryBuilderContract,
 } from '@ioc:Adonis/Lucid/Orm'
 
 import Tag from 'App/Models/Profile/Tag'
@@ -88,6 +85,9 @@ export default class User extends BaseModel {
   @column()
   public username: string
 
+  @column({ serializeAs: null })
+  public isBot: boolean
+
   @column({ serializeAs: 'avatarUrl' })
   public avatarUrl: string
 
@@ -159,8 +159,7 @@ export default class User extends BaseModel {
       {
         idx: 5,
         title: 'Follow Recommendations',
-        completed: false,
-        // this.$extras['followingCount'] ? this.$extras['followingCount'] > 0 : false
+        completed: this.$extras['followingCount'] ? this.$extras['followingCount'] > 0 : false,
       },
     ]
 

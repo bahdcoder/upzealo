@@ -18,6 +18,7 @@ export default class extends BaseSchema {
       table.string('author_id').references('id').inTable('authors').onDelete('CASCADE')
 
       table.string('path_id').nullable().references('id').inTable('paths').onDelete('CASCADE')
+      table.string('badge_id').nullable().references('id').inTable('badges').onDelete('CASCADE')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

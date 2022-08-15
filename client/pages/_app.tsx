@@ -1,6 +1,7 @@
 import '../styles/globals.css'
 import '../styles/badges.css'
 import '../styles/satoshi.css'
+import 'plyr-react/plyr.css'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import BaseApp from 'next/app'
@@ -40,7 +41,9 @@ App.getInitialProps = async function (appCtx: AppContext) {
   const appProps = await BaseApp.getInitialProps(appCtx)
 
   if (appCtx.ctx.req && appCtx.ctx.res) {
-    const { user } = await getIronSession(appCtx.ctx.req, appCtx.ctx.res, ironSessionOptions)
+    const session = await getIronSession(appCtx.ctx.req, appCtx.ctx.res, ironSessionOptions)
+
+    const { user } = session
 
     if (!user) {
       return {
@@ -52,11 +55,21 @@ App.getInitialProps = async function (appCtx: AppContext) {
       Authorization: `Bearer ${user?.accessToken}`,
     })
 
-    const response = await axios.get('/auth/me')
+    try {
+      const response = await axios.get('/auth/me')
 
-    return {
-      ...appProps,
-      pageProps: { ...appProps.pageProps, user, profile: response.data },
+      return {
+        ...appProps,
+        pageProps: { ...appProps.pageProps, user, profile: response.data },
+      }
+    } catch (error) {
+      session.destroy()
+
+      console.log('DELETED')
+
+      return {
+        ...appProps,
+      }
     }
   }
 
