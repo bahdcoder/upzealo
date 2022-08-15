@@ -1,5 +1,5 @@
 import { JobContract } from '@ioc:Rocketseat/Bull'
-import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes'
+import bs58 from 'bs58'
 import { Keypair } from '@solana/web3.js'
 import Encryption from '@ioc:Adonis/Core/Encryption'
 import Bot from 'App/Models/Profile/Bot'

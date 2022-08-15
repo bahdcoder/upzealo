@@ -2,6 +2,7 @@ import Tag from 'App/Models/Profile/Tag'
 import Badge from 'App/Models/Profile/Badge'
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import { ModelAttributes } from '@ioc:Adonis/Lucid/Orm'
+import Certifier from 'App/Models/Learning/Certifier'
 
 export default class extends BaseSeeder {
   public async run() {
@@ -186,5 +187,12 @@ export default class extends BaseSeeder {
         tags.map((tag) => ({ title: tag, badgeId: badge.id }))
       )
     }
+
+    await Certifier.firstOrCreate(
+      {
+        name: 'Buildspace',
+      },
+      { name: 'Buildspace' }
+    )
   }
 }

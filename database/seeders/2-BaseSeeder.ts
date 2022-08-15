@@ -37,7 +37,10 @@ export default class extends BaseSeeder {
             })
             .apply('published')
             .with('sections', 2, (section) =>
-              section.apply('published').with('lessons', 5, (lesson) => lesson.apply('published'))
+              section
+                .apply('published')
+                .with('lessons', 5, (lesson) => lesson.apply('published'))
+                .with('skills', 3)
             )
             .with('author', 1, (authorFactory) => authorFactory.with('user'))
             .with('path', 1, (pathFactory) => {

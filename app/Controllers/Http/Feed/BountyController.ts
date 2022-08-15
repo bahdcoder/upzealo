@@ -5,7 +5,6 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Bounty from 'App/Models/Feed/Bounty'
 import { SolanaProgram } from 'App/Services/SolanaProgram'
-import { Keypair, Transaction } from '@solana/web3.js'
 import Encryption from '@ioc:Adonis/Core/Encryption'
 
 export default class BountyController {

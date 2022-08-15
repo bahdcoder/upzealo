@@ -7,6 +7,16 @@ import {
   Signer,
 } from '@solana/web3.js'
 import { Program, AnchorProvider, BN } from '@project-serum/anchor'
+import {
+  Metaplex,
+  keypairIdentity,
+  bundlrStorage,
+  BundlrStorageDriver,
+  MetaplexFile,
+  Nft,
+  JsonMetadataAttribute,
+} from '@metaplex-foundation/js'
+import { freezeAccount, setAuthority, AuthorityType, getMint } from '@solana/spl-token'
 
 import { blockchain } from 'Config/app'
 
@@ -129,5 +139,131 @@ export const SolanaProgram = new (class {
     const signature = await sendAndConfirmTransaction(this.connection, transaction, signers)
 
     return signature
+  }
+
+  async updateNft(
+    wallet: Keypair,
+    resumeMint: string,
+    { file, avatarFile }: { file: MetaplexFile; avatarFile: MetaplexFile },
+    name: string,
+    attributes: JsonMetadataAttribute[]
+  ) {
+    const metaplex = Metaplex.make(this.connection)
+      .use(keypairIdentity(wallet))
+      .use(bundlrStorage())
+
+    const isDevnet = blockchain.environment === 'devnet'
+
+    if (isDevnet) {
+      metaplex.use(
+        bundlrStorage({
+          address: 'https://devnet.bundlr.network',
+          providerUrl: blockchain.rpcUrl,
+          timeout: 60000,
+        })
+      )
+    }
+
+    const storage = metaplex.storage().driver() as BundlrStorageDriver
+
+    ;(await storage.bundlr()).fund(5000)
+
+    const nft = await metaplex.nfts().findByMint(new PublicKey(resumeMint)).run()
+
+    const { uri, metadata } = await metaplex
+      .nfts()
+      .uploadMetadata({
+        name,
+        image: avatarFile,
+        properties: {
+          files: [
+            {
+              type: 'pdf',
+              uri: file,
+            },
+          ],
+        },
+        attributes,
+      })
+      .run()
+
+    await metaplex
+      .nfts()
+      .update(nft, {
+        uri,
+        name,
+      })
+      .run()
+
+    return {
+      uri,
+      mint: nft.mint,
+      resumePdf: metadata.properties.files[0].uri,
+    }
+  }
+
+  async uploadNft(
+    wallet: Keypair,
+    owner: string,
+    { file, avatarFile }: { file: MetaplexFile; avatarFile: MetaplexFile },
+    name: string,
+    attributes: JsonMetadataAttribute[]
+  ) {
+    const tokenOwner = new PublicKey(owner)
+    const metaplex = Metaplex.make(this.connection)
+      .use(keypairIdentity(wallet))
+      .use(bundlrStorage())
+
+    const isDevnet = blockchain.environment === 'devnet'
+
+    if (isDevnet) {
+      metaplex.use(
+        bundlrStorage({
+          address: 'https://devnet.bundlr.network',
+          providerUrl: blockchain.rpcUrl,
+          timeout: 60000,
+        })
+      )
+    }
+
+    const storage = metaplex.storage().driver() as BundlrStorageDriver
+
+    ;(await storage.bundlr()).fund(5000)
+
+    const { uri, metadata } = await metaplex
+      .nfts()
+      .uploadMetadata({
+        name,
+        image: avatarFile,
+        properties: {
+          files: [
+            {
+              type: 'pdf',
+              uri: file,
+            },
+          ],
+        },
+        attributes,
+      })
+      .run()
+
+    console.log({ uri, metadata, tokenOwner: tokenOwner.toBase58() })
+
+    const { nft }: { nft: Nft } = await metaplex
+      .nfts()
+      .create({
+        uri,
+        name,
+        tokenOwner,
+        mintAuthority: wallet,
+        updateAuthority: wallet,
+      })
+      .run()
+
+    return {
+      uri,
+      mint: nft.mint.address.toBase58(),
+      resumePdf: metadata.properties.files[0].uri,
+    }
   }
 })()

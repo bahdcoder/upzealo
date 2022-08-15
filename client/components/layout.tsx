@@ -8,8 +8,6 @@ export default function Layout({ children }: { children: ReactNode }) {
   const homeActive = router.pathname === '/'
   const learningActive = router.pathname.match(/learning/) !== null
 
-  console.log({ homeActive, learningActive })
-
   return (
     <div
       className={classNames('w-full', {

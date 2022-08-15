@@ -1,10 +1,11 @@
+import { DateTime } from 'luxon'
 import Section from 'App/Models/Learning/Section'
 
 import Factory from '@ioc:Adonis/Lucid/Factory'
 
+import SkillFactory from 'Database/factories/Learning/SkillFactory'
 import CourseFactory from 'Database/factories/Learning/CourseFactory'
 import LessonFactory from 'Database/factories/Learning/LessonFactory'
-import { DateTime } from 'luxon'
 
 export default Factory.define(Section, ({ faker }) => {
   return {
@@ -20,4 +21,5 @@ export default Factory.define(Section, ({ faker }) => {
   )
   .relation('course', () => CourseFactory)
   .relation('lessons', () => LessonFactory)
+  .relation('skills', () => SkillFactory)
   .build()

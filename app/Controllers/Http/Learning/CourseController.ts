@@ -38,8 +38,6 @@ export default class CourseController {
       await user.load('badges')
       const allUserBadges = user.badges.map((badge) => badge.id)
 
-      console.log({ allUserBadges })
-
       badgesQuery.whereIn('id', allUserBadges)
     }
 

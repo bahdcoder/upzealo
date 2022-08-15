@@ -41,6 +41,9 @@ export default class BaseModel extends LucidBaseModel {
     Bounty: 'bounty',
     Bot: 'bot',
     Author: 'author',
+    Certifier: 'cert',
+    ExternalCertification: 'excert',
+    Skill: 'skill',
   }
 
   @beforeCreate()

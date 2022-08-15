@@ -1,13 +1,12 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'skills'
+  protected tableName = 'external_certifications'
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.string('id').primary()
 
-      table.string('section_id').nullable().references('id').inTable('sections').onDelete('CASCADE')
       table
         .string('certifier_id')
         .nullable()
@@ -15,12 +14,13 @@ export default class extends BaseSchema {
         .inTable('certifiers')
         .onDelete('CASCADE')
 
-      table.string('certifier_course').nullable()
+      table.string('user_id').nullable().references('id').inTable('users').onDelete('CASCADE')
 
-      table.integer('index')
+      table.string('certifier_course')
 
-      table.string('name')
-      table.text('description').nullable()
+      table.unique(['certifier_course', 'certifier_id', 'user_id'], {
+        indexName: 'unique_course_user',
+      })
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

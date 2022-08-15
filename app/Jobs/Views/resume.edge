@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                900: '#232339',
+                800: '#2E2E48',
+                400: '#516CF7',
+                200: '#ACB1C3',
+              },
+            },
+            fontFamily: {
+              sans: [
+                'Outfit',
+                'ui-serif',
+                'Georgia',
+                'Cambria',
+                'Times New Roman',
+                'Times',
+                'serif',
+              ],
+            },
+          },
+        },
+      }
+    </script>
+    <style type="text/tailwindcss">
+      html {
+        -webkit-print-color-adjust: exact;
+      }
+      /* Software Engineer */
+      .badge-software-engineer {
+        @apply border-[#ec4899];
+      }
+
+      .badge-software-engineer-heading,
+      .badge-software-engineer-svg {
+        @apply text-[#ec4899];
+      }
+
+      .badge-software-engineer-tag {
+        @apply text-[#ec4899] bg-[#ec4899]/10 border border-[#ec4899]/50;
+      }
+
+      .badge-software-engineer-tag:hover,
+      .badge-software-engineer-tag-selected {
+        @apply bg-[#ec4899]/30;
+      }
+
+      /* Quality Content Creator */
+      .badge-quality-content-creator {
+        @apply border-[#7c3aed];
+      }
+
+      .badge-quality-content-creator-heading,
+      .badge-quality-content-creator-svg {
+        @apply text-[#7c3aed];
+      }
+
+      .badge-quality-content-creator-tag {
+        @apply text-[#7c3aed] bg-[#7c3aed]/10 border border-[#7c3aed]/50;
+      }
+
+      .badge-quality-content-creator-tag:hover,
+      .badge-quality-content-creator-tag-selected {
+        @apply bg-[#7c3aed]/30;
+      }
+
+      /* Meme Creator & Shitposter */
+      .badge-meme-creator-and-shitposter {
+        @apply border-[#ef4444];
+      }
+
+      .badge-meme-creator-and-shitposter-heading,
+      .badge-meme-creator-and-shitposter-svg {
+        @apply text-[#ef4444];
+      }
+
+      .badge-meme-creator-and-shitposter-tag {
+        @apply text-[#ef4444] bg-[#ef4444]/10 border border-[#ef4444]/50;
+      }
+
+      .badge-meme-creator-and-shitposter-tag:hover,
+      .badge-meme-creator-and-shitposter-tag-selected {
+        @apply bg-[#ef4444]/30;
+      }
+
+      /* Builder / Founder */
+      .badge-builder-founder {
+        @apply border-[#16a34a];
+      }
+
+      .badge-builder-founder-heading,
+      .badge-builder-founder-svg {
+        @apply text-[#16a34a];
+      }
+
+      .badge-builder-founder-tag {
+        @apply text-[#16a34a] bg-[#16a34a]/10 border border-[#16a34a]/50;
+      }
+
+      .badge-builder-founder-tag:hover,
+      .badge-builder-founder-tag-selected {
+        @apply bg-[#16a34a]/30;
+      }
+
+      /* Graphic / UI Designer */
+      .badge-graphic-ui-designer {
+        @apply border-[#ea580c];
+      }
+
+      .badge-graphic-ui-designer-heading,
+      .badge-graphic-ui-designer-svg {
+        @apply text-[#ea580c];
+      }
+
+      .badge-graphic-ui-designer-tag {
+        @apply text-[#ea580c] bg-[#ea580c]/10 border border-[#ea580c]/50;
+      }
+
+      .badge-graphic-ui-designer-tag:hover,
+      .badge-graphic-ui-designer-tag-selected {
+        @apply bg-[#ea580c]/30;
+      }
+
+      /* Marketer */
+      .badge-marketer {
+        @apply border-[#3b82f6];
+      }
+
+      .badge-marketer-heading,
+      .badge-marketer-svg {
+        @apply text-[#3b82f6];
+      }
+
+      .badge-marketer-tag {
+        @apply text-[#3b82f6] bg-[#3b82f6]/10 border border-[#3b82f6]/50;
+      }
+
+      .badge-marketer-tag:hover,
+      .badge-marketer-tag-selected {
+        @apply bg-[#3b82f6]/30;
+      }
+
+      /* Artist */
+      .badge-artist {
+        @apply border-[#D0FA3D];
+      }
+
+      .badge-artist-heading,
+      .badge-artist-svg {
+        @apply text-[#D0FA3D];
+      }
+
+      .badge-artist-tag {
+        @apply text-[#D0FA3D] bg-[#D0FA3D]/10 border border-[#D0FA3D]/50;
+      }
+
+      .badge-artist-tag:hover,
+      .badge-artist-tag-selected {
+        @apply bg-[#D0FA3D]/30;
+      }
+
+      /* Web3 Investor */
+      .badge-web3-investor {
+        @apply border-[#66C3FF];
+      }
+
+      .badge-web3-investor-heading,
+      .badge-web3-investor-svg {
+        @apply text-[#66C3FF];
+      }
+
+      .badge-web3-investor-tag {
+        @apply text-[#66C3FF] bg-[#66C3FF]/10 border border-[#66C3FF]/50;
+      }
+
+      .badge-web3-investor-tag:hover,
+      .badge-web3-investor-tag-selected {
+        @apply bg-[#66C3FF]/30;
+      }
+
+      /* Community Manager */
+      .badge-community-manager {
+        @apply border-[#7692FF];
+      }
+
+      .badge-community-manager-heading,
+      .badge-community-manager-svg {
+        @apply text-[#7692FF];
+      }
+
+      .badge-community-manager-tag {
+        @apply text-[#7692FF] bg-[#7692FF]/10 border border-[#7692FF]/50;
+      }
+
+      .badge-community-manager-tag:hover,
+      .badge-community-manager-tag-selected {
+        @apply bg-[#7692FF]/30;
+      }
+
+      /* Influencer */
+      .badge-influencer {
+        @apply border-[#eab308];
+      }
+
+      .badge-influencer-heading,
+      .badge-influencer-svg {
+        @apply text-[#eab308];
+      }
+
+      .badge-influencer-tag {
+        @apply text-[#eab308] bg-[#eab308]/10 border border-[#eab308]/50;
+      }
+
+      .badge-influencer-tag:hover,
+      .badge-influencer-tag-selected {
+        @apply bg-[#eab308]/30;
+      }
+
+      /* Trader */
+      .badge-trader {
+        @apply border-[#2AF5FF];
+      }
+
+      .badge-trader-heading,
+      .badge-trader-svg {
+        @apply text-[#2AF5FF];
+      }
+
+      .badge-trader-tag {
+        @apply text-[#2AF5FF] bg-[#2AF5FF]/10 border border-[#2AF5FF]/50;
+      }
+
+      .badge-trader-tag:hover,
+      .badge-trader-tag-selected {
+        @apply bg-[#2AF5FF]/30;
+      }
+
+      /* Advisor & Strategist */
+      .badge-advisor-and-strategist {
+        @apply border-[#FFF];
+      }
+
+      .badge-advisor-and-strategist-heading,
+      .badge-advisor-and-strategist-svg {
+        @apply text-[#FFF];
+      }
+
+      .badge-advisor-and-strategist-tag {
+        @apply text-[#FFF] bg-[#FFF]/10 border border-[#FFF]/50;
+      }
+
+      .badge-advisor-and-strategist-tag:hover,
+      .badge-advisor-and-strategist-tag-selected {
+        @apply bg-[#FFF]/30;
+      }
+    </style>
+  </head>
+  <body class="bg-primary-900 font-sans text-white">
+    <div class="flex min-h-screen h-[850px]">
+      <div class="w-[30%] border-r border-primary-800 h-full">
+        <div class="flex flex-col p-6">
+          <img class="w-16 h-16 rounded-full" src="{{ profile.avatarUrl }}" alt="" />
+
+          <h1 class="mt-4 text-white font-semibold">
+            {{ profile.username }}
+          </h1>
+
+          <div class="mt-4 flex flex-wrap">
+            @each(tag in profile.tags)
+              <div class="rounded-md flex items-center border transition ease-linear px-3 py-1.5 text-xs ml-2 mb-2 font-semibold badge-{{ tag.badge.className }}-tag">
+                {{ tag.title }}
+              </div>
+            @endeach
+          </div>
+        </div>
+      </div>
+      <div class="w-[70%] h-full px-12 py-12">
+        <div class="flex flex-col">
+          <h2 class="font-bold text-white text-3xl">Web3 Education / Courses</h2>
+
+          @each(course in courses)
+            <div class="flex flex-col space-y-4 my-12">
+              <h3 class="font-bold text-xl flex items-center">
+                {{ course.title }}
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="ml-3 text-green-500 fill-current"
+                  enable-background="new 0 0 24 24"
+                  height="24px"
+                  viewBox="0 0 24 24"
+                  width="24px"
+                  fill="current"
+                >
+                  <g><rect fill="none" height="24" width="24" /></g>
+                  <g>
+                    <g>
+                      <path
+                        d="M23,11.99l-2.44-2.79l0.34-3.69l-3.61-0.82L15.4,1.5L12,2.96L8.6,1.5L6.71,4.69L3.1,5.5L3.44,9.2L1,11.99l2.44,2.79 l-0.34,3.7l3.61,0.82L8.6,22.5l3.4-1.47l3.4,1.46l1.89-3.19l3.61-0.82l-0.34-3.69L23,11.99z M19.05,13.47l-0.56,0.65l0.08,0.85 l0.18,1.95l-1.9,0.43l-0.84,0.19l-0.44,0.74l-0.99,1.68l-1.78-0.77L12,18.85l-0.79,0.34l-1.78,0.77l-0.99-1.67l-0.44-0.74 l-0.84-0.19l-1.9-0.43l0.18-1.96l0.08-0.85l-0.56-0.65l-1.29-1.47l1.29-1.48l0.56-0.65L5.43,9.01L5.25,7.07l1.9-0.43l0.84-0.19 l0.44-0.74l0.99-1.68l1.78,0.77L12,5.14l0.79-0.34l1.78-0.77l0.99,1.68l0.44,0.74l0.84,0.19l1.9,0.43l-0.18,1.95l-0.08,0.85 l0.56,0.65l1.29,1.47L19.05,13.47z"
+                      />
+                      <polygon
+                        points="10.09,13.75 7.77,11.42 6.29,12.91 10.09,16.72 17.43,9.36 15.95,7.87"
+                      />
+                    </g>
+                  </g>
+                </svg>
+              </h3>
+
+              <h3 class="text-lg text-white">Skills acquired</h3>
+
+              <ol class="flex-flex-col pl-6 list-reset space-y-3">
+                @each(skill in course.skills)
+                  <li class="flex text-primary-200">
+                    {{ skill.name }}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="ml-3 text-green-500 fill-current w-5 h-5"
+                      enable-background="new 0 0 24 24"
+                      viewBox="0 0 24 24"
+                      fill="current"
+                    >
+                      <g><rect fill="none" height="24" width="24" /></g>
+                      <g>
+                        <g>
+                          <path
+                            d="M23,11.99l-2.44-2.79l0.34-3.69l-3.61-0.82L15.4,1.5L12,2.96L8.6,1.5L6.71,4.69L3.1,5.5L3.44,9.2L1,11.99l2.44,2.79 l-0.34,3.7l3.61,0.82L8.6,22.5l3.4-1.47l3.4,1.46l1.89-3.19l3.61-0.82l-0.34-3.69L23,11.99z M19.05,13.47l-0.56,0.65l0.08,0.85 l0.18,1.95l-1.9,0.43l-0.84,0.19l-0.44,0.74l-0.99,1.68l-1.78-0.77L12,18.85l-0.79,0.34l-1.78,0.77l-0.99-1.67l-0.44-0.74 l-0.84-0.19l-1.9-0.43l0.18-1.96l0.08-0.85l-0.56-0.65l-1.29-1.47l1.29-1.48l0.56-0.65L5.43,9.01L5.25,7.07l1.9-0.43l0.84-0.19 l0.44-0.74l0.99-1.68l1.78,0.77L12,5.14l0.79-0.34l1.78-0.77l0.99,1.68l0.44,0.74l0.84,0.19l1.9,0.43l-0.18,1.95l-0.08,0.85 l0.56,0.65l1.29,1.47L19.05,13.47z"
+                          />
+                          <polygon
+                            points="10.09,13.75 7.77,11.42 6.29,12.91 10.09,16.72 17.43,9.36 15.95,7.87"
+                          />
+                        </g>
+                      </g>
+                    </svg>
+                  </li>
+                @endeach
+              </ol>
+
+              @if(course.description)
+                <h3 class="text-lg text-white">Course description</h3>
+
+                <div class="mt-4 text-primary-200">
+                  {{ course.description }}
+                </div>
+              @endif
+
+              <div class="mt-4 text-lg">Certification authority</div>
+
+              <div class="mt-4">
+                <span class="text-primary-200"> Certified by </span>
+
+                <span class="font-bold">{{ course.certificationAuthority }}</span>
+              </div>
+            </div>
+          @endeach
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

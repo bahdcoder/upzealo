@@ -91,6 +91,15 @@ export default class User extends BaseModel {
   @column({ serializeAs: 'avatarUrl' })
   public avatarUrl: string
 
+  @column({ serializeAs: 'resumeMint' })
+  public resumeMint: string
+
+  @column({ serializeAs: 'resumeUrl' })
+  public resumeUrl: string
+
+  @column({ serializeAs: 'resumePdf' })
+  public resumePdf: string
+
   @column()
   public bio: string
 
