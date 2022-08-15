@@ -5,10 +5,10 @@ import 'plyr-react/plyr.css'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import BaseApp from 'next/app'
-import { withIronSessionSsr } from 'iron-session/next'
+import { Toaster } from 'react-hot-toast'
 import { QueryClientProvider } from '@tanstack/react-query'
 
-import type { AppContext, AppProps, AppInitialProps } from 'next/app'
+import type { AppContext, AppProps } from 'next/app'
 
 import { queryClient } from '../helpers/query-client'
 
@@ -23,6 +23,7 @@ import { config } from '../helpers/config'
 function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
+      <Toaster />
       <AuthContextWrapper isAuthenticated={pageProps.user !== undefined}>
         <AuthContextProvider
           defaultAuthState={pageProps.user ? { ...pageProps.user, authenticated: true } : undefined}

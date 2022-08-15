@@ -14,6 +14,7 @@ import { helpers, ProgramHelper } from './helpers'
 import { getAssociatedTokenAddress } from '@solana/spl-token'
 
 import { config } from '../config'
+import { WalletContextState } from '@solana/wallet-adapter-react'
 
 export type CreateBountyTransactionPayload = {
   walletAddress: string
@@ -22,19 +23,19 @@ export type CreateBountyTransactionPayload = {
   amountAsNumber: number
 }
 
-export const SolanaProgram = new (class {
+export const SolanaProgram = class {
   private program: Program<Upzealo>
   private connection: Connection
   private provider: AnchorProvider
   private helpers: ProgramHelper
 
-  constructor() {
+  constructor(wallet: WalletContextState) {
     this.connection = new Connection(config.solanaRpcUrl, {
       commitment: 'confirmed',
       confirmTransactionInitialTimeout: 120000,
     })
 
-    this.provider = new AnchorProvider(this.connection, {} as any, {
+    this.provider = new AnchorProvider(this.connection, wallet as any, {
       commitment: 'confirmed',
     })
 
@@ -92,23 +93,21 @@ export const SolanaProgram = new (class {
       bounty.publicKey
     )
 
-    const transaction = await this.program.methods
+    const signature = await this.program.methods
       .createBounty(amount, bountyAuthorityBump)
       .accounts({
         user,
         wallet,
-        bounty: bounty.publicKey,
         mint,
         mintSource,
         bountyWallet,
         bountyAuthority,
+        bounty: bounty.publicKey,
       })
       .signers([bounty])
-      .transaction()
+      .rpc()
 
-    await this.setTransactionOptions(transaction, wallet)
-
-    return { transaction, bounty, user, bountyWallet, bountyAuthority, mintSource, mint, amount }
+    return { signature, bounty, user, bountyWallet, bountyAuthority, mintSource, mint, amount }
   }
 
   async setTransactionOptions(transaction: Transaction, feePayer: string | PublicKey) {
@@ -118,16 +117,9 @@ export const SolanaProgram = new (class {
     transaction.feePayer = new PublicKey(feePayer)
   }
 
-  async createBounty(payload: CreateBountyTransactionPayload, signers: Signer[]) {
-    const { transaction, ...rest } = await this.createBountyTransaction(payload)
-    const signature = await this.sendAndConfirmTransaction(transaction, signers)
-
-    return { ...rest, signature, transaction }
-  }
-
   async sendAndConfirmTransaction(transaction: Transaction, signers: Signer[]) {
     const signature = await sendAndConfirmTransaction(this.connection, transaction, signers)
 
     return signature
   }
-})()
+}

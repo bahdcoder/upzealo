@@ -2,7 +2,7 @@ import Skeleton from 'react-loading-skeleton'
 import { useQuery } from '@tanstack/react-query'
 import Input from './input'
 import { Select, SelectOption } from './select'
-import {} from '@solana/web3.js'
+import { } from '@solana/web3.js'
 import { useApiAxiosInstance } from '../helpers/axios-client'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { formatNumber } from '../helpers/currencies'
@@ -49,7 +49,7 @@ export function CurrencyAmountSelector({
           name: usdcAccount.symbol,
           image: usdcAccount.logo,
           decimals: usdcAccount.decimals,
-          balance: computeBalance(usdcAccount),
+          balance: computeBalance(usdcAccount).toString(),
         })
       } else {
         const first = response.data.accounts[0]
@@ -58,14 +58,13 @@ export function CurrencyAmountSelector({
           name: first.symbol,
           image: first.logo,
           decimals: first.decimals,
-          balance: computeBalance(first),
+          balance: computeBalance(first).toString(),
         })
       }
 
       return response.data.accounts
     },
     {
-      refetchOnMount: false,
       refetchOnReconnect: true,
       refetchOnWindowFocus: false,
     }
@@ -75,7 +74,7 @@ export function CurrencyAmountSelector({
     () =>
       tokens.map((token) => ({
         id: token.mint,
-        name: `${token.symbol} (${computeBalance(token)})`,
+        name: `${token.symbol} (${formatNumber(computeBalance(token))})`,
         image: token.logo,
         decimals: token.decimals,
         balance: computeBalance(token),
@@ -84,9 +83,8 @@ export function CurrencyAmountSelector({
   )
 
   function computeBalance(token: SupportedCurrency) {
-    const amount = token.balance / 10 ** token.decimals
-
-    return formatNumber(amount)
+    // const amount = token.balance / 10 ** token.decimals
+    return token.balance
   }
 
   useEffect(() => {

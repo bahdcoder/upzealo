@@ -9,22 +9,31 @@ import {
   Dispatch,
   SetStateAction,
   useEffect,
+  ChangeEvent,
+  useRef,
 } from 'react'
-
 import Avatar from './avatar'
 import Button, { ActionButton, PrimaryButton } from './button'
 import Input from './input'
 import AvatarProfile from './avatar-profile'
 import { Select } from './select'
-import { Modal } from './modal'
+import { CloseIcon, Modal } from './modal'
 import { BountyInputLoader } from './bounty-input-loader'
 import { CurrencyAmountSelector } from './currency-amount-selector'
 import { useMutation } from '@tanstack/react-query'
 import { useApiAxiosInstance } from '../helpers/axios-client'
 import { useAuth } from '../store/auth'
+import NoSSR from 'react-no-ssr'
 import { Transaction } from '@solana/web3.js'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { SolanaProgram } from '../helpers/solana'
+import { toast } from 'react-hot-toast'
+
+type UploadedImage = {
+  dataURL?: string;
+  file: File;
+  [key: string]: any;
+}
 
 export function BountyButton({
   children,
@@ -219,6 +228,8 @@ export function CreatePostModal({
   setType: Dispatch<SetStateAction<PostType>>
   setIsOpen: Dispatch<SetStateAction<boolean>>
 }>) {
+  const [images, setImages] = useState<File[]>([])
+  const [imagePreviews, setImagePreviews] = useState<string[]>([])
   const [step, setStep] = useState(0)
   const [form, setForm] = useState<{
     content: string
@@ -231,24 +242,43 @@ export function CreatePostModal({
     content?: string
     amount?: string
   }>({})
-  const { signTransaction } = useWallet()
+  const wallet = useWallet()
   const instance = useApiAxiosInstance()
   const { profile } = useAuth()
+  const inputFile = useRef<HTMLInputElement>(null)
+
+  const { mutateAsync: uploadAttachments } = useMutation(async () => {
+    const responses = await Promise.all(
+      images.map(image => {
+        const formData = new FormData
+
+        formData.append('file', image)
+
+        return instance.post('/feed/attachments', formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          }
+        })
+      })
+    )
+
+    return responses.map(response => response.data.id)
+  })
 
   const { isLoading: isPublishingBounty, mutate: publishBounty } = useMutation(
     async () => {
       const amount = form.amount * 10 ** form.decimals
 
-      let { transaction, bounty } = await SolanaProgram.createBountyTransaction({
+      const program = new SolanaProgram(wallet)
+
+      const attachmentIds = await uploadAttachments()
+
+      let { signature, bounty } = await program.createBountyTransaction({
         userAddress: profile.solanaAddress,
         walletAddress: profile.addresses[0].publicKey,
         amountAsNumber: amount,
         mintAddress: form.currency,
       })
-
-      transaction = await signTransaction!(transaction)
-
-      const signature = await SolanaProgram.sendAndConfirmTransaction(transaction, [])
 
       const createBountyResponse = await instance.post('/feed/bounties', {
         currencyMint: form.currency,
@@ -256,16 +286,43 @@ export function CreatePostModal({
         content: form.content,
         bountyAddress: bounty.publicKey.toBase58(),
         signature,
+        attachmentIds
       })
+
+      console.log({ signature })
 
       console.log(createBountyResponse.data)
     },
     {
       onError(error) {
         console.error(error)
+        toast.error(`An error occurred published. Please try again.`)
       },
+      onSuccess() {
+        toast.success(`Your post has been published.`)
+        setIsOpen(false)
+        setImages([])
+      }
     }
   )
+
+  const { isLoading: isPublishingDefaultPost, mutate: publishDefaultPost } = useMutation(async () => {
+    const attachmentIds = await uploadAttachments()
+
+    await instance.post('/feed/posts', {
+      content: form.content,
+      attachmentIds
+    })
+  }, {
+    onError(error) {
+      console.error(error)
+      toast.error(`An error occurred published. Please try again.`)
+    },
+    onSuccess() {
+      toast.success(`Your post has been published.`)
+      setIsOpen(false)
+    }
+  })
 
   function closeModal() {
     setIsOpen(false)
@@ -354,6 +411,22 @@ export function CreatePostModal({
 
       publishBounty()
     }
+
+    if (type === PostType.PHOTO) {
+      const errors: typeof error = {}
+
+      if (!form.content) {
+        errors.content = 'Please provide your post content.'
+      }
+
+      if (Object.keys(errors).length > 0) {
+        setError(errors)
+
+        return
+      }
+
+      publishDefaultPost()
+    }
   }
 
   useEffect(() => {
@@ -365,6 +438,38 @@ export function CreatePostModal({
       setError({ ...error, amount: undefined })
     }
   }, [form])
+
+  function onImageChanged(event: ChangeEvent<HTMLInputElement>) {
+    if (!event.target.files || event.target.files.length === 0) {
+      setImages([])
+
+      return
+    }
+
+    setImages(Array.from(event.target.files).map(file => file))
+  }
+
+  useEffect(() => {
+    let imagesWithPreviews = images.map(image => URL.createObjectURL(image))
+
+    setImagePreviews(imagesWithPreviews)
+
+    return () => {
+      imagePreviews.forEach(image => {
+        URL.revokeObjectURL(image)
+      })
+    }
+  }, [images])
+
+  console.log({ images })
+
+  function onImageUpload() {
+    inputFile.current?.click()
+  }
+
+  function onImageRemove(idx: number) {
+    setImages(images.filter((img, imgIdx) => imgIdx !== idx))
+  }
 
   return (
     <Modal isOpen={isOpen} setIsOpen={() => closeModal()} title={resolveTitle()}>
@@ -414,7 +519,9 @@ export function CreatePostModal({
           ) : null}
 
           <div className="flex flex-col absolute lg:static bottom-0 pb-8 pt-8 lg:pb-0">
-            {types}
+            <div className="flex items-center justify-between">
+              {types}
+            </div>
 
             <div className="mt-6 flex items-center space-x-4">
               {step === 0 ? null : (
@@ -430,41 +537,70 @@ export function CreatePostModal({
         </>
       ) : (
         <>
-          <div className="mt-6">{/* <AvatarProfile  /> */}</div>
 
-          <div className="my-6">
-            <TextareaAutosize
-              autoFocus
-              placeholder={placeholder}
-              onChange={(event) => setForm({ ...form, content: event.target.value })}
-              className="bg-transparent min-h-[5rem] text-white focus:outline-none w-full text-md resize-none placeholder:text-dark-300"
-            />
-
-            {error?.content ? <span className="text-xs text-red-500">{error?.content}</span> : null}
+          <div className="mt-6">
+            <AvatarProfile profile={profile} />
           </div>
 
-          <div className="flex flex-col absolute bottom-0 lg:static pb-8 lg:pb-0 w-[88%] lg:w-full">
-            {type === PostType.BOUNTY ? (
-              <CurrencyAmountSelector
-                error={error?.amount}
-                onChange={({ currency, amount, balance, decimals }) => {
-                  setForm({ ...form, currency, amount, balance, decimals })
-                }}
-              />
-            ) : null}
+          <NoSSR>
+            <div>
 
-            <div className="my-2">{types}</div>
+              <div className="mt-3">
+                <TextareaAutosize
+                  autoFocus
+                  placeholder={placeholder}
+                  onChange={(event) => setForm({ ...form, content: event.target.value })}
+                  className="bg-transparent min-h-[6rem] text-white focus:outline-none w-full text-md resize-none placeholder:text-dark-300"
+                />
 
-            <div className="mt-6">
-              <PrimaryButton
-                isLoading={isPublishingBounty}
-                className="px-12"
-                onClick={() => publish()}
-              >
-                Publish
-              </PrimaryButton>
+                {error?.content ? <span className="text-xs text-red-500">{error?.content}</span> : null}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                {imagePreviews.map((preview, index: number) => (
+                  <div key={index} className='w-full relative' >
+                    <img src={preview} className='w-full rounded-2xl' />
+
+                    <button onClick={() => onImageRemove(index)} className="absolute top-2 right-2">
+                      <CloseIcon className='text-black' />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col absolute bottom-0 lg:static pb-8 lg:pb-0 w-[88%] lg:w-full">
+                {type === PostType.BOUNTY ? (
+                  <CurrencyAmountSelector
+                    error={error?.amount}
+                    onChange={({ currency, amount, balance, decimals }) => {
+                      setForm({ ...form, currency, amount, balance, decimals })
+                    }}
+                  />
+                ) : null}
+
+                <input type="file" id="attachment-selector" className='hidden' ref={inputFile} onChange={onImageChanged} />
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    {types}
+                  </div>
+                  <ActionButton className='py-2 text-xs px-6 mt-4' onClick={onImageUpload}>Attach files</ActionButton>
+                </div>
+
+                <div className="mt-4">
+                  <PrimaryButton
+                    isLoading={isPublishingBounty || isPublishingDefaultPost}
+                    className="px-12"
+                    onClick={() => publish()}
+                  >
+                    Publish
+                  </PrimaryButton>
+                </div>
+              </div>
             </div>
-          </div>
+          </NoSSR>
+
+
         </>
       )}
     </Modal>
