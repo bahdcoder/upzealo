@@ -1,7 +1,9 @@
 import { DateTime } from 'luxon'
-import { column } from '@ioc:Adonis/Lucid/Orm'
+import { BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 
 import BaseModel from 'App/Models/Base'
+import Post from './Post'
+import Comment from './Comment'
 
 export enum AttachmentDrivers {
   CLOUDINARY = 'CLOUDINARY',
@@ -20,6 +22,12 @@ export default class Attachment extends BaseModel {
 
   @column()
   public url: string
+
+  @belongsTo(() => Post)
+  public post: BelongsTo<typeof Post>
+
+  @belongsTo(() => Comment)
+  public comment: BelongsTo<typeof Comment>
 
   @column()
   public driver: AttachmentDrivers = AttachmentDrivers.CLOUDINARY

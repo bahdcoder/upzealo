@@ -64,7 +64,7 @@ export default class extends BaseSeeder {
 
     for (let index = 0; index < users.length; index++) {
       const user = users[index]
-      const randomTwentyFiveUsers = getMultipleRandom(users, 5)
+      const randomTwentyFiveUsers = getMultipleRandom(users, 25)
       entities.push(
         ...randomTwentyFiveUsers.map((target) => ({
           targetId: target.id,

@@ -461,7 +461,6 @@ export function CreatePostModal({
     }
   }, [images])
 
-  console.log({ images })
 
   function onImageUpload() {
     inputFile.current?.click()

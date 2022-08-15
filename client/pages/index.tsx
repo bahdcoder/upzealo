@@ -5,9 +5,19 @@ import Post from '../components/post'
 import CreatePost from '../components/create-post'
 import { WhoToFollow } from '../components/who-to-follow'
 import { ActionButton, PrimaryButton } from '../components/button'
+import { useQuery } from '@tanstack/react-query'
+import { useApiAxiosInstance } from '../helpers/axios-client'
 
 const Home: NextPage = () => {
-  const noCommunities = true
+  const instance = useApiAxiosInstance()
+  const { } = useQuery(['feed'], async () => {
+    const response = await instance.get('/feed')
+
+    return response.data
+  })
+
+
+  const noCommunities = false
   return (
     <div className="flex items-center h-[calc(100%-5rem)]">
       <div className="hidden lg:flex w-[24%] h-full flex-col px-8 pt-12">

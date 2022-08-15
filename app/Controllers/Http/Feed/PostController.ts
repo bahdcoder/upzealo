@@ -24,10 +24,10 @@ export default class PostController {
   public async store({ request, auth }: HttpContextContract) {
     const user = auth.use('jwt').user!
 
-    const { content, attachmentIds } = await request.validate({
+    const { content, attachmentIds = [] } = await request.validate({
       schema: schema.create({
         content: schema.string([rules.required(), rules.maxLength(1200)]),
-        attachmentIds: schema.array.nullable().members(schema.string()),
+        attachmentIds: schema.array.nullableAndOptional().members(schema.string()),
       }),
     })
 

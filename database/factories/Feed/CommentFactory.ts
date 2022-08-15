@@ -1,15 +1,15 @@
-import Post from 'App/Models/Feed/Post'
+import Comment from 'App/Models/Feed/Comment'
 import Factory from '@ioc:Adonis/Lucid/Factory'
 import AttachmentFactory from './AttachmentFactory'
-import CommentFactory from './CommentFactory'
+import PostFactory from './PostFactory'
 import UserFactory from '../Profile/UserFactory'
 
-export default Factory.define(Post, ({ faker }) => {
+export default Factory.define(Comment, ({ faker }) => {
   return {
-    content: faker.lorem.paragraphs(2),
+    content: faker.lorem.paragraph(),
   }
 })
   .relation('attachments', () => AttachmentFactory)
-  .relation('comments', () => CommentFactory)
+  .relation('post', () => PostFactory)
   .relation('user', () => UserFactory)
   .build()
