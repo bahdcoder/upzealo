@@ -175,6 +175,36 @@ export function RenderExperienceIcon({
   return null
 }
 
+export function Tag({
+  className,
+  icon,
+  title,
+}: PropsWithChildren<{
+  className: string
+  icon: string
+  title: string
+}>) {
+  return (
+    <button
+      className={classNames(
+        'rounded-md flex items-center border transition ease-linear px-3 py-1.5 text-xs ml-2 mb-2 font-semibold',
+        `badge-${className}-tag`
+      )}
+    >
+      <RenderExperienceIcon
+        svgProps={{
+          height: 16,
+          width: 16,
+          fill: 'currentColor',
+          className: 'mr-2',
+        }}
+        icon={icon}
+      />
+      {title}
+    </button>
+  )
+}
+
 export function PickWeb3Experience() {
   const { profile } = useContext(AuthCtx)
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])

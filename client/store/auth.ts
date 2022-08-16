@@ -80,9 +80,70 @@ export interface Experience {
   organisation: Organisation
 }
 
+export enum PostType {
+  BOUNTY = 'BOUNTY',
+  DEFAULT = 'DEFAULT',
+}
+
+export interface Attachment {
+  id: string
+  url: string
+}
+
+export interface Bounty {
+  id: string
+  amount: number
+  currencyMint: string
+  addressId: string
+  signature: string
+  bountyAddress: string
+  winnerId: string
+  commentId: string
+  winner: UserProfile
+}
+
+export interface Post {
+  id: string
+  content: string
+  createdAt: string
+  userId: string
+  user: UserProfile
+  type: PostType
+  meta: {
+    comments_count: number
+  }
+  bounty: Bounty
+  attachments: Attachment[]
+}
+
+export interface Comment {
+  id: string
+  content: string
+  user: UserProfile
+  userId: string
+  createdAt: string
+}
+
+export interface StreamPost {
+  actor: string
+  foreign_id: string
+  id: string
+  object: string
+  origin: null
+  target: string
+  time: string
+  verb: string
+}
+
+export interface EnrichedPost {
+  post: Post
+  stream: StreamPost
+}
+
 export interface UserProfile {
   id: string
   avatarUrl: string
+  resumeUrl?: string
   addresses: Address[]
   badges: Badge[]
   experiences: Experience[]
@@ -97,6 +158,7 @@ export interface UserProfile {
     isFollowing: boolean
   }
   username: string
+  bio: string
   solanaAddress: string
 }
 
@@ -105,11 +167,13 @@ export interface AuthState {
   streamAccessToken: string
   userId: string
   authenticated: boolean
+  loggedOut: boolean
 }
 
 export interface AuthContextData {
   authState: AuthState
   profile: UserProfile
+  setAuthState: (authState: AuthState) => void
   setProfile: Dispatch<SetStateAction<UserProfile>>
 }
 
@@ -118,6 +182,7 @@ export const defaultProfile: UserProfile = {
   addresses: [],
   username: '',
   avatarUrl: '',
+  bio: '',
   badges: [],
   experiences: [],
   solanaAddress: '',
@@ -139,7 +204,9 @@ export const AuthCtx = createContext<AuthContextData>({
     streamAccessToken: '',
     userId: '',
     authenticated: false,
+    loggedOut: false,
   },
+  setAuthState() {},
   profile: defaultProfile,
   setProfile() {},
 })

@@ -28,11 +28,12 @@ import { Transaction } from '@solana/web3.js'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { SolanaProgram } from '../helpers/solana'
 import { toast } from 'react-hot-toast'
+import classNames from 'classnames'
 
 type UploadedImage = {
-  dataURL?: string;
-  file: File;
-  [key: string]: any;
+  dataURL?: string
+  file: File
+  [key: string]: any
 }
 
 export function BountyButton({
@@ -249,20 +250,20 @@ export function CreatePostModal({
 
   const { mutateAsync: uploadAttachments } = useMutation(async () => {
     const responses = await Promise.all(
-      images.map(image => {
-        const formData = new FormData
+      images.map((image) => {
+        const formData = new FormData()
 
         formData.append('file', image)
 
         return instance.post('/feed/attachments', formData, {
           headers: {
-            "Content-Type": "multipart/form-data",
-          }
+            'Content-Type': 'multipart/form-data',
+          },
         })
       })
     )
 
-    return responses.map(response => response.data.id)
+    return responses.map((response) => response.data.id)
   })
 
   const { isLoading: isPublishingBounty, mutate: publishBounty } = useMutation(
@@ -286,7 +287,7 @@ export function CreatePostModal({
         content: form.content,
         bountyAddress: bounty.publicKey.toBase58(),
         signature,
-        attachmentIds
+        attachmentIds,
       })
 
       console.log({ signature })
@@ -302,27 +303,30 @@ export function CreatePostModal({
         toast.success(`Your post has been published.`)
         setIsOpen(false)
         setImages([])
-      }
+      },
     }
   )
 
-  const { isLoading: isPublishingDefaultPost, mutate: publishDefaultPost } = useMutation(async () => {
-    const attachmentIds = await uploadAttachments()
+  const { isLoading: isPublishingDefaultPost, mutate: publishDefaultPost } = useMutation(
+    async () => {
+      const attachmentIds = await uploadAttachments()
 
-    await instance.post('/feed/posts', {
-      content: form.content,
-      attachmentIds
-    })
-  }, {
-    onError(error) {
-      console.error(error)
-      toast.error(`An error occurred published. Please try again.`)
+      await instance.post('/feed/posts', {
+        content: form.content,
+        attachmentIds,
+      })
     },
-    onSuccess() {
-      toast.success(`Your post has been published.`)
-      setIsOpen(false)
+    {
+      onError(error) {
+        console.error(error)
+        toast.error(`An error occurred published. Please try again.`)
+      },
+      onSuccess() {
+        toast.success(`Your post has been published.`)
+        setIsOpen(false)
+      },
     }
-  })
+  )
 
   function closeModal() {
     setIsOpen(false)
@@ -446,21 +450,20 @@ export function CreatePostModal({
       return
     }
 
-    setImages(Array.from(event.target.files).map(file => file))
+    setImages(Array.from(event.target.files).map((file) => file))
   }
 
   useEffect(() => {
-    let imagesWithPreviews = images.map(image => URL.createObjectURL(image))
+    let imagesWithPreviews = images.map((image) => URL.createObjectURL(image))
 
     setImagePreviews(imagesWithPreviews)
 
     return () => {
-      imagePreviews.forEach(image => {
+      imagePreviews.forEach((image) => {
         URL.revokeObjectURL(image)
       })
     }
   }, [images])
-
 
   function onImageUpload() {
     inputFile.current?.click()
@@ -518,9 +521,7 @@ export function CreatePostModal({
           ) : null}
 
           <div className="flex flex-col absolute lg:static bottom-0 pb-8 pt-8 lg:pb-0">
-            <div className="flex items-center justify-between">
-              {types}
-            </div>
+            <div className="flex items-center justify-between">{types}</div>
 
             <div className="mt-6 flex items-center space-x-4">
               {step === 0 ? null : (
@@ -536,14 +537,12 @@ export function CreatePostModal({
         </>
       ) : (
         <>
-
           <div className="mt-6">
             <AvatarProfile profile={profile} />
           </div>
 
           <NoSSR>
             <div>
-
               <div className="mt-3">
                 <TextareaAutosize
                   autoFocus
@@ -552,16 +551,23 @@ export function CreatePostModal({
                   className="bg-transparent min-h-[6rem] text-white focus:outline-none w-full text-md resize-none placeholder:text-dark-300"
                 />
 
-                {error?.content ? <span className="text-xs text-red-500">{error?.content}</span> : null}
+                {error?.content ? (
+                  <span className="text-xs text-red-500">{error?.content}</span>
+                ) : null}
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mb-4">
+              <div
+                className={classNames('grid gap-4 mb-4', {
+                  'grid-cols-2': imagePreviews.length > 1,
+                  'grid-cols-1': imagePreviews.length === 1,
+                })}
+              >
                 {imagePreviews.map((preview, index: number) => (
-                  <div key={index} className='w-full relative' >
-                    <img src={preview} className='w-full rounded-2xl' />
+                  <div key={index} className="w-full relative">
+                    <img src={preview} className="w-full rounded-2xl" />
 
                     <button onClick={() => onImageRemove(index)} className="absolute top-2 right-2">
-                      <CloseIcon className='text-black' />
+                      <CloseIcon className="text-black" />
                     </button>
                   </div>
                 ))}
@@ -577,13 +583,20 @@ export function CreatePostModal({
                   />
                 ) : null}
 
-                <input type="file" id="attachment-selector" className='hidden' ref={inputFile} onChange={onImageChanged} />
+                <input
+                  type="file"
+                  id="attachment-selector"
+                  className="hidden"
+                  multiple
+                  ref={inputFile}
+                  onChange={onImageChanged}
+                />
 
                 <div className="flex items-center justify-between">
-                  <div>
-                    {types}
-                  </div>
-                  <ActionButton className='py-2 text-xs px-6 mt-4' onClick={onImageUpload}>Attach files</ActionButton>
+                  <div>{types}</div>
+                  <ActionButton className="py-2 text-xs px-6 mt-4" onClick={onImageUpload}>
+                    Attach files
+                  </ActionButton>
                 </div>
 
                 <div className="mt-4">
@@ -598,8 +611,6 @@ export function CreatePostModal({
               </div>
             </div>
           </NoSSR>
-
-
         </>
       )}
     </Modal>
@@ -609,6 +620,8 @@ export function CreatePostModal({
 export default function CreatePost() {
   const [isOpen, setIsOpen] = useState(false)
   const [type, setType] = useState<PostType>(PostType.PHOTO)
+
+  const { profile } = useAuth()
 
   function setTypeAndOpen(type: PostType) {
     setType(type)
@@ -621,7 +634,7 @@ export default function CreatePost() {
 
       <div className="flex items-center">
         <div className="mr-4">
-          <Avatar url="https://pbs.twimg.com/profile_images/1537681214546616320/xC9xGPn3_400x400.jpg" />
+          <Avatar url={profile.avatarUrl} />
         </div>
 
         <button className="w-full cursor-pointer" onClick={() => setIsOpen(true)}>

@@ -57,6 +57,8 @@ export default class Post extends BaseModel {
   public static async syncFeed(post: Post) {
     const getstream: Getstream = Application.container.use('Adonis/Addons/Getstream')
 
-    await getstream.addActivity(post)
+    const activity = await getstream.addActivity(post)
+
+    console.log({ activity })
   }
 }

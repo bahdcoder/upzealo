@@ -3,7 +3,7 @@ import * as anchor from '@project-serum/anchor'
 import { Program } from '@project-serum/anchor'
 import { BN } from 'bn.js'
 import { Upzealo } from '../target/types/upzealo'
-import { helpers } from './helpers/program'
+import { createFundedKeypair, helpers } from './helpers/program'
 import { getAccount, getAssociatedTokenAddress } from '@solana/spl-token'
 
 describe('upzealo', () => {
@@ -29,6 +29,8 @@ describe('upzealo', () => {
 
     const bounty = helper.bounty.publicKey
 
+    const payer = await createFundedKeypair()
+
     const amount = new BN(40000000)
     const [bountyAuthority, bountyAuthorityBump] = await helper.deriveBountyAuthorityPDA(bounty)
     const mint = helper.mint
@@ -41,16 +43,18 @@ describe('upzealo', () => {
         .accounts({
           user,
           wallet,
+          payer: payer.publicKey
         })
-        .signers([helper.wallet, helper.user])
+        .signers([payer, helper.user])
         .rpc(),
       program.methods
         .createAccount()
         .accounts({
           user: winnerUser,
           wallet: winnerWallet,
+          payer: payer.publicKey
         })
-        .signers([helper.secondWallet, helper.secondUser])
+        .signers([payer, helper.secondUser])
         .rpc(),
     ])
 
@@ -71,33 +75,23 @@ describe('upzealo', () => {
     let bountyAccount = await program.account.bounty.fetch(bounty)
 
     assert.equal(bountyAccount.amount.toNumber(), amount.toNumber())
-    assert.equal(bountyAccount.creator.toBase58(), wallet.toBase58())
+    assert.equal(bountyAccount.creator.toBase58(), user.toBase58())
 
     const mintDestination = await getAssociatedTokenAddress(mint, winnerWallet)
 
     await program.methods
-      .setBountyWinner()
+      .claimBountyReward()
       .accounts({
         wallet,
         user,
-        winner: winnerUser,
-        bounty,
-      })
-      .signers([helper.wallet])
-      .rpc()
-
-    await program.methods
-      .claimBountyReward()
-      .accounts({
-        wallet: winnerWallet,
-        user: winnerUser,
         mint,
         mintDestination,
         bountyWallet,
         bounty,
         bountyAuthority,
+        winner: winnerWallet,
       })
-      .signers([helper.secondWallet])
+      .signers([helper.wallet])
       .rpc()
 
     const mintDestinationAccount = await getAccount(connection, mintDestination)

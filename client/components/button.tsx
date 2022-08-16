@@ -1,7 +1,14 @@
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { twMerge } from 'tailwind-merge'
-import { PropsWithChildren, MouseEventHandler, useContext, useState, SVGProps } from 'react'
+import {
+  PropsWithChildren,
+  MouseEventHandler,
+  useContext,
+  useState,
+  SVGProps,
+  MutableRefObject,
+} from 'react'
 import { useApiAxiosInstance } from '../helpers/axios-client'
 import { AuthCtx, UserProfile } from '../store/auth'
 
@@ -97,32 +104,34 @@ export function FollowButton({
     onChange?: (action: 'followed' | 'unfollowed') => void
   }
 >) {
+  const [isFollowing, setIsFollowing] = useState(targetProfile?.meta?.isFollowing)
   const instance = useApiAxiosInstance()
   const [hovered, setHovered] = useState(false)
 
-  let content = targetProfile.meta.isFollowing ? 'Following' : 'Follow'
+  let content = isFollowing ? 'Following' : 'Follow'
 
-  if (hovered && targetProfile.meta.isFollowing) {
+  if (hovered && isFollowing) {
     content = 'Unfollow'
   }
 
   const { isLoading, mutate: followUnfollow } = useMutation(async () => {
-    if (targetProfile.meta.isFollowing) {
+    if (isFollowing) {
       await instance.delete(`/feed/follows/${targetProfile.id}`)
 
       onChange?.('unfollowed')
+      setIsFollowing(false)
     } else {
       await instance.post(`/feed/follows/${targetProfile.id}`)
 
       onChange?.('followed')
+      setIsFollowing(true)
     }
   })
 
   return (
     <ActionButton
       className={classNames('py-2 px-3 text-xs', {
-        'hover:bg-red-500/10 hover:text-red-500 bg-dark-700 border-transparent':
-          targetProfile.meta.isFollowing,
+        'hover:bg-red-500/10 hover:text-red-500 bg-dark-700 border-transparent': isFollowing,
         'w-[92px] h-[50px]': size === 'default',
         'w-[76px] h-[34px]': size === 'small',
       })}
@@ -142,6 +151,7 @@ export function FollowButton({
 }
 
 export function ActionButton({
+  ref,
   children,
   className,
   onClick,
@@ -149,9 +159,14 @@ export function ActionButton({
   isDisabled,
   onMouseEnter,
   onMouseLeave,
-}: PropsWithChildren<ButtonProps>) {
+}: PropsWithChildren<
+  ButtonProps & {
+    ref?: any
+  }
+>) {
   return (
     <button
+      ref={ref}
       onClick={onClick}
       disabled={isLoading || isDisabled}
       onMouseEnter={onMouseEnter}

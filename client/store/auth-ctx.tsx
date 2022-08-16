@@ -42,6 +42,7 @@ export function AuthContextProvider({
     streamAccessToken: '',
     userId: '',
     authenticated: false,
+    loggedOut: false,
   },
   defaultProfile = authDefaultProfile,
 }: PropsWithChildren<{ defaultAuthState?: AuthState; defaultProfile?: UserProfile }>) {
@@ -51,7 +52,7 @@ export function AuthContextProvider({
   const [profile, setProfile] = useState<UserProfile>(defaultProfile)
 
   return (
-    <AuthCtx.Provider value={{ authState, profile, setProfile }}>
+    <AuthCtx.Provider value={{ authState, profile, setProfile, setAuthState }}>
       <RootOnboarding
         isUserOnboarding={userOnboarding}
         setIsUserOnboarding={setUserOnboarding}

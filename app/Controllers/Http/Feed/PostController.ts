@@ -1,4 +1,4 @@
-import Post, { PostType } from 'App/Models/Feed/Post'
+import Post from 'App/Models/Feed/Post'
 import Attachment from 'App/Models/Feed/Attachment'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'

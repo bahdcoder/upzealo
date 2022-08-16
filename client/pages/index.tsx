@@ -1,23 +1,62 @@
 import type { NextPage } from 'next'
 import Link from 'next/link'
 
-import Post from '../components/post'
+import Post, { PostLoader } from '../components/post'
 import CreatePost from '../components/create-post'
 import { WhoToFollow } from '../components/who-to-follow'
 import { ActionButton, PrimaryButton } from '../components/button'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInView } from 'react-intersection-observer'
 import { useApiAxiosInstance } from '../helpers/axios-client'
+import { EnrichedPost, useAuth } from '../store/auth'
+import { Fragment, useEffect } from 'react'
 
 const Home: NextPage = () => {
   const instance = useApiAxiosInstance()
-  const { } = useQuery(['feed'], async () => {
-    const response = await instance.get('/feed')
+  const { authState } = useAuth()
+  const {
+    isLoading: isLoadingFeed,
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+    refetch,
+  } = useInfiniteQuery<{ posts: EnrichedPost[]; page: number; perPage: number }>(
+    ['feed', authState.authenticated],
+    async ({ pageParam = 1 }) => {
+      if (!authState.authenticated) {
+        return {
+          page: 1,
+          perPage: 10,
+          posts: [],
+        }
+      }
 
-    return response.data
-  })
+      const response = await instance.get(`/feed?page=${pageParam}perPage=10`)
 
+      return response.data
+    },
+    {
+      getNextPageParam(lastPage) {
+        if (lastPage.posts.length === 0) {
+          return undefined
+        }
+
+        return lastPage.page + 1
+      },
+    }
+  )
+  const { ref, inView } = useInView()
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage()
+    }
+  }, [inView])
 
   const noCommunities = false
+
   return (
     <div className="flex items-center h-[calc(100%-5rem)]">
       <div className="hidden lg:flex w-[24%] h-full flex-col px-8 pt-12">
@@ -127,11 +166,52 @@ const Home: NextPage = () => {
         </div>
 
         <div className="flex flex-col space-y-6 mb-24">
-          <Post />
-          <Post />
-          <Post image />
-          <Post />
-          <Post />
+          {isLoadingFeed ? (
+            <>
+              <PostLoader />
+              <PostLoader />
+              <PostLoader />
+            </>
+          ) : null}
+
+          {!isLoadingFeed ? (
+            <>
+              {data?.pages.map((page, idx) => (
+                <Fragment key={idx}>
+                  {page.posts.map((item) => (
+                    <Post key={item.post.id} post={item.post} refresh={refetch} />
+                  ))}
+                </Fragment>
+              ))}
+
+              <div className="flex items-center justify-center">
+                <button
+                  ref={ref}
+                  onClick={() => fetchNextPage()}
+                  disabled={!hasNextPage || isFetchingNextPage}
+                >
+                  {isFetchingNextPage ? <></> : hasNextPage ? 'Load Newer' : 'Nothing more to load'}
+                </button>
+                {isFetchingNextPage ? (
+                  <div className="flex w-full flex-col">
+                    <PostLoader />
+                    <PostLoader />
+                    <PostLoader />
+                    <PostLoader />
+                  </div>
+                ) : null}
+              </div>
+              <div>
+                {isFetching && !isFetchingNextPage ? (
+                  <>
+                    <PostLoader />
+                    <PostLoader />
+                    <PostLoader />
+                  </>
+                ) : null}
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
       <div className="hidden lg:flex flex-col w-[24%] h-full px-8 pt-12">

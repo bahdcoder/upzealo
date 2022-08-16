@@ -10,13 +10,19 @@ type Size = 'default' | 'small'
 export default function AvatarProfile({
   size = 'default',
   profile,
+  subtitle: defaultSubtitle,
 }: PropsWithChildren<{
   size?: Size
+  subtitle?: string
   profile: UserProfile
 }>) {
   // subtitle is either current working position or user's username
 
   const subtitle = useMemo(() => {
+    if (defaultSubtitle) {
+      return defaultSubtitle
+    }
+
     if (profile.username && profile.username.length > 10) {
       return `@${profile.username}`
     }
@@ -35,7 +41,7 @@ export default function AvatarProfile({
     }
 
     return `@${profile.username}`
-  }, [profile])
+  }, [profile, defaultSubtitle])
 
   const username =
     profile?.experiences?.length > 0
@@ -45,7 +51,7 @@ export default function AvatarProfile({
       : null
 
   return (
-    <Link href="/">
+    <Link href={`/${profile?.username}`}>
       <a className="flex items-center">
         <div className="mr-4">
           <Avatar size={size} url={profile?.avatarUrl} name={profile.username} />

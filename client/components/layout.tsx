@@ -1,12 +1,31 @@
+import { Menu, Transition } from '@headlessui/react'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ReactNode } from 'react'
+import { Fragment, ReactNode } from 'react'
+import { getApiInstance, useAxiosInstance } from '../helpers/axios-client'
+import { useAuth } from '../store/auth'
+import { Logo } from './connect-wallet'
 
 export default function Layout({ children }: { children: ReactNode }) {
   const router = useRouter()
-  const homeActive = router.pathname === '/'
+  const instance = useAxiosInstance()
+  const homeActive = router.pathname === '/' || router.pathname === '/[username]'
   const learningActive = router.pathname.match(/learning/) !== null
+
+  const { profile, setAuthState } = useAuth()
+
+  async function onLogout() {
+    await instance.post('/api/auth/logout')
+
+    setAuthState({
+      authenticated: false,
+      accessToken: '',
+      streamAccessToken: '',
+      userId: '',
+      loggedOut: true,
+    })
+  }
 
   return (
     <div
@@ -15,30 +34,19 @@ export default function Layout({ children }: { children: ReactNode }) {
       })}
     >
       <nav
-        className={classNames('w-full h-20 px-8 flex items-center bg-black', {
-          'fixed top-0': !homeActive,
+        className={classNames('w-full h-20 px-8 flex items-center justify-between bg-black', {
+          'fixed top-0 z-50': !homeActive || router.pathname === '/[username]',
         })}
       >
-        <div className="w-[22%]">
-          <svg
-            width={32}
-            height={32}
-            viewBox="0 0 32 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M5.52931 23.2C5.50442 23.2598 5.49754 23.3255 5.50951 23.3891C5.52149 23.4527 5.55179 23.5114 5.59671 23.558C5.64162 23.6046 5.69917 23.6371 5.76229 23.6514C5.82541 23.6658 5.89134 23.6613 5.95198 23.6387C9.1939 22.58 12.5901 22.0712 16 22.1333C19.4266 22.0718 22.839 22.5893 26.0933 23.664C26.1541 23.6866 26.2202 23.6909 26.2834 23.6765C26.3467 23.6621 26.4043 23.6295 26.4494 23.5828C26.4944 23.5361 26.5248 23.4773 26.5368 23.4135C26.5489 23.3498 26.5421 23.2839 26.5173 23.224L17.54 1.56535C17.4134 1.26119 17.1996 1.00132 16.9255 0.818509C16.6515 0.635702 16.3294 0.538147 16 0.538147C15.6705 0.538147 15.3485 0.635702 15.0744 0.818509C14.8003 1.00132 14.5865 1.26119 14.46 1.56535L5.52931 23.2Z"
-              fill="#D0FA3D"
-            />
-            <path
-              d="M16 24.1333C10.3213 24.1333 6.19331 25.368 4.50664 26.6173C4.45574 26.6539 4.4162 26.704 4.3926 26.7621C4.36901 26.8201 4.36232 26.8836 4.37331 26.9453C4.91731 29.912 10.4906 31.4667 16 31.4667C21.5093 31.4667 27.0826 29.916 27.6226 26.9453C27.6336 26.8836 27.6269 26.8201 27.6034 26.7621C27.5798 26.704 27.5402 26.6539 27.4893 26.6173C25.8066 25.364 21.6786 24.1333 16 24.1333Z"
-              fill="#D0FA3D"
-            />
-          </svg>
+        <div className="lg:w-[22%]">
+          <Link href="/">
+            <a>
+              <Logo />
+            </a>
+          </Link>
         </div>
 
-        <div className="w-[56%] h-full px-24">
+        <div className="w-[56%] hidden lg:block h-full px-24">
           <div className="flex items-center h-full space-x-12">
             <Link href="/">
               <a className="flex h-full w-[9.375rem] items-center justify-center relative group">
@@ -101,7 +109,61 @@ export default function Layout({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <div className="w-[22%]"></div>
+        <div className="lg:w-[22%] flex justify-end">
+          <Menu as="div" className="flex-shrink-0 relative ml-5">
+            <div>
+              <Menu.Button className=" rounded-full flex focus:outline-none items-center">
+                <span className="text-sm mr-3 font-grotesk">@{profile.username}</span>
+                <span className="sr-only">Open user menu</span>
+                <img
+                  className="h-12 w-12 rounded-full"
+                  src={profile.avatarUrl}
+                  alt={profile.username}
+                />
+              </Menu.Button>
+            </div>
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+              <Menu.Items className="origin-top-right absolute z-50 right-0 mt-2 w-48 rounded-2xl shadow-lg bg-black ring-1 border border-dark-700 ring-black ring-opacity-5 py-3 focus:outline-none">
+                <Link href={`/${profile.username}`}>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <a
+                        className={classNames(
+                          active ? 'bg-dark-700' : '',
+                          'block py-2 px-6 text-sm text-white cursor-pointer'
+                        )}
+                      >
+                        My profile
+                      </a>
+                    )}
+                  </Menu.Item>
+                </Link>
+
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      onClick={onLogout}
+                      className={classNames(
+                        active ? 'bg-dark-700' : '',
+                        'w-full text-left block py-2 px-6 text-sm text-white cursor-pointer'
+                      )}
+                    >
+                      Sign out
+                    </button>
+                  )}
+                </Menu.Item>
+              </Menu.Items>
+            </Transition>
+          </Menu>
+        </div>
       </nav>
       {children}
     </div>

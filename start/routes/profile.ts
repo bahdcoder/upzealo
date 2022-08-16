@@ -16,6 +16,8 @@ Route.group(() => [
   Route.put('/username/update', 'Profile/UpdateUsernameController.update'),
   Route.put('/bio/update', 'Profile/UpdateBioController.update'),
 
+  Route.get('/:username', 'Profile/ProfileController.show'),
+
   // Attach badges to a user profile.
   Route.post('/badges', 'Profile/BadgeController.store'),
   Route.post('/tags', 'Profile/TagController.store'),

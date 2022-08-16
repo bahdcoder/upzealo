@@ -4,7 +4,14 @@ import { Transition, Dialog } from '@headlessui/react'
 
 export function CloseIcon(props?: SVGProps<SVGSVGElement>) {
   return (
-    <svg width={32} height={32} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg
+      width={32}
+      height={32}
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
       <circle cx={16} cy={16} r={16} fill="currentColor" />
       <g clipPath="url(#clip0_45_16633)">
         <path
@@ -88,7 +95,7 @@ export function Modal({
                       onClick={() => setIsOpen?.(false)}
                       className="focus:outline-none hover:opacity-70 transition ease-linear"
                     >
-                      <CloseIcon className='text-[#202125]' />
+                      <CloseIcon className="text-[#202125]" />
                     </button>
                   </div>
                 )}

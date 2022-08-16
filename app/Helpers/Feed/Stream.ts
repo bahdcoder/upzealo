@@ -18,6 +18,7 @@ export async function enrichWithPosts(activities: FeedAPIResponse['results'], us
     .preload('community')
     .preload('bounty', (bountyQuery) => bountyQuery.preload('winner'))
     .preload('attachments')
+    .withCount('comments')
 
   const users = allPosts.map((post) => post.user)
 

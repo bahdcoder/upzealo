@@ -12,6 +12,7 @@ import Route from '@ioc:Adonis/Core/Route'
 Route.group(() => [
   Route.post('/posts', 'Feed/PostController.store'),
   Route.post('/bounties', 'Feed/BountyController.store'),
+  Route.put('/bounties/:bounty', 'Feed/BountyController.update'),
   Route.post('/bounties/transaction', 'Feed/BountyController.transaction'), // Get the create bounty transaction. Will be signed and returned back to POST /bounties endpoint for sending to blockchain.
 
   Route.get('/posts/:post', 'Feed/PostController.show'),

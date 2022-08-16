@@ -19,7 +19,11 @@ export default class CommentController {
           .preload('addresses', (addressesQuery) =>
             addressesQuery.select(['publicKey', 'isDefault', 'blockchain'])
           )
-          .select(['username', 'id'])
+          .preload('addresses')
+          .preload('socialAccounts')
+          .preload('experiences', (experienceQuery) => experienceQuery.preload('organisation'))
+          .preload('badges', (badgesQuery) => badgesQuery.preload('tags'))
+          .preload('tags')
       )
       .paginate(page, perPage)
 
@@ -27,12 +31,12 @@ export default class CommentController {
   }
 
   public async store({ request, auth, params }: HttpContextContract) {
-    const user = auth.use('jwt').user!
+    const user = auth.user!
 
-    const { content, attachmentIds } = await request.validate({
+    const { content, attachmentIds = [] } = await request.validate({
       schema: schema.create({
         content: schema.string([rules.required(), rules.maxLength(1200)]),
-        attachmentIds: schema.array.nullable().members(schema.string()),
+        attachmentIds: schema.array.nullableAndOptional().members(schema.string()),
       }),
     })
 
@@ -43,7 +47,7 @@ export default class CommentController {
       commentId: params.comment ? params.comment : null,
     })
 
-    if (attachmentIds !== null) {
+    if (attachmentIds) {
       await Attachment.query().whereIn('id', attachmentIds).update({
         commentId: comment.id,
       })

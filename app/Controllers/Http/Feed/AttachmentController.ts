@@ -11,8 +11,8 @@ export default class AttachmentController {
     const { file } = await request.validate({
       schema: schema.create({
         file: schema.file({
-          size: '2mb',
-          extnames: ['jpg', 'gif', 'png'],
+          size: '4mb',
+          extnames: ['jpg', 'gif', 'png', 'jpeg'],
         }),
       }),
     })

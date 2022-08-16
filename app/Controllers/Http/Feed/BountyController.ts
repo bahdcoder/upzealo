@@ -6,6 +6,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Bounty from 'App/Models/Feed/Bounty'
 import { SolanaProgram } from 'App/Services/SolanaProgram'
 import Encryption from '@ioc:Adonis/Core/Encryption'
+import Comment from 'App/Models/Feed/Comment'
 
 export default class BountyController {
   public async transaction({ request, auth }: HttpContextContract) {
@@ -32,6 +33,25 @@ export default class BountyController {
     const encryption = Encryption.encrypt(Bs58.encode(bounty.secretKey))
 
     return { transaction: transaction.serialize({ requireAllSignatures: false }), encryption }
+  }
+
+  public async update({ request, params }: HttpContextContract) {
+    const { signature, commentId } = await request.validate({
+      schema: schema.create({
+        commentId: schema.string([rules.required()]),
+        signature: schema.string([rules.required()]),
+      }),
+    })
+    const comment = await Comment.query().where('id', commentId).firstOrFail()
+    const bounty = await Bounty.query().where('id', params.bounty).preload('post').firstOrFail()
+
+    bounty.winnerId = comment.userId
+    bounty.commentId = comment.id
+    bounty.winnerSignature = signature
+
+    await bounty.save()
+
+    return { bounty }
   }
 
   public async store({ request, auth }: HttpContextContract) {

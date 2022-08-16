@@ -74,7 +74,7 @@ pub fn handler(ctx: Context<CreateBounty>, amount: u64, bounty_authority_bump: u
   bounty.authority_seed = bounty.key();
   bounty.authority_bump_seed = [bounty_authority_bump];
 
-  bounty.creator = ctx.accounts.wallet.key();
+  bounty.creator = ctx.accounts.user.key();
 
   token::transfer(
     ctx

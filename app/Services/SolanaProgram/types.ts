@@ -148,6 +148,11 @@ export type Upzealo = {
           isSigner: true
         },
         {
+          name: 'winner'
+          isMut: true
+          isSigner: false
+        },
+        {
           name: 'user'
           isMut: true
           isSigner: false
@@ -658,6 +663,11 @@ export const IDL: Upzealo = {
           name: 'wallet',
           isMut: true,
           isSigner: true,
+        },
+        {
+          name: 'winner',
+          isMut: true,
+          isSigner: false,
         },
         {
           name: 'user',

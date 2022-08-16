@@ -15,11 +15,15 @@ pub struct ClaimBountyReward<'info> {
   #[account(mut)]
   pub wallet: Signer<'info>,
 
+  /// CHECK:
+  #[account(mut)]
+  pub winner: AccountInfo<'info>,
+
   #[account(mut, constraint = wallet.key() == user.wallet)]
   pub user: Box<Account<'info, User>>,
 
   /// CHECK:
-  #[account(mut, constraint = bounty.winner == user.key())]
+  #[account(mut, constraint = bounty.creator == user.key())]
   pub bounty: Box<Account<'info, Bounty>>,
 
   /// CHECK:
@@ -29,7 +33,7 @@ pub struct ClaimBountyReward<'info> {
   #[account(mut)]
   pub mint: Box<Account<'info, Mint>>,
 
-  #[account(init_if_needed, payer = wallet, associated_token::mint = mint, associated_token::authority = wallet)]
+  #[account(init_if_needed, payer = wallet, associated_token::mint = mint, associated_token::authority = winner)]
   pub mint_destination: Box<Account<'info, TokenAccount>>,
 
   #[account(mut,
@@ -62,7 +66,7 @@ pub fn handler(ctx: Context<ClaimBountyReward>) -> Result<()> {
   let bounty = &mut ctx.accounts.bounty;
 
   bounty.paid = true;
-
+  
   token::transfer(
     ctx
       .accounts

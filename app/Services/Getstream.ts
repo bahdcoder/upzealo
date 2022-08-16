@@ -54,7 +54,7 @@ export default class Stream {
   async timeline(user: User, page = 1, perPage = 10) {
     const feed = this.stream.feed('timeline', user.id)
 
-    const activities = await feed.get({ limit: perPage, offset: page - 1 })
+    const activities = await feed.get({ limit: perPage, offset: (page - 1) * perPage })
 
     return activities.results
   }

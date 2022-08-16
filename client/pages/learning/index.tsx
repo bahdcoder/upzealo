@@ -10,7 +10,7 @@ export default function Learning({ badges }: PropsWithChildren<{ badges: Badge[]
   return (
     <div className="w-full">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 mt-8 lg:mt-32 px-6 lg:px-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 mt-8 lg:mt-32 px-4 lg:px-0">
           <div className="pt-24">
             <h1 className="font-semibold font-grotesk text-4xl lg:text-6xl lg:leading-[4.5rem]">
               Practical courses to build a Career in Web3

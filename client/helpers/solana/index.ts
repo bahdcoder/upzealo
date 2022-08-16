@@ -24,7 +24,7 @@ export type CreateBountyTransactionPayload = {
 }
 
 export const SolanaProgram = class {
-  private program: Program<Upzealo>
+  public program: Program<Upzealo>
   private connection: Connection
   private provider: AnchorProvider
   private helpers: ProgramHelper
@@ -70,6 +70,49 @@ export const SolanaProgram = class {
     const signature = await this.sendAndConfirmTransaction(transaction, signers)
 
     return { user, signature }
+  }
+
+  async claimBountyTransaction({
+    mintAddress,
+    winnerWalletAddress,
+    bountyAddress,
+    userAddress,
+    bountyCreatorAddress,
+  }: {
+    bountyAddress: string
+    userAddress: string
+    winnerWalletAddress: string
+    mintAddress: string
+    bountyCreatorAddress: string
+  }) {
+    const wallet = new PublicKey(bountyCreatorAddress)
+    const user = new PublicKey(userAddress)
+    const mint = new PublicKey(mintAddress)
+    const winnerWallet = new PublicKey(winnerWalletAddress)
+    const bounty = new PublicKey(bountyAddress)
+    const [bountyWallet] = await this.helpers.deriveBountyWalletPDA(mint, bounty)
+    const [bountyAuthority] = await this.helpers.deriveBountyAuthorityPDA(bounty)
+    const mintDestination = await getAssociatedTokenAddress(
+      new PublicKey(mintAddress),
+      new PublicKey(winnerWalletAddress)
+    )
+
+    const signature = await this.program.methods
+      .claimBountyReward()
+      .accounts({
+        wallet,
+        user,
+        mint,
+        mintDestination,
+        bountyWallet,
+        bounty,
+        bountyAuthority,
+        winner: winnerWallet,
+      })
+      .signers([])
+      .rpc()
+
+    return { signature }
   }
 
   async createBountyTransaction({

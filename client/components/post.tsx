@@ -1,8 +1,20 @@
+import { useWallet } from '@solana/wallet-adapter-react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import classNames from 'classnames'
 import cx from 'classnames'
 import { PropsWithChildren, useState, MouseEventHandler } from 'react'
+import toast from 'react-hot-toast'
+import Skeleton from 'react-loading-skeleton'
+import ReactTextareaAutosize from 'react-textarea-autosize'
+import { useApiAxiosInstance } from '../helpers/axios-client'
+import { config } from '../helpers/config'
+import { formatNumber } from '../helpers/currencies'
+import { toDiffForHumans } from '../helpers/dates'
+import { SolanaProgram } from '../helpers/solana'
+import { Comment, Post as PostInterface, PostType, useAuth, UserProfile } from '../store/auth'
 import Avatar from './avatar'
 import AvatarProfile from './avatar-profile'
-import { ActionButton } from './button'
+import { ActionButton, PrimaryButton, Spinner } from './button'
 import Input from './input'
 import { ToggleFade } from './toggle-transition'
 
@@ -12,7 +24,7 @@ export function LikeButton({
 }: PropsWithChildren<{ liked?: boolean; onClick?: MouseEventHandler<HTMLButtonElement> }>) {
   return (
     <ActionButton
-      onClick={onClick}
+      onClick={() => toast(`Coming soon.`)}
       className={cx({
         'bg-[#df18ff] bg-opacity-20 border-transparent': liked,
       })}
@@ -42,13 +54,254 @@ export function LikeButton({
   )
 }
 
-export default function Post({ image, ...rest }: PropsWithChildren<{ image?: boolean }>) {
+export function PostLoader() {
+  const defaultProps = {
+    count: 1,
+    duration: 1,
+    baseColor: '#000000',
+    highlightColor: '#1F2024',
+  }
+
+  return (
+    <div className="bg-black/30 p-6 rounded-2xl mb-4">
+      <div className="mb-3 flex items-center">
+        <Skeleton {...defaultProps} circle borderRadius={9999} count={1} height={64} width={64} />
+
+        <div className="flex flex-col w-full pl-6 pt-4">
+          <div className="w-1/3">
+            <Skeleton {...defaultProps} height={12} borderRadius={8} />
+          </div>
+          <div className="w-[25%]">
+            <Skeleton {...defaultProps} height={12} borderRadius={8} />
+          </div>
+        </div>
+      </div>
+      <div className="pl-[88px]">
+        <Skeleton {...defaultProps} height={12} borderRadius={8} />
+
+        <div className="w-[80%]">
+          <Skeleton {...defaultProps} height={12} borderRadius={8} />
+        </div>
+        <div className="w-[40%]">
+          <Skeleton {...defaultProps} height={12} borderRadius={8} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function PostsLoading() {
+  return (
+    <>
+      <PostLoader />
+      <PostLoader />
+    </>
+  )
+}
+
+export function Comments({
+  post,
+  refreshPost,
+}: PropsWithChildren<{ post: PostInterface; refreshPost?: () => Promise<any> }>) {
+  const instance = useApiAxiosInstance()
+  const [content, setContent] = useState('')
+  const wallet = useWallet()
+
+  const isBounty = post.type === PostType.BOUNTY
+
+  const { profile } = useAuth()
+
+  const isOwnerViewing = post.userId === profile.id
+
+  const { data: comments = [], refetch } = useQuery<Comment[]>(
+    ['post-comments', post.id],
+    async () => {
+      const response = await instance.get(`/feed/posts/${post.id}/comments`)
+
+      return response.data.data
+    }
+  )
+
+  const { isLoading: isPostingComment, mutate: publishComment } = useMutation(async () => {
+    await instance.post(`/feed/posts/${post.id}/comments`, {
+      content,
+    })
+
+    await refetch()
+
+    setContent('')
+  })
+
+  const { isLoading: isAcceptingBountyAnswer, mutate: acceptAnswer } = useMutation(
+    async (comment: Comment) => {
+      const program = new SolanaProgram(wallet)
+      const winnerWalletAddress = comment.user.addresses[0].publicKey
+      const userAddress = profile.solanaAddress
+      const bountyAddress = post.bounty.bountyAddress
+      const mintAddress = post.bounty.currencyMint
+      const bountyCreatorAddress = profile.addresses[0].publicKey
+
+      const { signature } = await program.claimBountyTransaction({
+        bountyAddress,
+        bountyCreatorAddress,
+        winnerWalletAddress,
+        userAddress,
+        mintAddress,
+      })
+
+      await instance.put(`/feed/bounties/${post.bounty.id}`, {
+        commentId: comment.id,
+        signature,
+      })
+
+      await refetch()
+      await refreshPost?.()
+    },
+    {
+      onError(error) {
+        console.error(error)
+        toast.error(`Failed to accept answer. Please try again.`)
+      },
+    }
+  )
+
+  const winnerAccepted = post?.bounty?.winnerId !== undefined && post.bounty.winnerId !== null
+
+  return (
+    <div className="">
+      <div className="w-full border border-dark-700 my-6"></div>
+
+      {comments.map((comment) => (
+        <div className="w-full mb-4" key={comment.id}>
+          <AvatarProfile
+            size="small"
+            profile={comment.user}
+            subtitle={`${toDiffForHumans(comment.createdAt)} ago`}
+          />
+
+          <div className="pl-12 mt-4">
+            <p
+              className={classNames(
+                'py-3 min-h-[3rem] inline-flex items-center px-4 rounded-lg bg-dark-700 text-white text-sm',
+                {
+                  'border border-primary-500 bg-primary-500/10':
+                    isBounty && post.bounty?.commentId === comment.id,
+                }
+              )}
+            >
+              {comment.content}
+            </p>
+
+            <div className="mt-2 flex">
+              <button className="text-dark-300 hover:text-white transition ease-linear text-xs">
+                Like
+              </button>
+              <button className="text-dark-300 hover:text-white transition ease-linear ml-4 text-xs">
+                Reply
+              </button>
+
+              {isOwnerViewing && isBounty && comment.userId != profile.id && !winnerAccepted ? (
+                <button
+                  className="text-xs ml-3 text-primary-500 font-grotesk cursor-pointer flex items-center"
+                  disabled={isAcceptingBountyAnswer}
+                  onClick={() => acceptAnswer(comment)}
+                >
+                  Accept answer{' '}
+                  {isAcceptingBountyAnswer ? (
+                    <Spinner className="ml-3 w-4 h-4 animate-spin" />
+                  ) : null}
+                </button>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      ))}
+
+      <div className="mt-4 flex items-start w-full">
+        <Avatar size="small" url={profile.avatarUrl} />
+
+        <div className="ml-4 w-full relative">
+          <Input
+            placeholder="Write a comment.."
+            className="text-xs"
+            value={content}
+            textarea
+            onChange={(event: any) => setContent(event.target.value)}
+          />
+
+          <div className="flex w-full justify-end mt-3">
+            <PrimaryButton
+              className="px-4 py-2 text-xs"
+              isLoading={isPostingComment}
+              isDisabled={!content || content.length < 6}
+              onClick={() => publishComment()}
+            >
+              Comment
+            </PrimaryButton>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function getSupportedCurrencies() {
+  const isDevnet = config.solanaEnvironment === 'devnet'
+
+  return [
+    {
+      symbol: 'USDC',
+      logo: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
+      mint: isDevnet
+        ? 'E5TGw3nHURLMydUkUd42LwNzjuLYoo22KCm7CrnUSxiC'
+        : 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+      decimals: 6,
+    },
+    {
+      symbol: 'MNGO',
+      logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11171.png',
+      mint: isDevnet ? '' : 'MangoCzJ36AjZyKwVj3VnYU4GTonjfVEnJmvvWaxLac',
+      decimals: 6,
+    },
+    {
+      symbol: 'SHDW',
+      logo: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y/logo.png',
+      mint: isDevnet
+        ? 'BXJ5SSmMb4Vp9U45enozuNcdSpDdssvymHyLB4jj2EDX'
+        : 'SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y',
+      decimals: 9,
+    },
+    {
+      symbol: 'JELLY',
+      logo: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9WMwGcY6TcbSfy9XPpQymY3qNEsvEaYL3wivdwPG2fpp/logo.png',
+      mint: isDevnet ? '' : '9WMwGcY6TcbSfy9XPpQymY3qNEsvEaYL3wivdwPG2fpp',
+      decimals: 6,
+    },
+  ].filter((token) => token.mint)
+}
+
+export default function Post({
+  post,
+  refresh,
+}: PropsWithChildren<{ post: PostInterface; refresh?: () => Promise<any> }>) {
   const [showingComments, setShowingComments] = useState(false)
+
+  const isBounty = post.type === PostType.BOUNTY
+
+  const currency = getSupportedCurrencies().find(
+    (currency) => currency.mint === post.bounty?.currencyMint
+  )
+
+  function getFormattedAmount(amount: number) {
+    const balance = amount / 10 ** (currency?.decimals || 0)
+
+    return formatNumber(balance)
+  }
 
   return (
     <div className="w-full bg-black rounded-3xl p-6">
       <div className="w-full flex items-center justify-between">
-        {/* <AvatarProfile subTitle="12 February" /> */}
+        <AvatarProfile profile={post.user} subtitle={`${toDiffForHumans(post.createdAt)} ago`} />
 
         <button>
           <svg
@@ -83,17 +336,47 @@ export default function Post({ image, ...rest }: PropsWithChildren<{ image?: boo
 
       <div className="lg:pl-16">
         <div className="mt-2 text-white">
-          <p>Let’s set an age limit after which you can’t run for political office.</p>
+          <p className="prose prose-md text-white text-sm">{post.content}</p>
 
-          {image ? (
-            <div className="w-full mt-4">
-              <img
-                src="https://scontent-los2-1.xx.fbcdn.net/v/t39.30808-6/297358499_4978326928938901_5330389093075701625_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeEX8f0v93cpfGk8P0KN_EQhjr5XCHHCSAaOvlcIccJIBhh7UHfa-33I4FVE-rKLmCH34cpC1MDE0eHzFHur8_u0&_nc_ohc=Kmh4Xysm0dgAX_C3rh3&_nc_zt=23&_nc_ht=scontent-los2-1.xx&oh=00_AT-wlUDzQrCejOUKcc9Q4D_bSP8bUKuYWS2jaOlXvEkuhw&oe=62F2D829"
-                alt="post cover"
-                className="rounded-lg w-full"
-              />
+          {isBounty ? (
+            <div className="flex my-3 items-center">
+              <div className="rounded-3xl bg-blue-800 py-2 text-sm px-4 font-grotesk font-semibold text-white flex items-center">
+                <img
+                  src={currency?.logo}
+                  alt={currency?.symbol}
+                  className="w-6 h-6 rounded-full mr-2"
+                />
+                <p className=" line-through">
+                  {getFormattedAmount(post.bounty.amount)}{' '}
+                  <span className="ml-2">{currency?.symbol}</span>
+                </p>
+              </div>
+
+              {post.bounty.winnerId ? (
+                <div className="rounded-full border-2 border-primary-500 w-10 h-10 flex items-center justify-center ml-2">
+                  {post.bounty.winner ? (
+                    <img src={post.bounty.winner.avatarUrl} className="w-6 h-6 rounded-full" />
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           ) : null}
+
+          <div
+            className={classNames('w-full mt-4 grid gap-4', {
+              'grid-cols-2': post.attachments.length > 1,
+              'grid-cols-1': post.attachments.length === 1,
+            })}
+          >
+            {post.attachments.map((attachment) => (
+              <img
+                src={attachment.url}
+                alt="post cover"
+                key={attachment.id}
+                className="rounded-2xl w-full"
+              />
+            ))}
+          </div>
         </div>
 
         <div className="mt-2 flex items-center justify-between">
@@ -112,13 +395,13 @@ export default function Post({ image, ...rest }: PropsWithChildren<{ image?: boo
                 fill="white"
               />
             </svg>
-            3
+            0
           </p>
-          <p className="text-dark-300 text-sm">45 comments</p>
+          <p className="text-dark-300 text-sm">{post.meta.comments_count} comments</p>
         </div>
 
         <div className="mt-4 grid grid-cols-3 gap-4">
-          <LikeButton liked />
+          <LikeButton />
 
           <ActionButton onClick={() => setShowingComments(true)}>
             <svg
@@ -137,7 +420,7 @@ export default function Post({ image, ...rest }: PropsWithChildren<{ image?: boo
             <span className="ml-3 hidden lg:inline">Comment</span>
           </ActionButton>
 
-          <ActionButton>
+          <ActionButton onClick={() => toast('Coming soon.')}>
             <svg
               width={16}
               height={16}
@@ -167,40 +450,7 @@ export default function Post({ image, ...rest }: PropsWithChildren<{ image?: boo
         </div>
 
         <ToggleFade show={showingComments}>
-          <div className="">
-            <div className="w-full border border-dark-700 my-6"></div>
-
-            <div className="w-full">
-              {/* <AvatarProfile size="small" subTitle="A few minutes ago" /> */}
-
-              <div className="pl-12 mt-2">
-                <p className="py-3 min-h-[3rem] inline-flex items-center px-4 rounded-lg bg-dark-700 text-white text-sm">
-                  I couldn’t agree more.
-                </p>
-
-                <div className="mt-2">
-                  <button className="text-dark-300 hover:text-white transition ease-linear text-xs">
-                    Like
-                  </button>
-                  <button className="text-dark-300 hover:text-white transition ease-linear ml-4 text-xs">
-                    Reply
-                  </button>
-                  <span className="text-dark-300 ml-4 text-xs">32m</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4 flex items-center w-full">
-              <Avatar
-                size="small"
-                url="https://pbs.twimg.com/profile_images/1537681214546616320/xC9xGPn3_400x400.jpg"
-              />
-
-              <div className="ml-4 w-full relative">
-                <Input placeholder="Write a comment.." />
-              </div>
-            </div>
-          </div>
+          <Comments post={post} refreshPost={refresh} />
         </ToggleFade>
       </div>
     </div>
