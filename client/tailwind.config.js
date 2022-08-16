@@ -9,6 +9,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      transitionProperty: {
+          'width': 'width'
+      },
       colors: {
         primary: {
           500: '#D0FA3D',

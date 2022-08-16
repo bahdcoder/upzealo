@@ -102,6 +102,17 @@ export interface Bounty {
   winner: UserProfile
 }
 
+export interface Community {
+  id: string
+  coverImage: string
+  name: string
+  description: string
+  logoImage: string
+  badges: Badge[]
+  rules: string
+  owner: UserProfile
+}
+
 export interface Post {
   id: string
   content: string

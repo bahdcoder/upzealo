@@ -8,7 +8,7 @@ export function ToggleFade({ show, children }: PropsWithChildren<{ show?: boolea
       enter="transform transition duration-[400ms]"
       enterFrom="opacity-0"
       enterTo="opacity-100 rotate-0"
-      leave="transform duration-200 transition ease-in-out"
+      leave="transform duration-[4ms] transition ease-in-out"
       leaveFrom="opacity-100"
       leaveTo="opacity-0 "
     >

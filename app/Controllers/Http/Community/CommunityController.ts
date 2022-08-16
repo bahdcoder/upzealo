@@ -4,12 +4,16 @@ import Community from 'App/Models/Community/Community'
 import Membership, { MembershipStatus } from 'App/Models/Community/Membership'
 import { baseUrl } from 'Config/app'
 
-export default class CommunitiesController {
+export default class CommunityController {
   public async index({ request }: HttpContextContract) {
     const page = request.input('page', 1)
-    const perPage = request.input('perPage', 10)
+    const perPage = request.input('perPage', 25)
 
-    const communities = await Community.query().preload('user').paginate(page, perPage)
+    const communities = await Community.query()
+      .preload('user')
+      .preload('badges')
+      .orderBy('created_at', 'desc')
+      .paginate(page, perPage)
 
     communities.baseUrl(`${baseUrl}/communities`)
 

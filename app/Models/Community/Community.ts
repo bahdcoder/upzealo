@@ -1,9 +1,21 @@
-import { BelongsTo, belongsTo, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
+import {
+  beforeCreate,
+  BelongsTo,
+  belongsTo,
+  column,
+  hasMany,
+  HasMany,
+  manyToMany,
+  ManyToMany,
+} from '@ioc:Adonis/Lucid/Orm'
 
 import BaseModel from 'App/Models/Base'
-import User from 'App/Models/Profile/User'
+import User, { avatars } from 'App/Models/Profile/User'
 import SocialAccount from 'App/Models/Profile/SocialAccount'
 import { slugify } from '@ioc:Adonis/Addons/LucidSlugify'
+
+import Badge from 'App/Models/Profile/Badge'
+import Membership from './Membership'
 
 export enum CommunityMembershipTypes {
   WALLET_TOKENS = 'WALLET_TOKENS',
@@ -33,6 +45,9 @@ export default class Community extends BaseModel {
   @column({ serializeAs: 'coverImage' })
   public coverImage: string
 
+  @manyToMany(() => Badge)
+  public badges: ManyToMany<typeof Badge>
+
   @hasMany(() => SocialAccount)
   public socialAccounts: HasMany<typeof SocialAccount>
 
@@ -50,5 +65,15 @@ export default class Community extends BaseModel {
 
   public TOKENS_HASHLIST_KEY() {
     return `communities:hashlists:${this.slug}`
+  }
+
+  @hasMany(() => Membership)
+  public memberships: HasMany<typeof Membership>
+
+  @beforeCreate()
+  public static assignRandomAvatar(community: Community) {
+    community.logoImage = avatars[Math.floor(Math.random() * avatars.length)]
+    community.coverImage =
+      'https://res.cloudinary.com/bahdcoder/image/upload/v1660675893/Rectangle_1_nyjjlw.png'
   }
 }

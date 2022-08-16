@@ -26,9 +26,6 @@ export default class extends BaseSeeder {
       .with('addresses', 1, (addressFactory) => {
         addressFactory.apply('default')
       })
-      .with('communities', 1, (communityFactory) => {
-        communityFactory.apply('tokens')
-      })
       .with('enrolments', 1, (enrolmentFactory) => {
         enrolmentFactory.with('course', 1, (courseFactory) => {
           courseFactory

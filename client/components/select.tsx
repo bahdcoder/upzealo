@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { Fragment, useState, PropsWithChildren, useEffect } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, ArrowDownIcon } from '@heroicons/react/solid'
+import { twMerge } from 'tailwind-merge'
 
 export interface SelectOption {
   id: string
@@ -14,10 +15,12 @@ export function Select({
   options = [],
   defaultOption,
   onChange,
+  className
 }: PropsWithChildren<{
   label?: string
   defaultOption?: SelectOption
   options: SelectOption[]
+  className?: string
   onChange?: (option: SelectOption) => void
 }>) {
   const [selected, setSelected] = useState(defaultOption || options[0])
@@ -36,7 +39,7 @@ export function Select({
             </Listbox.Label>
           ) : null}
           <div className="relative">
-            <Listbox.Button className="relative w-full bg-dark-700 border border-transparent rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+            <Listbox.Button className={twMerge('relative w-full bg-dark-700 border border-transparent rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm', className)}>
               <span className="flex items-center">
                 {selected?.image ? (
                   <img
@@ -74,11 +77,11 @@ export function Select({
                     {({ selected, active }) => (
                       <>
                         <div className="flex items-center">
-                          <img
+                          {option.image ? <img
                             src={option.image}
                             alt=""
                             className="flex-shrink-0 h-6 w-6 rounded-full"
-                          />
+                          /> : null}
                           <span
                             className={classNames(
                               selected ? 'font-semibold' : 'font-normal',

@@ -1,6 +1,7 @@
 import cx from 'classnames'
 import TextareaAutosize from 'react-textarea-autosize'
 import { PropsWithChildren, HTMLProps, ChangeEventHandler } from 'react'
+import { twMerge } from 'tailwind-merge'
 
 export default function Input({
   className,
@@ -28,7 +29,7 @@ export default function Input({
       <Component
         type="text"
         className={cx(
-          'text-sm w-full h-12 rounded-lg bg-dark-700 placeholder:text-dark-300 p-4 focus:outline-none text-white',
+          'text-sm w-full h-12 rounded-lg bg-dark-700 placeholder:text-dark-300 p-4 focus:outline-none text-white resize-none',
           {
             'focus:ring-1 focus:ring-primary-500 focus:border-primary-500': !error,
             'ring-1 ring-red-500': error !== undefined,

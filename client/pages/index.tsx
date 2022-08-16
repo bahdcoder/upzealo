@@ -10,6 +10,7 @@ import { useInView } from 'react-intersection-observer'
 import { useApiAxiosInstance } from '../helpers/axios-client'
 import { EnrichedPost, useAuth } from '../store/auth'
 import { Fragment, useEffect } from 'react'
+import Head from 'next/head'
 
 const Home: NextPage = () => {
   const instance = useApiAxiosInstance()
@@ -59,6 +60,9 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex items-center h-[calc(100%-5rem)]">
+      <Head>
+        <title>Feed - Upzealo</title>
+      </Head>
       <div className="hidden lg:flex w-[24%] h-full flex-col px-8 pt-12">
         <div className="flex items-center">
           <div className="rounded-full w-[2.25rem] h-[2.25rem] flex items-center justify-center bg-dark-700">

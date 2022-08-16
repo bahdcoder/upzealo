@@ -3,20 +3,16 @@ import Factory from '@ioc:Adonis/Lucid/Factory'
 
 import UserFactory from 'Database/factories/Profile/UserFactory'
 import SocialAccountFactory from 'Database/factories/Profile/SocialAccountFactory'
-
-const membershipTypes = [
-  CommunityMembershipTypes.INVITE_ONLY,
-  CommunityMembershipTypes.WALLET_TOKENS,
-]
+import MembershipFactory from './MembershipFactory'
 
 export default Factory.define(Community, ({ faker }) => {
   return {
-    name: faker.lorem.sentence(3),
-    description: faker.lorem.text(),
+    name: faker.lorem.sentence(2),
+    description: faker.lorem.paragraph(),
     rules: faker.lorem.text(),
     coverImage: faker.image.imageUrl(),
     logoImage: faker.image.imageUrl(),
-    membershipType: membershipTypes[Math.floor(Math.random() * membershipTypes.length)],
+    membershipType: CommunityMembershipTypes.WALLET_TOKENS,
   }
 })
   .state(
@@ -28,5 +24,6 @@ export default Factory.define(Community, ({ faker }) => {
     (community) => (community.membershipType = CommunityMembershipTypes.INVITE_ONLY)
   )
   .relation('socialAccounts', () => SocialAccountFactory)
+  .relation('memberships', () => MembershipFactory)
   .relation('user', () => UserFactory)
   .build()

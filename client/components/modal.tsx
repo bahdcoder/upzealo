@@ -46,7 +46,7 @@ export function Modal({
 }>) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={() => setIsOpen?.(false)}>
+      <Dialog as="div" className="relative z-[1000]" onClose={() => setIsOpen?.(false)}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

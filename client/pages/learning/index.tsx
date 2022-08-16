@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import Link from 'next/link'
 import { PropsWithChildren } from 'react'
 import { getApiInstance, getInstance } from '../../helpers/axios-client'
@@ -5,10 +6,12 @@ import { withGetServerSideProps } from '../../helpers/session'
 import { Badge } from '../../store/auth'
 
 export default function Learning({ badges }: PropsWithChildren<{ badges: Badge[] }>) {
-  console.log({ badges })
-
   return (
     <div className="w-full">
+      <Head>
+        <title>Learning - Upzealo</title>
+        <meta name='description' content='Practical courses to build a Career in Web3' />
+      </Head>
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 mt-8 lg:mt-32 px-4 lg:px-0">
           <div className="pt-24">

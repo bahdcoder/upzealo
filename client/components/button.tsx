@@ -214,6 +214,33 @@ export function PrimaryButton({
   )
 }
 
+export function SecondaryButton({
+  children,
+  className,
+  onClick,
+  isLoading,
+  isDisabled,
+}: PropsWithChildren<ButtonProps>) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={isDisabled}
+      className={twMerge(
+        classNames(
+          'group rounded-full flex items-center justify-center py-4 text-white border border-dark-400 transition ease-linear focus:outline-none font-bold',
+          {
+            'bg-black/80 cursor-not-allowed': isDisabled || isLoading,
+            'bg-black hover:bg-dark-700': !isLoading && !isDisabled,
+          }
+        ),
+        className
+      )}
+    >
+      {isLoading ? <Spinner /> : children}
+    </button>
+  )
+}
+
 export default function Button({
   children,
   className,
