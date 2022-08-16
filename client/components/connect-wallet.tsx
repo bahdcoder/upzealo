@@ -198,33 +198,39 @@ export function ConnectWallet({
     onAuthenticated(response.data.user)
   })
 
-  useEffect(() => {
-    if (
-      connected &&
-      wallet &&
-      publicKey &&
-      !isSigningMessage &&
-      !failedSigningMessage &&
-      !authState.authenticated &&
-      !authState.loggedOut
-    ) {
-      signWalletMessage()
-    }
-  }, [
-    connected,
-    connecting,
-    wallet,
-    publicKey,
-    authState,
-    isSigningMessage,
-    failedSigningMessage,
-    walletManuallySelected,
-  ])
+  useEffect(
+    () => {
+      if (
+        connected &&
+        wallet &&
+        publicKey &&
+        !isSigningMessage &&
+        !failedSigningMessage &&
+        !authState.authenticated &&
+        !authState.loggedOut
+      ) {
+        signWalletMessage()
+      }
+    },
+    // eslint-disable-next-line
+    [
+      connected,
+      connecting,
+      wallet,
+      publicKey,
+      authState,
+      isSigningMessage,
+      failedSigningMessage,
+      walletManuallySelected,
+    ]
+  )
 
   useEffect(() => {
     if (wallet && walletManuallySelected && !connected && !connecting) {
       connect()
     }
+
+    // eslint-disable-next-line
   }, [walletManuallySelected, wallet, connected, connecting])
 
   const ongoingOperation = connecting || isSigningMessage

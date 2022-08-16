@@ -37,8 +37,8 @@ export function FollowRecommendations() {
       <h2 className="font-bold text-lg text-center text-primary-500">Build your network</h2>
 
       <p className="mt-4 text-center text-sm">
-        Here's some people with similar interests we recommend you follow. You'll see posts from the
-        people you follow on your feed.
+        Here&apos;s some people with similar interests we recommend you follow. You&apos;ll see
+        posts from the people you follow on your feed.
       </p>
 
       {isFetchingRecommendations ? (

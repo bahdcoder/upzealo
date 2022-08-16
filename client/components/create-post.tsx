@@ -3,7 +3,6 @@ import Decimal from 'decimal.js'
 import TextareaAutosize from 'react-textarea-autosize'
 import {
   PropsWithChildren,
-  Fragment,
   useState,
   MouseEventHandler,
   Dispatch,
@@ -441,6 +440,8 @@ export function CreatePostModal({
     if (form.amount) {
       setError({ ...error, amount: undefined })
     }
+
+    // eslint-disable-next-line
   }, [form])
 
   function onImageChanged(event: ChangeEvent<HTMLInputElement>) {
@@ -463,6 +464,8 @@ export function CreatePostModal({
         URL.revokeObjectURL(image)
       })
     }
+
+    // eslint-disable-next-line
   }, [images])
 
   function onImageUpload() {
@@ -564,7 +567,11 @@ export function CreatePostModal({
               >
                 {imagePreviews.map((preview, index: number) => (
                   <div key={index} className="w-full relative">
-                    <img src={preview} className="w-full rounded-2xl" />
+                    <img
+                      src={preview}
+                      className="w-full rounded-2xl"
+                      alt="uploaded image preview"
+                    />
 
                     <button onClick={() => onImageRemove(index)} className="absolute top-2 right-2">
                       <CloseIcon className="text-black" />

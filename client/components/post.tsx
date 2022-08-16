@@ -200,7 +200,7 @@ export function Comments({
                 Reply
               </button>
 
-              {isOwnerViewing && isBounty && comment.userId != profile.id && !winnerAccepted ? (
+              {isOwnerViewing && isBounty && comment.userId !== profile.id && !winnerAccepted ? (
                 <button
                   className="text-xs ml-3 text-primary-500 font-grotesk cursor-pointer flex items-center"
                   disabled={isAcceptingBountyAnswer}
@@ -355,7 +355,11 @@ export default function Post({
               {post.bounty.winnerId ? (
                 <div className="rounded-full border-2 border-primary-500 w-10 h-10 flex items-center justify-center ml-2">
                   {post.bounty.winner ? (
-                    <img src={post.bounty.winner.avatarUrl} className="w-6 h-6 rounded-full" />
+                    <img
+                      src={post.bounty.winner.avatarUrl}
+                      className="w-6 h-6 rounded-full"
+                      alt="winner avatar"
+                    />
                   ) : null}
                 </div>
               ) : null}

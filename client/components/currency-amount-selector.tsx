@@ -94,6 +94,8 @@ export function CurrencyAmountSelector({
       balance: token?.balance!,
       decimals: token?.decimals!,
     })
+
+    // eslint-disable-next-line
   }, [token, amount])
 
   return (

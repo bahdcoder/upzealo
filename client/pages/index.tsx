@@ -23,7 +23,7 @@ export function CommunitiesSkeleton() {
 
   return (
     <>
-      {[1, 2, 3, 4, 5].map(x => (
+      {[1, 2, 3, 4, 5].map((x) => (
         <div className="flex" key={x}>
           <Skeleton {...defaultProps} circle borderRadius={9999} count={1} height={40} width={40} />
           <div className="flex flex-col ml-3 pt-2">
@@ -75,14 +75,17 @@ const Home: NextPage = () => {
     }
   )
 
-  const { isLoading: isLoadingCommunities, data: communities = [] } = useQuery<Community[]>(['communities-self', authState.authenticated], async function () {
-    if (!authState.authenticated) {
-      return []
-    }
-    const response = await instance.get(`/communities/self`)
+  const { isLoading: isLoadingCommunities, data: communities = [] } = useQuery<Community[]>(
+    ['communities-self', authState.authenticated],
+    async function () {
+      if (!authState.authenticated) {
+        return []
+      }
+      const response = await instance.get(`/communities/self`)
 
-    return response.data.data
-  })
+      return response.data.data
+    }
+  )
 
   const { ref, inView } = useInView()
 
@@ -90,6 +93,8 @@ const Home: NextPage = () => {
     if (inView) {
       fetchNextPage()
     }
+
+    // eslint-disable-next-line
   }, [inView])
 
   const noCommunities = isLoadingCommunities ? false : communities.length === 0
@@ -138,16 +143,18 @@ const Home: NextPage = () => {
           <p className="text-white font-bold text-lg ml-4">Communities</p>
         </div>
 
-        {isLoadingCommunities ? <div className="mt-4">
-          <CommunitiesSkeleton />
-        </div> : null}
+        {isLoadingCommunities ? (
+          <div className="mt-4">
+            <CommunitiesSkeleton />
+          </div>
+        ) : null}
 
         {noCommunities ? null : (
           <>
             <div className="flex flex-col mt-6">
               <ul className="list-reset">
-                {communities.map(community => (
-                  <li className="flex items-center mb-4">
+                {communities.map((community) => (
+                  <li className="flex items-center mb-4" key={community.id}>
                     <Link href={`/communities/${community.id}`}>
                       <a className="flex items-center">
                         <img
@@ -156,9 +163,7 @@ const Home: NextPage = () => {
                           className="w-10 h-10 rounded-sm"
                         />
                         <div className="flex flex-col ml-4">
-                          <p className="font-bold text-white text-sm">
-                            {community.name}
-                          </p>
+                          <p className="font-bold text-white text-sm">{community.name}</p>
                           <span className="text-xs text-dark-300">
                             {community.meta.memberships_count + 1} members
                           </span>
@@ -170,7 +175,7 @@ const Home: NextPage = () => {
               </ul>
 
               <div className="mt-6 w-full">
-                <Link href='/communities'>
+                <Link href="/communities">
                   <ActionButton className="w-full">Discover more</ActionButton>
                 </Link>
               </div>
@@ -178,7 +183,7 @@ const Home: NextPage = () => {
           </>
         )}
 
-        {(noCommunities && !isLoadingCommunities) ? (
+        {noCommunities && !isLoadingCommunities ? (
           <div className="mt-6">
             <div className="rounded-3xl w-full border border-[#FFC3C31C] flex flex-col items-center justify-center py-8 bg-[linear-gradient(79.71deg, #25DDD1 -0.81%, rgba(37, 221, 209, 0) 72.47%)]">
               <div className="w-full flex justify-center items-center">
@@ -206,7 +211,7 @@ const Home: NextPage = () => {
               </p>
 
               <div className="mt-8 w-full px-10 mb-2">
-                <Link href='/communities'>
+                <Link href="/communities">
                   <a>
                     <PrimaryButton className="w-full">Explore Communities</PrimaryButton>
                   </a>

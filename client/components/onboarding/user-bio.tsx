@@ -47,8 +47,8 @@ export function UserBio() {
       <h2 className="font-bold text-lg text-center text-primary-500">Tell us who you are</h2>
 
       <p className="mt-4 text-center text-sm">
-        Introduce yourself. Tell us what you're working on, and what makes you excited in the Web3
-        Space
+        Introduce yourself. Tell us what you&apos;re working on, and what makes you excited in the
+        Web3 Space
       </p>
 
       <div className="mt-6">

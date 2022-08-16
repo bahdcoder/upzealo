@@ -15,7 +15,7 @@ export function Select({
   options = [],
   defaultOption,
   onChange,
-  className
+  className,
 }: PropsWithChildren<{
   label?: string
   defaultOption?: SelectOption
@@ -27,6 +27,8 @@ export function Select({
 
   useEffect(() => {
     onChange?.(selected)
+
+    // eslint-disable-next-line
   }, [selected])
 
   return (
@@ -39,7 +41,12 @@ export function Select({
             </Listbox.Label>
           ) : null}
           <div className="relative">
-            <Listbox.Button className={twMerge('relative w-full bg-dark-700 border border-transparent rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm', className)}>
+            <Listbox.Button
+              className={twMerge(
+                'relative w-full bg-dark-700 border border-transparent rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm',
+                className
+              )}
+            >
               <span className="flex items-center">
                 {selected?.image ? (
                   <img
@@ -77,11 +84,13 @@ export function Select({
                     {({ selected, active }) => (
                       <>
                         <div className="flex items-center">
-                          {option.image ? <img
-                            src={option.image}
-                            alt=""
-                            className="flex-shrink-0 h-6 w-6 rounded-full"
-                          /> : null}
+                          {option.image ? (
+                            <img
+                              src={option.image}
+                              alt=""
+                              className="flex-shrink-0 h-6 w-6 rounded-full"
+                            />
+                          ) : null}
                           <span
                             className={classNames(
                               selected ? 'font-semibold' : 'font-normal',

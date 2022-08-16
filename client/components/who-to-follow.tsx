@@ -16,7 +16,7 @@ export function WhoToFollowLoader() {
 
   return (
     <>
-      {[1, 2, 3, 4, 5].map(x => (
+      {[1, 2, 3, 4, 5].map((x) => (
         <div className="flex mb-3" key={x}>
           <Skeleton {...defaultProps} circle borderRadius={9999} count={1} height={40} width={40} />
           <div className="flex flex-col ml-3 pt-2">
@@ -56,9 +56,7 @@ export function WhoToFollow() {
 
   return (
     <>
-      {isLoading ? (
-        <WhoToFollowLoader />
-      ) : null}
+      {isLoading ? <WhoToFollowLoader /> : null}
       <div className="mt-6 space-y-6">
         {profiles.map((profile) => (
           <div className="flex items-center justify-between" key={profile.id}>
@@ -74,12 +72,12 @@ export function WhoToFollow() {
                     profiles.map((oldProfile) =>
                       oldProfile.id === profile.id
                         ? {
-                          ...oldProfile,
-                          meta: {
-                            ...oldProfile.meta,
-                            isFollowing: action === 'followed',
-                          },
-                        }
+                            ...oldProfile,
+                            meta: {
+                              ...oldProfile.meta,
+                              isFollowing: action === 'followed',
+                            },
+                          }
                         : oldProfile
                     )
                 )

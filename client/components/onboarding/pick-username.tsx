@@ -6,6 +6,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useApiAxiosInstance } from '../../helpers/axios-client'
 import { AuthCtx } from '../../store/auth'
 import { AxiosError } from 'axios'
+import toast from 'react-hot-toast'
 
 export function PickUsername({}: {}) {
   const instance = useApiAxiosInstance()
@@ -39,7 +40,10 @@ export function PickUsername({}: {}) {
           })
         )
       },
-      onError(error: AxiosError<{ errors: { message: string }[] }>) {},
+      onError(error: AxiosError<{ errors: { message: string }[] }>) {
+        console.error(error)
+        toast.error(`Failed to update username. Please try again.`)
+      },
     }
   )
 
