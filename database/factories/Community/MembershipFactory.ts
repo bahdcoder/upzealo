@@ -3,7 +3,7 @@ import Factory from '@ioc:Adonis/Lucid/Factory'
 import UserFactory from '../Profile/UserFactory'
 import CommunityFactory from './CommunityFactory'
 
-export default Factory.define(Membership, ({ faker }) => {
+export default Factory.define(Membership, () => {
   return {
     status: MembershipStatus.APPROVED,
   }

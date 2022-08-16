@@ -1,7 +1,7 @@
 {
   "extends": "adonis-preset-ts/tsconfig.json",
   "include": ["**/*"],
-  "exclude": ["node_modules", "build"],
+  "exclude": ["node_modules", "build", "client", "upzealo"],
   "compilerOptions": {
     "outDir": "build",
     "rootDir": "./",
@@ -27,5 +27,5 @@
       "@adonisjs/redis",
       "@rocketseat/adonis-bull"
     ]
-  }
+  },
 }

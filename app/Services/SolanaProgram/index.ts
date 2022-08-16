@@ -16,7 +16,6 @@ import {
   Nft,
   JsonMetadataAttribute,
 } from '@metaplex-foundation/js'
-import { freezeAccount, setAuthority, AuthorityType, getMint } from '@solana/spl-token'
 
 import { blockchain } from 'Config/app'
 

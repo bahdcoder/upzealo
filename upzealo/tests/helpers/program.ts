@@ -10,23 +10,7 @@ import {
 } from '@solana/web3.js'
 import { Account, createMint, getOrCreateAssociatedTokenAccount, mintTo } from '@solana/spl-token'
 import { Upzealo } from '../../target/types/upzealo'
-import BNType, { BN } from 'bn.js'
 
-interface Tier {
-  keypair: Keypair
-  name: string
-  minFundsRequired: BNType
-}
-
-interface Quest {
-  keypair: Keypair
-  name: string
-  description: string
-  minWinFunds: BNType
-  maxWinFunds: BNType
-  duration: BNType
-  qStoneRequired: BNType
-}
 
 export class ProgramHelper {
   public user: Keypair
