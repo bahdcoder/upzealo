@@ -111,6 +111,9 @@ export interface Community {
   badges: Badge[]
   rules: string
   owner: UserProfile
+  meta: {
+    memberships_count: number
+  }
 }
 
 export interface Post {

@@ -5,12 +5,38 @@ import Post, { PostLoader } from '../components/post'
 import CreatePost from '../components/create-post'
 import { WhoToFollow } from '../components/who-to-follow'
 import { ActionButton, PrimaryButton } from '../components/button'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useInView } from 'react-intersection-observer'
 import { useApiAxiosInstance } from '../helpers/axios-client'
-import { EnrichedPost, useAuth } from '../store/auth'
+import { Community, EnrichedPost, useAuth } from '../store/auth'
 import { Fragment, useEffect } from 'react'
 import Head from 'next/head'
+import Skeleton from 'react-loading-skeleton'
+
+export function CommunitiesSkeleton() {
+  const defaultProps = {
+    count: 1,
+    duration: 1,
+    highlightColor: '#717E84',
+    baseColor: '#1F2024',
+  }
+
+  return (
+    <>
+      {[1, 2, 3, 4, 5].map(x => (
+        <div className="flex" key={x}>
+          <Skeleton {...defaultProps} circle borderRadius={9999} count={1} height={40} width={40} />
+          <div className="flex flex-col ml-3 pt-2">
+            <Skeleton {...defaultProps} height={10} width={200} />
+            <div>
+              <Skeleton {...defaultProps} height={6} width={100} />
+            </div>
+          </div>
+        </div>
+      ))}
+    </>
+  )
+}
 
 const Home: NextPage = () => {
   const instance = useApiAxiosInstance()
@@ -48,6 +74,16 @@ const Home: NextPage = () => {
       },
     }
   )
+
+  const { isLoading: isLoadingCommunities, data: communities = [] } = useQuery<Community[]>(['communities-self', authState.authenticated], async function () {
+    if (!authState.authenticated) {
+      return []
+    }
+    const response = await instance.get(`/communities/self`)
+
+    return response.data.data
+  })
+
   const { ref, inView } = useInView()
 
   useEffect(() => {
@@ -56,7 +92,7 @@ const Home: NextPage = () => {
     }
   }, [inView])
 
-  const noCommunities = false
+  const noCommunities = isLoadingCommunities ? false : communities.length === 0
 
   return (
     <div className="flex items-center h-[calc(100%-5rem)]">
@@ -102,35 +138,47 @@ const Home: NextPage = () => {
           <p className="text-white font-bold text-lg ml-4">Communities</p>
         </div>
 
+        {isLoadingCommunities ? <div className="mt-4">
+          <CommunitiesSkeleton />
+        </div> : null}
+
         {noCommunities ? null : (
           <>
             <div className="flex flex-col mt-6">
               <ul className="list-reset">
-                <li className="flex items-center">
-                  <Link href="/">
-                    <a className="flex items-center">
-                      <img
-                        src="https://pbs.twimg.com/profile_images/1537681214546616320/xC9xGPn3_400x400.jpg"
-                        alt="community image"
-                        className="w-10 h-10 rounded-sm"
-                      />
-                      <div className="flex flex-col ml-4">
-                        <p className="font-bold text-white text-sm">NFT Collectors</p>
-                        <span className="text-xs text-dark-300">7.6k members</span>
-                      </div>
-                    </a>
-                  </Link>
-                </li>
+                {communities.map(community => (
+                  <li className="flex items-center mb-4">
+                    <Link href={`/communities/${community.id}`}>
+                      <a className="flex items-center">
+                        <img
+                          src={community.logoImage}
+                          alt="community image"
+                          className="w-10 h-10 rounded-sm"
+                        />
+                        <div className="flex flex-col ml-4">
+                          <p className="font-bold text-white text-sm">
+                            {community.name}
+                          </p>
+                          <span className="text-xs text-dark-300">
+                            {community.meta.memberships_count + 1} members
+                          </span>
+                        </div>
+                      </a>
+                    </Link>
+                  </li>
+                ))}
               </ul>
 
-              <div className="mt-8 w-full">
-                <ActionButton className="w-full">Show more</ActionButton>
+              <div className="mt-6 w-full">
+                <Link href='/communities'>
+                  <ActionButton className="w-full">Discover more</ActionButton>
+                </Link>
               </div>
             </div>
           </>
         )}
 
-        {noCommunities ? (
+        {(noCommunities && !isLoadingCommunities) ? (
           <div className="mt-6">
             <div className="rounded-3xl w-full border border-[#FFC3C31C] flex flex-col items-center justify-center py-8 bg-[linear-gradient(79.71deg, #25DDD1 -0.81%, rgba(37, 221, 209, 0) 72.47%)]">
               <div className="w-full flex justify-center items-center">
@@ -158,7 +206,11 @@ const Home: NextPage = () => {
               </p>
 
               <div className="mt-8 w-full px-10 mb-2">
-                <PrimaryButton className="w-full">Explore Communities</PrimaryButton>
+                <Link href='/communities'>
+                  <a>
+                    <PrimaryButton className="w-full">Explore Communities</PrimaryButton>
+                  </a>
+                </Link>
               </div>
             </div>
           </div>

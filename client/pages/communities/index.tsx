@@ -13,7 +13,6 @@ import Skeleton from "react-loading-skeleton";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import classNames from "classnames";
-import { withGetServerSideProps } from "../../helpers/session";
 import { Tag } from "../../components/onboarding/pick-web3-experience";
 
 export function JoinCommunity({ isOpen, setIsOpen, community }: PropsWithChildren<{

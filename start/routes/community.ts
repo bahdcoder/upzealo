@@ -12,6 +12,7 @@ import Route from '@ioc:Adonis/Core/Route'
 Route.group(() => [
   Route.get('/', 'Community/CommunityController.index'),
   Route.get('/self', 'Community/CommunityController.self'),
+  Route.get('/:community', 'Community/CommunityController.show'),
   Route.post('/', 'Community/CreateCommunityController.handler'),
   Route.get('/:community/memberships', 'Community/MembershipController.index').middleware(
     'membership'

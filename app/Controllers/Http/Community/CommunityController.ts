@@ -20,6 +20,18 @@ export default class CommunityController {
     return communities
   }
 
+  public async show({ params }: HttpContextContract) {
+    const community = await Community.query()
+      .where('id', params.community)
+      .preload('user')
+      .preload('badges')
+      .orderBy('created_at', 'desc')
+      .withCount('memberships')
+      .firstOrFail()
+
+    return { community }
+  }
+
   public async self({ params, request, auth }: HttpContextContract) {
     const user = auth.use('jwt').user!
 
@@ -29,16 +41,24 @@ export default class CommunityController {
     const memberships = await Membership.query()
       .where('userId', user.id)
       .where('status', MembershipStatus.APPROVED)
-      .preload('community')
+      .preload('community', (communityQuery) => {
+        communityQuery.withCount('memberships')
+      })
       .paginate(page, perPage)
 
     memberships.baseUrl(`${baseUrl}/communities/${params.community}/memberships`)
 
+    const ownedCommunities = await Community.query()
+      .where('userId', user.id)
+      .withCount('memberships')
+
     const paginatedMemberships = memberships.toJSON()
 
     return {
-      ...paginatedMemberships,
-      data: paginatedMemberships.data.map((membership) => membership.community),
+      data: [
+        ...paginatedMemberships.data.map((membership) => membership.community),
+        ...ownedCommunities,
+      ],
     }
   }
 }

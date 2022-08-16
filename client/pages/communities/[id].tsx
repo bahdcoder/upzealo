@@ -1,16 +1,20 @@
 import { ToggleFade } from '../../components/toggle-transition'
 import classNames from "classnames";
 import Head from "next/head";
-import { useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import ReactTextareaAutosize from 'react-textarea-autosize';
+import { withGetServerSideProps } from '../../helpers/session';
+import { getApiInstance } from '../../helpers/axios-client';
+import { Community as CommunityInterface } from '../../store/auth';
+import Link from 'next/link';
 
-export default function Community() {
+export default function Community({ communities, community }: PropsWithChildren<{ communities: CommunityInterface[], community: CommunityInterface }>) {
     const [leftSideOpen, setLeftSideOpen] = useState(false)
 
     return (
         <div className="w-full h-screen">
             <Head>
-                <title>Community - Upzealo</title>
+                <title>{community.name} - Upzealo</title>
             </Head>
 
             <div className="flex h-full pt-20">
@@ -19,28 +23,34 @@ export default function Community() {
                     'w-[15rem]': leftSideOpen
                 })}>
                     <div className="grid grid-cols-1 gap-y-6">
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map(x => (
-                            <button className="flex items-center cursor-pointer group">
-                                <img key={x} className=" w-10 h-10 rounded-full" src="https://res.cloudinary.com/bahdcoder/image/upload/v1660309950/avatars/No_comments_4.png" alt="community logos" />
+                        {communities.map(community => (
+                            <Link key={community.id} href={`/communities/${community.id}`}>
+                                <a>
+                                    <button className="flex items-center cursor-pointer group">
+                                        <img className=" w-10 h-10 rounded-full" src={community.logoImage} alt="community logos" />
 
-                                <ToggleFade show={leftSideOpen}>
-                                    <p className="ml-3 font-semibold text-sm group-hover:text-primary-500 transition ease-linear">
-                                        DeGods Engineers
-                                    </p>
-                                </ToggleFade>
-                            </button>
+                                        <ToggleFade show={leftSideOpen}>
+                                            <p className="ml-3 font-semibold text-sm group-hover:text-primary-500 transition ease-linear">
+                                                {community.name}
+                                            </p>
+                                        </ToggleFade>
+                                    </button>
+                                </a>
+                            </Link>
                         ))}
                     </div>
                 </div>
 
                 <div className="ml-10 bg-black hidden lg:flex lg:w-[14rem] pt-10">
                     <div className="h-[95%] w-full border border-dark-700 rounded-3xl p-6">
-                        <img className='mb-6 w-14 h-14' src="https://res.cloudinary.com/bahdcoder/image/upload/v1660309948/avatars/No_Comments-3.png" alt="" />
+                        <img className='mb-6 w-14 h-14' src={community.logoImage} alt="" />
 
-                        <h3 className='font-bold'>DeGods Engineers</h3>
+                        <h3 className='font-bold'>
+                            {community.name}
+                        </h3>
 
                         <div className="mt-1 text-xs text-dark-300 flex items-center">
-                            <div className="w-[6px] h-[6px] rounded-full bg-primary-500 mr-2"></div> 233 Online
+                            <div className="w-[6px] h-[6px] rounded-full bg-primary-500 mr-2"></div> {community.meta.memberships_count} Members
                         </div>
 
                         <div className="mt-8">
@@ -81,3 +91,38 @@ export default function Community() {
         </div>
     )
 }
+
+export const getServerSideProps = withGetServerSideProps(async function ({ req, params }) {
+    const accessToken = req.session?.user?.accessToken
+    const instance = getApiInstance(accessToken)
+
+    if (!accessToken) {
+        return {
+            redirect: {
+                destination: '/',
+                statusCode: 301
+            }
+        }
+    }
+
+    try {
+        const [response, communityResponse] = await Promise.all([
+            instance.get(`/communities/self`),
+            instance.get(`/communities/${params?.id}`)
+        ])
+
+        return {
+            props: {
+                communities: response.data.data,
+                community: communityResponse.data.community
+            }
+        }
+    } catch (error) {
+        return {
+            redirect: {
+                destination: '/',
+                statusCode: 301
+            }
+        }
+    }
+})
