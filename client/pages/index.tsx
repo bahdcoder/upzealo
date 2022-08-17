@@ -176,7 +176,9 @@ const Home: NextPage = () => {
 
               <div className="mt-6 w-full">
                 <Link href="/communities">
-                  <ActionButton className="w-full">Discover more</ActionButton>
+                  <a>
+                    <ActionButton className="w-full">Discover more</ActionButton>
+                  </a>
                 </Link>
               </div>
             </div>

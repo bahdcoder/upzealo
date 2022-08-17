@@ -27,5 +27,5 @@
       "@adonisjs/redis",
       "@rocketseat/adonis-bull"
     ]
-  },
+  }
 }
