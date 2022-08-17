@@ -111,92 +111,101 @@ export default class UpdateResumeNft implements JobContract {
 
     Logger.info('generated html. launching puppeteer and generating pdf')
 
-    const browser = await Puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    })
+    try {
+      const browser = await Puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      })
 
-    const page = await browser.newPage()
+      const page = await browser.newPage()
 
-    await page.setContent(html, {
-      waitUntil: 'networkidle0',
-    })
+      await page.setContent(html, {
+        waitUntil: 'networkidle0',
+      })
 
-    const now = Date.now()
+      const now = Date.now()
 
-    await page.pdf({
-      path: join(__dirname, 'resumes', `${now}.pdf`),
-      printBackground: true,
-    })
+      await page.pdf({
+        path: join(__dirname, 'resumes', `${now}.pdf`),
+        printBackground: true,
+      })
 
-    Logger.info('done rendering pdf. now generating nft')
+      Logger.info('done rendering pdf. now generating nft')
 
-    const bot = await Bot.firstOrFail()
+      const bot = await Bot.firstOrFail()
 
-    const decryptedSecretKey = Encryption.decrypt<string>(bot.secretKey)!
+      const decryptedSecretKey = Encryption.decrypt<string>(bot.secretKey)!
 
-    const wallet = Keypair.fromSecretKey(bs58.decode(decryptedSecretKey))
+      const wallet = Keypair.fromSecretKey(bs58.decode(decryptedSecretKey))
 
-    const avatarBufferResponse = await NodeFetch(user.avatarUrl)
-    const avatarBuffer = await avatarBufferResponse.arrayBuffer()
+      const avatarBufferResponse = await NodeFetch(user.avatarUrl)
+      const avatarBuffer = await avatarBufferResponse.arrayBuffer()
 
-    const file = toMetaplexFile(
-      Fs.readFileSync(join(__dirname, 'resumes', `${now}.pdf`)),
-      `${now}.pdf`
-    )
+      const file = toMetaplexFile(
+        Fs.readFileSync(join(__dirname, 'resumes', `${now}.pdf`)),
+        `${now}.pdf`
+      )
 
-    const split = user.avatarUrl.split('.')
+      const split = user.avatarUrl.split('.')
 
-    const avatarFile = toMetaplexFile(avatarBuffer, `${user.id}.${split[split.length - 1]}`)
+      const avatarFile = toMetaplexFile(avatarBuffer, `${user.id}.${split[split.length - 1]}`)
 
-    const attributes = [
-      ...internalCourses.map((course) => ({
-        course: course.title,
-        skills: course.skills.map((skill) => skill.name),
-        certificationAuthority: course.certificationAuthority,
-        verified: true,
-      })),
-      ...externalCourses.map((cert) => ({
-        course: cert.title,
-        certificationAuthority: cert.certificationAuthority,
-        skills: cert.skills.map((skill) => skill.name),
-        verified: true,
-      })),
-    ]
+      const attributes = [
+        ...internalCourses.map((course) => ({
+          course: course.title,
+          skills: course.skills.map((skill) => skill.name),
+          certificationAuthority: course.certificationAuthority,
+          verified: true,
+        })),
+        ...externalCourses.map((cert) => ({
+          course: cert.title,
+          certificationAuthority: cert.certificationAuthority,
+          skills: cert.skills.map((skill) => skill.name),
+          verified: true,
+        })),
+      ]
 
-    const nftName = `${user.username} Soulbound Resume`
+      const nftName = `${user.username} Soulbound Resume`
 
-    if (user.resumeMint) {
-      const { resumePdf, uri } = await SolanaProgram.updateNft(
+      if (user.resumeMint) {
+        const { resumePdf, uri } = await SolanaProgram.updateNft(
+          wallet,
+          user.resumeMint,
+          {
+            file,
+            avatarFile,
+          },
+          nftName,
+          attributes
+        )
+
+        user.resumePdf = resumePdf
+        user.resumeUrl = uri
+
+        await user.save()
+
+        return
+      }
+
+      const { resumePdf, uri, mint } = await SolanaProgram.uploadNft(
         wallet,
-        user.resumeMint,
-        {
-          file,
-          avatarFile,
-        },
+        user.addresses[0].publicKey,
+        { file, avatarFile },
         nftName,
         attributes
       )
 
+      user.resumeMint = mint
       user.resumePdf = resumePdf
       user.resumeUrl = uri
 
       await user.save()
+      Logger.info('my work is now done.')
+    } catch (e) {
+      Logger.error(e)
+      Logger.error(e?.message)
+      console.error(e)
 
-      return
+      throw e
     }
-
-    const { resumePdf, uri, mint } = await SolanaProgram.uploadNft(
-      wallet,
-      user.addresses[0].publicKey,
-      { file, avatarFile },
-      nftName,
-      attributes
-    )
-
-    user.resumeMint = mint
-    user.resumePdf = resumePdf
-    user.resumeUrl = uri
-
-    await user.save()
   }
 }
