@@ -346,7 +346,7 @@ export default function Post({
                   alt={currency?.symbol}
                   className="w-6 h-6 rounded-full mr-2"
                 />
-                <p className=" line-through">
+                <p className={classNames({ 'line-through': post.bounty.winnerId })}>
                   {getFormattedAmount(post.bounty.amount)}{' '}
                   <span className="ml-2">{currency?.symbol}</span>
                 </p>
