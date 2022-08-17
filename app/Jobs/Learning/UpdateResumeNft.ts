@@ -13,6 +13,7 @@ import Bot from 'App/Models/Profile/Bot'
 import { Keypair } from '@solana/web3.js'
 import NodeFetch from 'node-fetch'
 import { SolanaProgram } from 'App/Services/SolanaProgram'
+import Logger from '@ioc:Adonis/Core/Logger'
 
 /*
 |--------------------------------------------------------------------------
@@ -31,8 +32,11 @@ export default class UpdateResumeNft implements JobContract {
 
   public async handle(job) {
     const { data } = job
+    Logger.info(`${this.key} job invoked with data`, data)
     const edge = new Edge({ cache: false })
     edge.mount(join(__dirname, '..', 'Views'))
+
+    Logger.info('finding user')
 
     const user = await User.query()
       .where('id', data.user)
@@ -42,6 +46,8 @@ export default class UpdateResumeNft implements JobContract {
       .preload('badges', (badgesQuery) => badgesQuery.preload('tags'))
       .preload('tags', (tagQuery) => tagQuery.preload('badge'))
       .firstOrFail()
+
+    Logger.info('found user. finding user enrolments.')
 
     const enrolments = await Enrolment.query()
       .where('user_id', user.id)
@@ -53,9 +59,13 @@ export default class UpdateResumeNft implements JobContract {
             .orderBy('index', 'desc')
         )
       )
+
+    Logger.info('found enrolments. finding external certificates')
     const externalCertifications = await ExternalCertification.query()
       .where('userId', user.id)
       .preload('certifier', (certifierQuery) => certifierQuery.preload('skills'))
+
+    Logger.info('found external certifcates. finding external courses.')
 
     const externalCourses = externalCertifications.map((cert) => {
       return {
@@ -79,6 +89,8 @@ export default class UpdateResumeNft implements JobContract {
       }
     })
 
+    Logger.info('found external courses. generating html with edge')
+
     const html = await edge.render('resume', {
       profile: user.serialize(),
       courses: [
@@ -97,6 +109,8 @@ export default class UpdateResumeNft implements JobContract {
       ],
     })
 
+    Logger.info('generated html. launching puppeteer and generating pdf')
+
     const browser = await Puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     })
@@ -114,7 +128,7 @@ export default class UpdateResumeNft implements JobContract {
       printBackground: true,
     })
 
-    console.log('done rendering.')
+    Logger.info('done rendering pdf. now generating nft')
 
     const bot = await Bot.firstOrFail()
 

@@ -1,7 +1,7 @@
 import { JobContract } from '@ioc:Rocketseat/Bull'
 import Follow from 'App/Models/Feed/Follow'
 import Bot from 'App/Models/Profile/Bot'
-
+import Logger from '@ioc:Adonis/Core/Logger'
 /*
 |--------------------------------------------------------------------------
 | Job setup
@@ -19,6 +19,8 @@ export default class FollowBotAccount implements JobContract {
 
   public async handle(job) {
     const { data } = job
+
+    Logger.info(`Following bot account for data:`, data)
 
     const bot = await Bot.firstOrFail()
 
