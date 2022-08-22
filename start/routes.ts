@@ -28,9 +28,19 @@ Route.get('/greekz', async ({ request }) => {
   const { program } = getProgram({} as any)
   const params = request.qs()
 
-  const allRascalPhases = await program.account.rascalPhase.all()
+  const allRascalPhases = shuffle(await program.account.rascalPhase.all())
 
-  const randomRascal = shuffle(allRascalPhases).find((nft) => {
+  const hasLevel = params.level !== undefined && params.level !== null
+
+  if (!hasLevel) {
+    const randomRascal = allRascalPhases.find((nft) => {
+      return nft.account.minted === false && nft?.account.phase.toString() === params.phase
+    })
+
+    return { mint: randomRascal?.account.mint.toBase58() }
+  }
+
+  const randomRascal = allRascalPhases.find((nft) => {
     return (
       nft.account.minted === false &&
       nft?.account.phase.toString() === params.phase &&
